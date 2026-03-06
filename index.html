@@ -2728,24 +2728,30 @@ function hideLoader() {
 }
 
 // Scroll reveal
+function revealEl(el) {
+  el.style.animation = 'fadeUp .5s ease both';
+  el.style.opacity = '1';
+  el.style.transform = '';
+  el.style.pointerEvents = '';
+}
 function initScrollReveal() {
+  const els = document.querySelectorAll('.sec-hdr, .pkg-card, .deal-card, .deal-card-v2, .flight-card-v2, .tool-card, .hiw-card, .tip-card');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.animation = 'fadeUp .5s ease both';
-        e.target.style.opacity = '';
-        io.unobserve(e.target);
-      }
+      if (e.isIntersecting) { revealEl(e.target); io.unobserve(e.target); }
     });
-  }, { threshold: 0.08 });
-  document.querySelectorAll('.sec-hdr, .pkg-card, .deal-card, .deal-card-v2, .flight-card-v2, .tool-card, .hiw-card, .tip-card').forEach(el => {
+  }, { threshold: 0.05 });
+  els.forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(16px)';
+    el.style.pointerEvents = 'none';
     io.observe(el);
   });
+  // Fallback: force-reveal everything after 2s so nothing stays hidden/unclickable
+  setTimeout(() => { els.forEach(el => revealEl(el)); }, 2000);
 }
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(initScrollReveal, 500);
+  setTimeout(initScrollReveal, 300);
 });
 
 // ── Any-time date toggle ──────────────────────────────────────────
@@ -7206,22 +7212,7 @@ if (_origSearchFlights2) {
   };
 }
 
-/* ── Scroll-reveal animation ── */
-(function(){
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){
-        e.target.style.animation='fadeUp .55s ease both';
-        io.unobserve(e.target);
-      }
-    });
-  },{threshold:0.08});
-  document.querySelectorAll('.sec-hdr,.pkg-card,.deal-card-v2,.flight-card,.tool-card,.hiw-card,.tip-card').forEach(el=>{
-    el.style.opacity='0';
-    el.style.transform='translateY(20px)';
-    io.observe(el);
-  });
-})();
+/* ── Scroll-reveal handled by initScrollReveal() above ── */
 
 </script>
 </body>
