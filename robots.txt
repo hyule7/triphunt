@@ -1,47 +1,16 @@
-[build]
-  publish   = "."
-  functions = "netlify/functions"
-  command   = ""
+User-agent: *
+Allow: /
 
-[functions]
-  node_bundler = "zisi"
+# Sitemaps
+Sitemap: https://www.triphunt.co.uk/sitemap.xml
+Sitemap: https://www.triphunt.co.uk/flights/sitemap.xml
 
-[functions.checkPriceAlerts]
-  schedule = "0 7 * * *"
+# Block Netlify function endpoints from being indexed
+Disallow: /.netlify/
 
-[[redirects]]
-  from   = "/*"
-  to     = "/index.html"
-  status = 200
+# Block internal/admin paths
+Disallow: /admin/
+Disallow: /api/
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options        = "DENY"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy        = "strict-origin-when-cross-origin"
-
-[[headers]]
-  for = "/flights/*"
-  [headers.values]
-    Cache-Control = "public, max-age=86400, stale-while-revalidate=43200"
-
-[[headers]]
-  for = "/sw.js"
-  [headers.values]
-    Cache-Control = "no-cache, no-store, must-revalidate"
-
-[[headers]]
-  for = "/sitemap.xml"
-  [headers.values]
-    Cache-Control = "public, max-age=3600"
-
-[[headers]]
-  for = "/robots.txt"
-  [headers.values]
-    Cache-Control = "public, max-age=86400"
-
-[[headers]]
-  for = "/.netlify/functions/*"
-  [headers.values]
-    Cache-Control = "no-store"
+# Crawl-delay for bots that respect it (prevents server overload)
+Crawl-delay: 1

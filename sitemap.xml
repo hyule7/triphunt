@@ -1,16 +1,41 @@
-User-agent: *
-Allow: /
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
-# Sitemaps
-Sitemap: https://www.triphunt.co.uk/sitemap.xml
-Sitemap: https://www.triphunt.co.uk/flights/sitemap.xml
+  <!-- Homepage -->
+  <url>
+    <loc>https://www.triphunt.co.uk/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
 
-# Block Netlify function endpoints from being indexed
-Disallow: /.netlify/
+  <!-- Key static flight routes (pre-seeded for fast indexing) -->
+  <url><loc>https://www.triphunt.co.uk/flights/london-to-paris</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.triphunt.co.uk/flights/london-to-dubai</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.triphunt.co.uk/flights/london-to-bali</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.triphunt.co.uk/flights/london-to-new-york</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.triphunt.co.uk/flights/london-to-tokyo</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.triphunt.co.uk/flights/london-to-bangkok</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.triphunt.co.uk/flights/london-to-barcelona</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.triphunt.co.uk/flights/london-to-lisbon</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.triphunt.co.uk/flights/manchester-to-barcelona</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.triphunt.co.uk/flights/london-to-rome</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.triphunt.co.uk/flights/london-to-amsterdam</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.triphunt.co.uk/flights/edinburgh-to-london</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.triphunt.co.uk/flights/manchester-to-dubai</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.triphunt.co.uk/flights/birmingham-to-malaga</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.triphunt.co.uk/flights/glasgow-to-tenerife</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.triphunt.co.uk/flights/bristol-to-mallorca</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
 
-# Block internal/admin paths
-Disallow: /admin/
-Disallow: /api/
+  <!-- Sitemap index for programmatic pages -->
+  <!-- NOTE: After running generate-seo-pages.js, add this:
+  <url>
+    <loc>https://www.triphunt.co.uk/flights/sitemap.xml</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  -->
 
-# Crawl-delay for bots that respect it (prevents server overload)
-Crawl-delay: 1
+</urlset>
