@@ -1,19 +1,72 @@
 [build]
   publish   = "."
   functions = "netlify/functions"
-  command   = ""
+  command   = "node build-seo.js"
+
+[build.processing]
+  skip_processing = true
 
 [functions]
-  node_bundler = "zisi"
+  node_bundler = "esbuild"
 
 [functions.checkPriceAlerts]
   schedule = "0 7 * * *"
 
+# ── Functions passthrough (must be before wildcard) ──────────────
 [[redirects]]
-  from   = "/*"
-  to     = "/index.html"
+  from  = "/.netlify/functions/*"
+  to    = "/.netlify/functions/:splat"
+  status = 200
+  force  = true
+
+# ── SEO programmatic pages ─────────────────────────────────────
+[[redirects]]
+  from  = "/flights/:route"
+  to    = "/seo-pages/flights/:route/index.html"
   status = 200
 
+[[redirects]]
+  from  = "/flights/"
+  to    = "/seo-pages/flights/index.html"
+  status = 200
+
+[[redirects]]
+  from  = "/cheap-flights-to/:dest"
+  to    = "/seo-pages/cheap-flights-to/:dest/index.html"
+  status = 200
+
+[[redirects]]
+  from  = "/flights-from/:origin"
+  to    = "/seo-pages/flights-from/:origin/index.html"
+  status = 200
+
+[[redirects]]
+  from  = "/airports/:ap"
+  to    = "/seo-pages/airports/:ap/index.html"
+  status = 200
+
+[[redirects]]
+  from  = "/airports/"
+  to    = "/seo-pages/airports/index.html"
+  status = 200
+
+[[redirects]]
+  from  = "/destinations/:dest"
+  to    = "/seo-pages/destinations/:dest/index.html"
+  status = 200
+
+[[redirects]]
+  from  = "/destinations/"
+  to    = "/seo-pages/destinations/index.html"
+  status = 200
+
+# ── Main SPA (must be last) ────────────────────────────────────
+[[redirects]]
+  from  = "/*"
+  to    = "/index.html"
+  status = 200
+
+# ── Headers ────────────────────────────────────────────────────
 [[headers]]
   for = "/*"
   [headers.values]
@@ -22,26 +75,17 @@
     Referrer-Policy        = "strict-origin-when-cross-origin"
 
 [[headers]]
-  for = "/flights/*"
+  for = "/seo-pages/*"
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=43200"
 
 [[headers]]
-  for = "/sw.js"
-  [headers.values]
-    Cache-Control = "no-cache, no-store, must-revalidate"
-
-[[headers]]
-  for = "/sitemap.xml"
-  [headers.values]
-    Cache-Control = "public, max-age=3600"
-
-[[headers]]
-  for = "/robots.txt"
-  [headers.values]
-    Cache-Control = "public, max-age=86400"
-
-[[headers]]
   for = "/.netlify/functions/*"
   [headers.values]
-    Cache-Control = "no-store"
+    Cache-Control               = "no-store"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/sitemap*.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
