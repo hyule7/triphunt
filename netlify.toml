@@ -1,13 +1,10 @@
 [build]
-  publish   = "TripHunt_v8_final"
-  functions = "TripHunt_v8_final/netlify/functions"
+  publish   = "."
   command   = ""
 
 [functions]
+  directory    = "."
   node_bundler = "zisi"
-
-[functions.checkPriceAlerts]
-  schedule = "0 7 * * *"
 
 [[redirects]]
   from   = "/*"
