@@ -3,11 +3,14 @@ Allow: /
 
 # Sitemaps
 Sitemap: https://www.triphunt.co.uk/sitemap.xml
-Sitemap: https://www.triphunt.co.uk/sitemap-index.xml
-Sitemap: https://www.triphunt.co.uk/sitemap-flights.xml
-Sitemap: https://www.triphunt.co.uk/sitemap-destinations.xml
-Sitemap: https://www.triphunt.co.uk/sitemap-airports.xml
+Sitemap: https://www.triphunt.co.uk/flights/sitemap.xml
 
-# Disallow internal paths
+# Block Netlify function endpoints from being indexed
 Disallow: /.netlify/
-Disallow: /node_modules/
+
+# Block internal/admin paths
+Disallow: /admin/
+Disallow: /api/
+
+# Crawl-delay for bots that respect it (prevents server overload)
+Crawl-delay: 1

@@ -1,84 +1,87 @@
+# ══════════════════════════════════════════════════════════
+# TripHunt - netlify.toml
+# ══════════════════════════════════════════════════════════
+
 [build]
   publish   = "."
   functions = "netlify/functions"
-  command   = "node build-seo.js"
-
-[build.processing]
-  skip_processing = true
+  command   = "node generate-seo-pages.js"   # generates 500k+ SEO pages on every deploy
 
 [functions]
-  node_bundler = "esbuild"
+  node_bundler = "zisi"
 
+# ── Scheduled: run price alert checks every day at 7am UTC
 [functions.checkPriceAlerts]
   schedule = "0 7 * * *"
 
-# ── SEO programmatic pages ─────────────────────────────────────
+# ── SPA redirect: all unmatched routes → index
 [[redirects]]
-  from  = "/flights/:route"
-  to    = "/seo-pages/flights/:route/index.html"
+  from   = "/*"
+  to     = "/index.html"
   status = 200
 
-[[redirects]]
-  from  = "/flights/"
-  to    = "/seo-pages/flights/index.html"
-  status = 200
-
-[[redirects]]
-  from  = "/cheap-flights-to/:dest"
-  to    = "/seo-pages/cheap-flights-to/:dest/index.html"
-  status = 200
-
-[[redirects]]
-  from  = "/flights-from/:origin"
-  to    = "/seo-pages/flights-from/:origin/index.html"
-  status = 200
-
-[[redirects]]
-  from  = "/airports/:ap"
-  to    = "/seo-pages/airports/:ap/index.html"
-  status = 200
-
-[[redirects]]
-  from  = "/airports/"
-  to    = "/seo-pages/airports/index.html"
-  status = 200
-
-[[redirects]]
-  from  = "/destinations/:dest"
-  to    = "/seo-pages/destinations/:dest/index.html"
-  status = 200
-
-[[redirects]]
-  from  = "/destinations/"
-  to    = "/seo-pages/destinations/index.html"
-  status = 200
-
-# ── Main SPA (must be last) ────────────────────────────────────
-[[redirects]]
-  from  = "/*"
-  to    = "/index.html"
-  status = 200
-
-# ── Headers ────────────────────────────────────────────────────
+# ── Security headers (all pages)
 [[headers]]
   for = "/*"
   [headers.values]
-    X-Frame-Options        = "DENY"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy        = "strict-origin-when-cross-origin"
+    X-Frame-Options          = "DENY"
+    X-Content-Type-Options   = "nosniff"
+    Referrer-Policy          = "strict-origin-when-cross-origin"
+    Permissions-Policy       = "geolocation=(), microphone=(), camera=()"
+    Content-Security-Policy  = "default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data:; font-src 'self' https: data:;"
 
+# ── Cache SEO pages aggressively (24h + stale-while-revalidate)
 [[headers]]
-  for = "/seo-pages/*"
+  for = "/flights/*"
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=43200"
 
+# ── Service worker: never cache
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# ── Sitemap: cache 1 hour
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+    Content-Type  = "application/xml"
+
+[[headers]]
+  for = "/flights/sitemap.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+    Content-Type  = "application/xml"
+
+# ── Robots: cache 1 day
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# ── Netlify Functions: never cache
 [[headers]]
   for = "/.netlify/functions/*"
   [headers.values]
-    Cache-Control               = "no-store"
-    Access-Control-Allow-Origin = "*"
+    Cache-Control = "no-store"
 
-[[headers]]
-  for = "/sitemap*.xml"
-  [headers.values]
-    Cache-Control = "public, max-age=3600"
+# ══════════════════════════════════════════════════════════
+# ENVIRONMENT VARIABLES (set in Netlify dashboard)
+# Site Settings → Environment Variables
+# ══════════════════════════════════════════════════════════
+#
+# TRAVELPAYOUTS_TOKEN   = your TravelPayouts API token
+# TRAVELPAYOUTS_MARKER  = 499405
+# ANTHROPIC_API_KEY     = your Anthropic API key (optional - AI advisor)
+# RESEND_API_KEY        = from resend.com (free: 3000 emails/month)
+# SUPABASE_URL          = https://xxxx.supabase.co
+# SUPABASE_SERVICE_KEY  = your Supabase service_role key
+# SITE_URL              = https://www.triphunt.co.uk
+
