@@ -369,8 +369,9 @@ function jrUrl(orig, dest, weeksOut=3, nights=7, adults=1){
   while(dep.getDay()!==2) dep.setDate(dep.getDate()+1);
   const ret=new Date(dep);
   ret.setDate(ret.getDate()+nights);
-  const dd=String(dep.getMonth()+1).padStart(2,'0')+String(dep.getDate()).padStart(2,'0');
-  const rd=String(ret.getMonth()+1).padStart(2,'0')+String(ret.getDate()).padStart(2,'0');
+  // JetRadar path format: DDMM (day first, then month)
+  const dd=String(dep.getDate()).padStart(2,'0')+String(dep.getMonth()+1).padStart(2,'0');
+  const rd=String(ret.getDate()).padStart(2,'0')+String(ret.getMonth()+1).padStart(2,'0');
   return `https://www.jetradar.com/search/${orig}${dd}${dest}${rd}${adults}1?adults=${adults}&currency=GBP&locale=en&marker=${MARKER}`;
 }
 

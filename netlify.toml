@@ -12,13 +12,6 @@
 [functions.checkPriceAlerts]
   schedule = "0 7 * * *"
 
-# ── Functions passthrough (must be before wildcard) ──────────────
-[[redirects]]
-  from  = "/.netlify/functions/*"
-  to    = "/.netlify/functions/:splat"
-  status = 200
-  force  = true
-
 # ── SEO programmatic pages ─────────────────────────────────────
 [[redirects]]
   from  = "/flights/:route"

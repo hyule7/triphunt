@@ -254,21 +254,29 @@ select.search-input { cursor: pointer; appearance: none; }
 
 /* Autocomplete */
 .autocomplete-list {
-  position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 100;
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 9999;
   background: var(--navy1); border: 1px solid var(--border2);
   border-radius: var(--r12); overflow: hidden;
-  box-shadow: var(--shadow2); max-height: 240px; overflow-y: auto;
+  box-shadow: 0 12px 40px rgba(0,0,0,.5); max-height: 320px; overflow-y: auto;
+  animation: acDrop .15s ease;
 }
+@keyframes acDrop {
+  from { opacity:0; transform: translateY(-6px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.autocomplete-list:empty { display: none; }
 .autocomplete-item {
-  padding: 10px 14px; cursor: pointer; font-size: 13px;
-  display: flex; align-items: center; justify-content: space-between;
-  transition: background .15s; color: var(--txt2);
+  padding: 11px 14px; cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  transition: background .12s; color: var(--txt2); border-bottom: 1px solid var(--border);
 }
-.autocomplete-item:hover { background: var(--navy2); color: var(--txt); }
+.autocomplete-item:last-child { border-bottom: none; }
+.autocomplete-item:hover, .autocomplete-item:focus { background: var(--navy2); color: var(--txt); outline: none; }
 .iata-badge {
   background: var(--navy3); color: var(--acc3);
-  font-size: 10px; font-weight: 700; padding: 2px 6px;
-  border-radius: 4px; font-family: monospace; letter-spacing: .5px;
+  font-size: 10px; font-weight: 700; padding: 3px 7px;
+  border-radius: 5px; font-family: monospace; letter-spacing: .5px;
+  flex-shrink: 0;
 }
 
 /* Search button */
@@ -1611,15 +1619,15 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
       <div class="search-fields">
         <div class="field-wrap" style="position:relative">
           <label>From</label>
-          <input type="text" class="search-input" id="origin-input" placeholder="City or airport" autocomplete="off" oninput="handleAutocomplete(this,'origin')" onfocus="showNearbyAirports()">
+          <input type="text" class="search-input" id="origin-input" placeholder="City or airport" autocomplete="off" oninput="handleAutocomplete(this,'origin')" onfocus="handleFocus(this,'origin')">
           <input type="hidden" id="origin-iata" value="LHR">
-          <div class="autocomplete-list" id="origin-ac" style="display:none"></div>
+          <div class="autocomplete-list" id="origin-ac"></div>
         </div>
         <div class="field-wrap" style="position:relative">
           <label>To</label>
-          <input type="text" class="search-input" id="dest-input" placeholder="Anywhere" autocomplete="off" oninput="handleAutocomplete(this,'dest')">
+          <input type="text" class="search-input" id="dest-input" placeholder="Anywhere" autocomplete="off" oninput="handleAutocomplete(this,'dest')" onfocus="handleFocus(this,'dest')">
           <input type="hidden" id="dest-iata" value="">
-          <div class="autocomplete-list" id="dest-ac" style="display:none"></div>
+          <div class="autocomplete-list" id="dest-ac"></div>
         </div>
         <div class="field-wrap">
           <label>Depart</label>
@@ -1649,13 +1657,33 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
       <div id="multicity-panel">
         <div id="mc-legs">
           <div class="mc-leg" data-leg="0">
-            <input class="search-input" placeholder="From" id="mc-from-0" style="flex:1;min-width:120px" autocomplete="off">
-            <input class="search-input" placeholder="To" id="mc-to-0" style="flex:1;min-width:120px" autocomplete="off">
+            <div style="position:relative;flex:1;min-width:120px">
+            <input class="search-input" placeholder="From" id="mc-from-0" style="width:100%" autocomplete="off"
+              oninput="handleAutocomplete(this,'mc-from-0')" onfocus="handleFocus(this,'mc-from-0')">
+            <input type="hidden" id="mc-from-0-iata" value="">
+            <div class="autocomplete-list" id="mc-from-0-ac"></div>
+          </div>
+            <div style="position:relative;flex:1;min-width:120px">
+            <input class="search-input" placeholder="To" id="mc-to-0" style="width:100%" autocomplete="off"
+              oninput="handleAutocomplete(this,'mc-to-0')" onfocus="handleFocus(this,'mc-to-0')">
+            <input type="hidden" id="mc-to-0-iata" value="">
+            <div class="autocomplete-list" id="mc-to-0-ac"></div>
+          </div>
             <input class="search-input" type="date" id="mc-date-0" style="max-width:140px">
           </div>
           <div class="mc-leg" data-leg="1">
-            <input class="search-input" placeholder="From" id="mc-from-1" style="flex:1;min-width:120px" autocomplete="off">
-            <input class="search-input" placeholder="To" id="mc-to-1" style="flex:1;min-width:120px" autocomplete="off">
+            <div style="position:relative;flex:1;min-width:120px">
+            <input class="search-input" placeholder="From" id="mc-from-1" style="width:100%" autocomplete="off"
+              oninput="handleAutocomplete(this,'mc-from-1')" onfocus="handleFocus(this,'mc-from-1')">
+            <input type="hidden" id="mc-from-1-iata" value="">
+            <div class="autocomplete-list" id="mc-from-1-ac"></div>
+          </div>
+            <div style="position:relative;flex:1;min-width:120px">
+            <input class="search-input" placeholder="To" id="mc-to-1" style="width:100%" autocomplete="off"
+              oninput="handleAutocomplete(this,'mc-to-1')" onfocus="handleFocus(this,'mc-to-1')">
+            <input type="hidden" id="mc-to-1-iata" value="">
+            <div class="autocomplete-list" id="mc-to-1-ac"></div>
+          </div>
             <input class="search-input" type="date" id="mc-date-1" style="max-width:140px">
             <button class="btn-remove-leg" onclick="removeMCLeg(1)">✕</button>
           </div>
@@ -1683,13 +1711,17 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
       <div class="pkg-search-fields" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:14px">
         <div class="field-wrap" style="position:relative">
           <label>From</label>
-          <input type="text" class="search-input" id="pkg-origin-input" placeholder="London Heathrow" autocomplete="off">
+          <input type="text" class="search-input" id="pkg-origin-input" placeholder="London Heathrow" autocomplete="off"
+            oninput="handleAutocomplete(this,'pkg-origin')" onfocus="handleFocus(this,'pkg-origin')">
           <input type="hidden" id="pkg-origin-iata" value="LHR">
+          <div class="autocomplete-list" id="pkg-origin-ac"></div>
         </div>
         <div class="field-wrap">
           <label>Going To</label>
-          <input type="text" class="search-input" id="pkg-dest-input" placeholder="Barcelona, Bali, Dubai…">
+          <input type="text" class="search-input" id="pkg-dest-input" placeholder="Barcelona, Bali, Dubai…" autocomplete="off"
+            oninput="handleAutocomplete(this,'pkg-dest')" onfocus="handleFocus(this,'pkg-dest')">
           <input type="hidden" id="pkg-dest-iata" value="">
+          <div class="autocomplete-list" id="pkg-dest-ac"></div>
         </div>
         <div class="field-wrap">
           <label>Departure</label>
@@ -1736,7 +1768,12 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
       <div class="search-fields">
         <div class="field-wrap">
           <label>Pick-up location</label>
-          <input type="text" class="search-input" id="car-location" placeholder="Airport or city" autocomplete="off">
+          <div style="position:relative">
+          <input type="text" class="search-input" id="car-location" placeholder="Airport or city" autocomplete="off"
+            oninput="handleAutocomplete(this,'car-loc')" onfocus="handleFocus(this,'car-loc')">
+          <div class="autocomplete-list" id="car-loc-ac"></div>
+          <input type="hidden" id="car-loc-iata" value="">
+          </div>
         </div>
         <div class="field-wrap">
           <label>Pick-up date</label>
@@ -2884,7 +2921,7 @@ function switchTab(id,btn){
 
 /* DEEP LINKS */
 function _defaultDep(){
-  // Always supply a default date if none given — 3 weeks out, nearest Tuesday
+  // Default: 3 weeks out, nearest Tuesday
   const d=new Date();d.setDate(d.getDate()+21);
   while(d.getDay()!==2)d.setDate(d.getDate()+1);
   return d.toISOString().slice(0,10);
@@ -2892,15 +2929,21 @@ function _defaultDep(){
 function _defaultRet(dep){
   const d=new Date(dep);d.setDate(d.getDate()+7);return d.toISOString().slice(0,10);
 }
+// JetRadar path date format: DDMM (day first, then month)
+// e.g. 2026-03-31 → "3103", 2026-04-07 → "0704"
+function _ddmm(s){
+  if(!s) return "";
+  const p=String(s).slice(0,10).split("-");
+  return p.length===3 ? p[2]+p[1] : "";
+}
 function aviasalesUrl(o,d,date,adults=1,retDate=""){
-  // JetRadar URL format for UK users - preserves TravelPayouts affiliate tracking
-  // Always encode dates so JetRadar pre-fills origin/dest/dates/pax
+  // Always encode dates - JetRadar pre-fills origin, destination, dates and passenger count
   const dep = date || _defaultDep();
   const ret = retDate || _defaultRet(dep);
-  const dd = dep.replace(/-/g,"").slice(4);  // MMDD
-  const rd = ret.replace(/-/g,"").slice(4);  // MMDD
-  // Use path-encoded format: /search/LHR0106BCN0806{adults}1
-  return `https://www.jetradar.com/search/${o}${dd}${d}${rd}${adults}1?adults=${adults}&currency=GBP&locale=en&marker=${MARKER}`;
+  const dd = _ddmm(dep);  // DDMM e.g. "3103"
+  const rd = _ddmm(ret);  // DDMM e.g. "0704"
+  const p = parseInt(adults)||1;
+  return `https://www.jetradar.com/search/${o}${dd}${d}${rd}${p}1?adults=${p}&currency=GBP&locale=en&marker=${MARKER}`;
 }
 function flightSearchUrl(o,d,date,adults=1,retDate=""){ return aviasalesUrl(o,d,date,adults,retDate); }
 function flightTicketUrl(o,d,date,adults=1,retDate=""){ return aviasalesUrl(o,d,date,adults,retDate); }
@@ -2912,19 +2955,8 @@ function flightTicketUrl(o,d,date,adults=1,retDate=""){ return aviasalesUrl(o,d,
 
 // ── TravelPayouts / JetRadar (flights) UK ──────────────────────────
 function buildFlightUrl(origin, dest, depDate, retDate, pax=1){
-  const params = new URLSearchParams({
-    origin: origin,
-    destination: dest,
-    adults: pax,
-    currency: "GBP",
-    locale: "en",
-    marker: MARKER,
-    ...(depDate && { depart_date: depDate }),
-    ...(retDate && { return_date: retDate }),
-    utm_source: "triphunt",
-    utm_medium: "package",
-  });
-  return `https://www.jetradar.com/flights/?${params.toString()}`;
+  // Use path-encoded deep link so JetRadar pre-fills all search fields
+  return aviasalesUrl(origin, dest, depDate, pax, retDate);
 }
 
 // ── Booking.com (hotels) ─────────────────────────────────────────
@@ -3040,44 +3072,216 @@ function buildKlookDestUrl(destIata, destName){
     : `https://www.klook.com/en-GB/search/?query=${encodeURIComponent(destName||"")}&aid=triphunt&utm_source=triphunt&utm_medium=pkg`;
 }
 
-/* AUTOCOMPLETE */
-async function handleAC(q,listId,inputId,hiddenId){
-  const list=document.getElementById(listId);
-  if(q.length<2){list.innerHTML="";return}
-  try{
-    const r=await fetch(`https://autocomplete.travelpayouts.com/places2?term=${encodeURIComponent(q)}&locale=en&types[]=airport&types[]=city`);
-    const data=await r.json();
-    list.innerHTML="";
-    data.slice(0,7).forEach(item=>{
-      const d=document.createElement("div");d.className="autocomplete-item";
-      d.innerHTML=`<span>✈️ ${item.name}</span><span class="iata-badge">${item.code}</span>`;
-      d.onclick=()=>{
-        document.getElementById(inputId).value=`${item.name} (${item.code})`;
-        document.getElementById(hiddenId).value=item.code;
-        list.innerHTML="";
-        if(hiddenId==="origin-iata")showNearby(item.code);
-        // update social proof if both origin and dest are selected
-        const o=document.getElementById("origin-iata").value;
-        const d=document.getElementById("dest-iata").value;
-        if(o&&d) updateSearchCount(o,d);
-      };
-      list.appendChild(d);
-    });
-  }catch{list.innerHTML=""}
+/* ═══════════════════════════════════════════════════════════════
+   UNIFIED AUTOCOMPLETE SYSTEM
+   Works for: flights origin/dest, packages origin/dest,
+              car hire location, multi-city legs
+   ═══════════════════════════════════════════════════════════════ */
+
+// Popular destinations shown immediately on focus (before typing)
+const POPULAR_DESTINATIONS = [
+  {name:"Barcelona",code:"BCN",sub:"Spain"},
+  {name:"Amsterdam",code:"AMS",sub:"Netherlands"},
+  {name:"Dubai",code:"DXB",sub:"UAE"},
+  {name:"New York",code:"JFK",sub:"USA"},
+  {name:"Rome",code:"FCO",sub:"Italy"},
+  {name:"Lisbon",code:"LIS",sub:"Portugal"},
+  {name:"Paris",code:"CDG",sub:"France"},
+  {name:"Athens",code:"ATH",sub:"Greece"},
+  {name:"Tokyo",code:"NRT",sub:"Japan"},
+  {name:"Bangkok",code:"BKK",sub:"Thailand"},
+  {name:"Bali",code:"DPS",sub:"Indonesia"},
+  {name:"Tenerife",code:"TFS",sub:"Spain"},
+];
+
+const POPULAR_ORIGINS = [
+  {name:"London Heathrow",code:"LHR",sub:"London"},
+  {name:"London Gatwick",code:"LGW",sub:"London"},
+  {name:"Manchester Airport",code:"MAN",sub:"Manchester"},
+  {name:"Edinburgh Airport",code:"EDI",sub:"Edinburgh"},
+  {name:"Birmingham Airport",code:"BHX",sub:"Birmingham"},
+  {name:"Bristol Airport",code:"BRS",sub:"Bristol"},
+  {name:"Glasgow Airport",code:"GLA",sub:"Glasgow"},
+  {name:"Leeds Bradford",code:"LBA",sub:"Leeds"},
+  {name:"Newcastle Airport",code:"NCL",sub:"Newcastle"},
+  {name:"London Stansted",code:"STN",sub:"London"},
+  {name:"London Luton",code:"LTN",sub:"London"},
+];
+
+// Config: which input maps to which hidden field and which autocomplete list
+const AC_CONFIG = {
+  "origin":     {inputId:"origin-input",    hiddenId:"origin-iata",    listId:"origin-ac",    type:"origin"},
+  "dest":       {inputId:"dest-input",      hiddenId:"dest-iata",      listId:"dest-ac",      type:"dest"},
+  "pkg-origin": {inputId:"pkg-origin-input",hiddenId:"pkg-origin-iata",listId:"pkg-origin-ac",type:"origin"},
+  "pkg-dest":   {inputId:"pkg-dest-input",  hiddenId:"pkg-dest-iata",  listId:"pkg-dest-ac",  type:"dest"},
+  "car-loc":    {inputId:"car-location",    hiddenId:"car-loc-iata",   listId:"car-loc-ac",   type:"origin"},
+  "mc-from-0":  {inputId:"mc-from-0",       hiddenId:"mc-from-0-iata", listId:"mc-from-0-ac", type:"origin"},
+  "mc-to-0":    {inputId:"mc-to-0",         hiddenId:"mc-to-0-iata",   listId:"mc-to-0-ac",   type:"dest"},
+  "mc-from-1":  {inputId:"mc-from-1",       hiddenId:"mc-from-1-iata", listId:"mc-from-1-ac", type:"origin"},
+  "mc-to-1":    {inputId:"mc-to-1",         hiddenId:"mc-to-1-iata",   listId:"mc-to-1-ac",   type:"dest"},
+};
+
+let _acTimer = null;
+
+// Called oninput on every search text field
+function handleAutocomplete(inputEl, key) {
+  const q = inputEl.value.trim();
+  const cfg = AC_CONFIG[key];
+  if(!cfg) return;
+  const list = document.getElementById(cfg.listId);
+  if(!list) return;
+
+  // Clear hidden IATA if user is typing again
+  const hidden = document.getElementById(cfg.hiddenId);
+  if(hidden) hidden.value = "";
+
+  if(q.length < 2) {
+    // Show popular suggestions instead of empty dropdown
+    showPopular(list, cfg, key);
+    return;
+  }
+  // Debounce API call 200ms
+  clearTimeout(_acTimer);
+  _acTimer = setTimeout(() => fetchAC(q, list, cfg, key), 200);
 }
-document.addEventListener("click",e=>{document.querySelectorAll(".autocomplete-list").forEach(l=>{if(!l.contains(e.target))l.innerHTML=""})});
+
+// Called onfocus on every search text field  
+function handleFocus(inputEl, key) {
+  const cfg = AC_CONFIG[key];
+  if(!cfg) return;
+  const list = document.getElementById(cfg.listId);
+  if(!list) return;
+  const q = inputEl.value.trim();
+  if(q.length < 2) showPopular(list, cfg, key);
+}
+
+// Render popular airports/destinations before user has typed
+function showPopular(list, cfg, key) {
+  const items = cfg.type === "origin" ? POPULAR_ORIGINS : POPULAR_DESTINATIONS;
+  renderItems(list, items, cfg, key, true);
+}
+
+// Render a list of results into the dropdown
+function renderItems(list, items, cfg, key, isPopular) {
+  if(!items.length) { list.innerHTML = ""; return; }
+  list.innerHTML = "";
+  if(isPopular) {
+    const hdr = document.createElement("div");
+    hdr.style.cssText = "padding:8px 14px 4px;font-size:10px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.7px";
+    hdr.textContent = cfg.type === "origin" ? "Popular UK Airports" : "Popular Destinations";
+    list.appendChild(hdr);
+  }
+  items.slice(0,8).forEach(item => {
+    const d = document.createElement("div");
+    d.className = "autocomplete-item";
+    d.innerHTML = `
+      <span style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:16px">${cfg.type==="origin"?"🏴󠁧󠁢󠁥󠁮󠁧󠁿":"✈️"}</span>
+        <span>
+          <div style="font-weight:600;color:var(--txt)">${item.name}</div>
+          <div style="font-size:11px;color:var(--txt3)">${item.sub||""}</div>
+        </span>
+      </span>
+      <span class="iata-badge">${item.code}</span>`;
+    d.onmousedown = (e) => {
+      e.preventDefault(); // stop blur firing before click
+      selectAirport(item, cfg, key);
+    };
+    list.appendChild(d);
+  });
+}
+
+// Fetch from TravelPayouts autocomplete API
+async function fetchAC(q, list, cfg, key) {
+  try {
+    const r = await fetch(`https://autocomplete.travelpayouts.com/places2?term=${encodeURIComponent(q)}&locale=en&types[]=airport&types[]=city`);
+    if(!r.ok) { showPopular(list, cfg, key); return; }
+    const data = await r.json();
+    if(!data.length) { showPopular(list, cfg, key); return; }
+    const mapped = data.slice(0,8).map(item => ({
+      name: item.name,
+      code: item.code,
+      sub:  item.country_name || item.city_name || ""
+    }));
+    renderItems(list, mapped, cfg, key, false);
+  } catch(e) {
+    showPopular(list, cfg, key);
+  }
+}
+
+// Select an airport from the dropdown
+function selectAirport(item, cfg, key) {
+  const inputEl = document.getElementById(cfg.inputId);
+  const hiddenEl = document.getElementById(cfg.hiddenId);
+  const list = document.getElementById(cfg.listId);
+  if(inputEl) inputEl.value = `${item.name} (${item.code})`;
+  if(hiddenEl) hiddenEl.value = item.code;
+  if(list) list.innerHTML = "";
+
+  // Side effects per field
+  if(key === "origin") {
+    showNearby(item.code);
+    const dest = document.getElementById("dest-iata")?.value;
+    if(dest) updateSearchCount(item.code, dest);
+    // Auto-focus destination next
+    setTimeout(()=>document.getElementById("dest-input")?.focus(), 50);
+  }
+  if(key === "dest") {
+    const orig = document.getElementById("origin-iata")?.value;
+    if(orig) updateSearchCount(orig, item.code);
+    // Auto-focus depart date next
+    setTimeout(()=>document.getElementById("depart-date")?.focus(), 50);
+  }
+  if(key === "pkg-origin") {
+    setTimeout(()=>document.getElementById("pkg-dest-input")?.focus(), 50);
+  }
+  if(key === "pkg-dest") {
+    setTimeout(()=>document.getElementById("pkg-from")?.focus(), 50);
+  }
+}
+
+// Close all dropdowns when clicking outside
+document.addEventListener("mousedown", e => {
+  document.querySelectorAll(".autocomplete-list").forEach(l => {
+    if(!l.contains(e.target) && !e.target.matches("input")) {
+      l.innerHTML = "";
+    }
+  });
+});
+
+// Close on ESC
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape") {
+    document.querySelectorAll(".autocomplete-list").forEach(l => l.innerHTML = "");
+  }
+});
 
 /* NEARBY AIRPORTS */
-function showNearby(iata){
-  const n=NEARBY[iata],s=document.getElementById("nearby-airports"),c=document.getElementById("nearby-chips");
+function showNearby(iata) {
+  const n=NEARBY[iata], s=document.getElementById("nearby-airports"), c=document.getElementById("nearby-chips");
   if(!n||!n.length){s.classList.remove("show");return}
-  c.innerHTML=n.map(x=>`<span class="nearby-chip" onclick="pickNearby('${x}')">${x}</span>`).join("");
+  // Show full airport names not just codes
+  const names = {LHR:"Heathrow",LGW:"Gatwick",STN:"Stansted",LTN:"Luton",LCY:"City",
+    LPL:"Liverpool",LBA:"Leeds Bradford",DSA:"Doncaster",PIK:"Prestwick",CWL:"Cardiff",EXT:"Exeter",EMA:"E Midlands"};
+  c.innerHTML = n.map(x=>`<span class="nearby-chip" onclick="pickNearby('${x}')">${names[x]||x}</span>`).join("");
   s.classList.add("show");
 }
-function pickNearby(code){
-  document.getElementById("origin-input").value=code;
-  document.getElementById("origin-iata").value=code;
+
+function pickNearby(code) {
+  const names = {LHR:"London Heathrow",LGW:"London Gatwick",STN:"London Stansted",LTN:"London Luton",
+    LCY:"London City",LPL:"Liverpool",LBA:"Leeds Bradford",DSA:"Doncaster Sheffield",
+    PIK:"Glasgow Prestwick",CWL:"Cardiff",EXT:"Exeter",EMA:"East Midlands"};
+  document.getElementById("origin-input").value = (names[code]||code) + ` (${code})`;
+  document.getElementById("origin-iata").value = code;
   document.getElementById("nearby-airports").classList.remove("show");
+  setTimeout(()=>document.getElementById("dest-input")?.focus(), 50);
+}
+
+// Legacy function kept for backward compat
+function handleAC(q,listId,inputId,hiddenId){} 
+function showNearbyAirports(){
+  const iata = document.getElementById("origin-iata")?.value;
+  if(iata) showNearby(iata);
 }
 
 /* FLIGHT SEARCH */
@@ -3549,7 +3753,7 @@ function renderDeals(code){
     const dep=dealDate(3+i%3);
     const ret=new Date(dep);ret.setDate(ret.getDate()+7);
     const retStr=ret.toISOString().slice(0,10);
-    const url=`https://www.jetradar.com/search/${code}${d.iata}${dep.replace(/-/g,"").slice(4)}${retStr.replace(/-/g,"").slice(4)}11?adults=1&currency=GBP&locale=en&marker=${MARKER}`;
+    const url=`https://www.jetradar.com/search/${code}${_ddmm(dep)}${d.iata}${_ddmm(retStr)}11?adults=1&currency=GBP&locale=en&marker=${MARKER}`;
     return`<a class="deal-card" href="${url}" target="_blank" rel="noopener" onclick="trackClick({event_type:'click',partner:'jetradar',section:'trending',price:parseInt('${d.price}'.replace(/[^0-9]/g,''))||99})">
       <div class="deal-img-wrap">
         <img src="${d.img}" alt="${d.dest}" loading="lazy" onerror="this.parentElement.style.background='var(--c3)';this.remove()"/>
@@ -3680,7 +3884,7 @@ function buildTicker(){
   const _td=(()=>{const d=new Date();d.setDate(d.getDate()+21);while(d.getDay()!==2)d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})();
   const _tr=(()=>{const d=new Date(_td);d.setDate(d.getDate()+7);return d.toISOString().slice(0,10);})();
   track.innerHTML=items.map(d=>{
-    const url=`https://www.jetradar.com/search/${d.o}${d.d}${_td.replace(/-/g,"").slice(4)}${_tr.replace(/-/g,"").slice(4)}11?adults=1&currency=GBP&locale=en&marker=${MARKER}`;
+    const url=`https://www.jetradar.com/search/${d.o}${_ddmm(_td)}${d.d}${_ddmm(_tr)}11?adults=1&currency=GBP&locale=en&marker=${MARKER}`;
     return`<span class="ticker-item" onclick="window.open('${url}','_blank','noopener')">✈️ ${d.r} <span class="t-price">${d.p}</span> ${d.a} <span class="ticker-dot">●</span></span>`;
   }).join("");
 }
@@ -3772,7 +3976,7 @@ function renderFallbackDeals(origin){
     const ret=new Date(dep);ret.setDate(ret.getDate()+7);
     const retStr=ret.toISOString().slice(0,10);
     const rawPrice=parseInt(d.price.replace(/[^0-9]/g,""))||99;
-    const url=`https://www.jetradar.com/search/${origin}${d.iata}${dep.replace(/-/g,"").slice(4)}${retStr.replace(/-/g,"").slice(4)}11?adults=1&currency=GBP&locale=en&marker=${MARKER}`;
+    const url=`https://www.jetradar.com/search/${origin}${_ddmm(dep)}${d.iata}${_ddmm(retStr)}11?adults=1&currency=GBP&locale=en&marker=${MARKER}`;
     return`<a class="deal-card-v2" href="${url}" target="_blank" rel="noopener" onclick="trackClick({event_type:'click',partner:'jetradar',section:'top_deals_fallback',price:${rawPrice}})">
       <div class="deal-img-wrap">
         <img src="${DEST_PHOTOS[d.iata]||d.img}" alt="${d.dest}" loading="lazy" onerror="this.src='${d.img}'">
@@ -4846,7 +5050,8 @@ function buildWeatherRow(daily){
 async function searchPackages(){
   const originIata = document.getElementById("pkg-origin-iata").value || "LHR";
   const destInput  = document.getElementById("pkg-dest-input").value.trim();
-  const destIata   = document.getElementById("pkg-dest-iata").value;
+  const destIata   = document.getElementById("pkg-dest-iata").value ||
+    (document.getElementById("pkg-dest-input")?.value?.match(/\(([A-Z]{3})\)/)||[])[1] || "";
   const fromDate   = document.getElementById("pkg-from").value;
   const toDate     = document.getElementById("pkg-to").value;
   const pax        = parseInt(document.getElementById("pkg-pax").value)||1;
@@ -6326,14 +6531,29 @@ function setSearchType(type){
 
 function addMCLeg(){
   if(_mcLegCount>=5){ toast("Maximum 5 flights for multi-city search"); return; }
-  const legs  = document.getElementById("mc-legs");
-  const div   = document.createElement("div");
-  div.className="mc-leg"; div.dataset.leg=_mcLegCount;
-  div.innerHTML=`<input class="search-input" placeholder="From" id="mc-from-${_mcLegCount}" autocomplete="off">
-    <input class="search-input" placeholder="To" id="mc-to-${_mcLegCount}" autocomplete="off">
-    <input class="search-input" type="date" id="mc-date-${_mcLegCount}" style="max-width:140px">
-    <button class="btn-remove-leg" onclick="removeMCLeg(${_mcLegCount})">✕</button>`;
+  const legs = document.getElementById("mc-legs");
+  const n = _mcLegCount;
+  const div = document.createElement("div");
+  div.className="mc-leg"; div.dataset.leg=n;
+  div.innerHTML=`
+    <div style="position:relative;flex:1;min-width:120px">
+      <input class="search-input" placeholder="From" id="mc-from-${n}" style="width:100%" autocomplete="off"
+        oninput="handleAutocomplete(this,'mc-from-${n}')" onfocus="handleFocus(this,'mc-from-${n}')">
+      <input type="hidden" id="mc-from-${n}-iata" value="">
+      <div class="autocomplete-list" id="mc-from-${n}-ac"></div>
+    </div>
+    <div style="position:relative;flex:1;min-width:120px">
+      <input class="search-input" placeholder="To" id="mc-to-${n}" style="width:100%" autocomplete="off"
+        oninput="handleAutocomplete(this,'mc-to-${n}')" onfocus="handleFocus(this,'mc-to-${n}')">
+      <input type="hidden" id="mc-to-${n}-iata" value="">
+      <div class="autocomplete-list" id="mc-to-${n}-ac"></div>
+    </div>
+    <input class="search-input" type="date" id="mc-date-${n}" style="max-width:140px">
+    <button class="btn-remove-leg" onclick="removeMCLeg(${n})">✕</button>`;
   legs?.appendChild(div);
+  // Register the new leg in AC_CONFIG
+  AC_CONFIG[`mc-from-${n}`] = {inputId:`mc-from-${n}`,hiddenId:`mc-from-${n}-iata`,listId:`mc-from-${n}-ac`,type:"origin"};
+  AC_CONFIG[`mc-to-${n}`]   = {inputId:`mc-to-${n}`,  hiddenId:`mc-to-${n}-iata`,  listId:`mc-to-${n}-ac`,  type:"dest"};
   _mcLegCount++;
 }
 
@@ -6344,15 +6564,23 @@ function removeMCLeg(idx){
 function searchMultiCity(){
   const legs=[];
   for(let i=0;i<_mcLegCount;i++){
-    const from=document.getElementById(`mc-from-${i}`)?.value?.trim();
-    const to  =document.getElementById(`mc-to-${i}`)?.value?.trim();
-    const date=document.getElementById(`mc-date-${i}`)?.value;
-    if(from && to) legs.push({from,to,date});
+    // Prefer hidden IATA, fall back to parsing text input
+    const fromIata = document.getElementById(`mc-from-${i}-iata`)?.value?.trim().toUpperCase() ||
+                     (document.getElementById(`mc-from-${i}`)?.value?.match(/\(([A-Z]{3})\)/)||[])[1] ||
+                     document.getElementById(`mc-from-${i}`)?.value?.trim().toUpperCase().slice(0,3);
+    const toIata   = document.getElementById(`mc-to-${i}-iata`)?.value?.trim().toUpperCase() ||
+                     (document.getElementById(`mc-to-${i}`)?.value?.match(/\(([A-Z]{3})\)/)||[])[1] ||
+                     document.getElementById(`mc-to-${i}`)?.value?.trim().toUpperCase().slice(0,3);
+    const date     = document.getElementById(`mc-date-${i}`)?.value;
+    if(fromIata && toIata) legs.push({from:fromIata, to:toIata, date});
   }
-  if(legs.length<2){ toast("Please enter at least 2 flights"); return; }
+  if(legs.length<2){ toast("Please add at least 2 flights for multi-city search"); return; }
 
-  // Build JetRadar multi-city URL for UK users
-  const legStrings = legs.map(leg=>`${leg.from.toUpperCase().slice(0,3)}-${leg.to.toUpperCase().slice(0,3)}-${leg.date||""}`).join(",");
+  // Build JetRadar multi-city URL
+  const legStrings = legs.map(leg => {
+    const dd = leg.date ? _ddmm(leg.date) : "";
+    return dd ? `${leg.from}${dd}${leg.to}` : `${leg.from}-${leg.to}`;
+  }).join(",");
   const url=`https://www.jetradar.com/flights/?marker=${MARKER}&currency=GBP&locale=en&multi_city=${encodeURIComponent(legStrings)}&adults=1`;
   trackClick({event_type:"click",partner:"jetradar",section:"multi-city"});
   window.open(url,"_blank","noopener");
@@ -6718,8 +6946,8 @@ function renderDealDiscovery(type) {
 function buildBookingUrl_safe(origin, dest, dep, ret, adults) {
   // Always use date-encoded deep link so JetRadar pre-fills the search
   if(dep && ret){
-    const d=dep.replace(/-/g,"").slice(4); // MMDD
-    const r=ret.replace(/-/g,"").slice(4);
+    const d=_ddmm(dep);
+    const r=_ddmm(ret);
     return `https://www.jetradar.com/search/${origin}${d}${dest}${r}${adults}1?adults=${adults}&currency=GBP&locale=en&marker=${MARKER}`;
   }
   return `https://www.jetradar.com/search/${origin}${dest}?adults=${adults}&currency=GBP&locale=en&marker=${MARKER}`;
@@ -6757,7 +6985,7 @@ function shareToWhatsApp(origin, dest, price) {
   // Build a date-encoded share URL so recipients see the deal pre-filled
   const _dep=(()=>{const d=new Date();d.setDate(d.getDate()+21);while(d.getDay()!==2)d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})();
   const _ret=(()=>{const d=new Date(_dep);d.setDate(d.getDate()+7);return d.toISOString().slice(0,10);})();
-  const _d=_dep.replace(/-/g,"").slice(4),_r=_ret.replace(/-/g,"").slice(4);
+  const _d=_ddmm(_dep),_r=_ddmm(_ret);
   const url  = `https://www.jetradar.com/search/${origin}${_d}${dest}${_r}11?adults=1&currency=GBP&locale=en&marker=${MARKER}`;
   const text = `✈️ Found a great deal! ${origin} → ${dest} from £${price}pp — check it out on TripHunt`;
   window.open(`https://wa.me/?text=${encodeURIComponent(text + "\n" + url)}`, "_blank");
