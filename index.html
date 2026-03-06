@@ -2883,20 +2883,24 @@ function switchTab(id,btn){
 }
 
 /* DEEP LINKS */
+function _defaultDep(){
+  // Always supply a default date if none given — 3 weeks out, nearest Tuesday
+  const d=new Date();d.setDate(d.getDate()+21);
+  while(d.getDay()!==2)d.setDate(d.getDate()+1);
+  return d.toISOString().slice(0,10);
+}
+function _defaultRet(dep){
+  const d=new Date(dep);d.setDate(d.getDate()+7);return d.toISOString().slice(0,10);
+}
 function aviasalesUrl(o,d,date,adults=1,retDate=""){
   // JetRadar URL format for UK users - preserves TravelPayouts affiliate tracking
-  const params = new URLSearchParams({
-    origin: o,
-    destination: d,
-    adults: adults,
-    currency: "GBP",
-    locale: "en",
-    marker: MARKER,
-    ...(date && { depart_date: date }),
-    ...(retDate && { return_date: retDate }),
-    ...(!retDate && { one_way: "true" }),
-  });
-  return `https://www.jetradar.com/flights/?${params.toString()}`;
+  // Always encode dates so JetRadar pre-fills origin/dest/dates/pax
+  const dep = date || _defaultDep();
+  const ret = retDate || _defaultRet(dep);
+  const dd = dep.replace(/-/g,"").slice(4);  // MMDD
+  const rd = ret.replace(/-/g,"").slice(4);  // MMDD
+  // Use path-encoded format: /search/LHR0106BCN0806{adults}1
+  return `https://www.jetradar.com/search/${o}${dd}${d}${rd}${adults}1?adults=${adults}&currency=GBP&locale=en&marker=${MARKER}`;
 }
 function flightSearchUrl(o,d,date,adults=1,retDate=""){ return aviasalesUrl(o,d,date,adults,retDate); }
 function flightTicketUrl(o,d,date,adults=1,retDate=""){ return aviasalesUrl(o,d,date,adults,retDate); }
@@ -3184,7 +3188,7 @@ async function searchFlights(){
         <div style="font-size:40px;margin-bottom:12px">✈️</div>
         <div style="font-size:18px;font-weight:700;margin-bottom:8px">No direct results found</div>
         <div style="font-size:13px;color:var(--txt2);margin-bottom:20px">Try different dates or use the flexible calendar below</div>
-        <a href="${flightSearchUrl(originIata,destIata,"",adults)}" target="_blank" rel="noopener" class="btn-search" style="display:inline-flex;width:auto;padding:12px 28px">Search on JetRadar →</a>
+        <a href="${flightSearchUrl(originIata,destIata,date||"",adults,returnDate||"")}" target="_blank" rel="noopener" class="btn-search" style="display:inline-flex;width:auto;padding:12px 28px">Search on JetRadar →</a>
       </div>`;
     addHackerFare(originIata, destIata, date, adults, grid, destName);
   } else {
@@ -3534,8 +3538,19 @@ function selectAirport(code,btn){
 function renderDeals(code){
   const grid=document.getElementById("deals-grid");
   const deals=TRENDING[code]||TRENDING.LHR;
-  grid.innerHTML=deals.map(d=>`
-    <a class="deal-card" href="${flightSearchUrl(code,d.iata,'',1)}" target="_blank" rel="noopener">
+  // Generate a real departure date ~3 weeks out on a Tuesday, return 7 days later
+  function dealDate(weeksOut){
+    const d=new Date();d.setDate(d.getDate()+weeksOut*7);
+    while(d.getDay()!==2)d.setDate(d.getDate()+1);
+    return d.toISOString().slice(0,10);
+  }
+  function fmtDate(s){return new Date(s).toLocaleDateString("en-GB",{day:"numeric",month:"short"});}
+  grid.innerHTML=deals.map((d,i)=>{
+    const dep=dealDate(3+i%3);
+    const ret=new Date(dep);ret.setDate(ret.getDate()+7);
+    const retStr=ret.toISOString().slice(0,10);
+    const url=`https://www.jetradar.com/search/${code}${d.iata}${dep.replace(/-/g,"").slice(4)}${retStr.replace(/-/g,"").slice(4)}11?adults=1&currency=GBP&locale=en&marker=${MARKER}`;
+    return`<a class="deal-card" href="${url}" target="_blank" rel="noopener" onclick="trackClick({event_type:'click',partner:'jetradar',section:'trending',price:parseInt('${d.price}'.replace(/[^0-9]/g,''))||99})">
       <div class="deal-img-wrap">
         <img src="${d.img}" alt="${d.dest}" loading="lazy" onerror="this.parentElement.style.background='var(--c3)';this.remove()"/>
         <div class="deal-img-overlay"></div>
@@ -3543,10 +3558,12 @@ function renderDeals(code){
       </div>
       <div class="deal-body">
         <div class="deal-dest-name">${d.dest}</div>
-        <div class="deal-from">from ${code} · Economy</div>
+        <div class="deal-from">✈ ${code} → ${d.iata} · 1 adult · Economy</div>
+        <div style="font-size:11px;font-weight:700;color:var(--txt);margin:4px 0 2px">📅 ${fmtDate(dep)} → ${fmtDate(retStr)}</div>
         <div class="deal-tags">${d.tags.map(t=>`<span class="deal-tag">${t}</span>`).join("")}</div>
       </div>
-    </a>`).join("");
+    </a>`;
+  }).join("");
 }
 
 /* GHOST NOTIFICATION */
@@ -3659,7 +3676,13 @@ function toggleFAQ(btn){btn.closest(".faq-item").classList.toggle("open")}
 function buildTicker(){
   const track=document.getElementById("ticker-track");
   const items=[...TICKER,...TICKER];
-  track.innerHTML=items.map(d=>`<span class="ticker-item" onclick="window.open('${flightSearchUrl(d.o,d.d,'')}','_blank','noopener')">✈️ ${d.r} <span class="t-price">${d.p}</span> ${d.a} <span class="ticker-dot">●</span></span>`).join("");
+  // Ticker uses a fixed ~3 week out departure
+  const _td=(()=>{const d=new Date();d.setDate(d.getDate()+21);while(d.getDay()!==2)d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})();
+  const _tr=(()=>{const d=new Date(_td);d.setDate(d.getDate()+7);return d.toISOString().slice(0,10);})();
+  track.innerHTML=items.map(d=>{
+    const url=`https://www.jetradar.com/search/${d.o}${d.d}${_td.replace(/-/g,"").slice(4)}${_tr.replace(/-/g,"").slice(4)}11?adults=1&currency=GBP&locale=en&marker=${MARKER}`;
+    return`<span class="ticker-item" onclick="window.open('${url}','_blank','noopener')">✈️ ${d.r} <span class="t-price">${d.p}</span> ${d.a} <span class="ticker-dot">●</span></span>`;
+  }).join("");
 }
 
 /* TODAY'S TOP DEALS */
@@ -3742,8 +3765,15 @@ async function loadTopDeals(){
 function renderFallbackDeals(origin){
   const deals=TRENDING[origin]||TRENDING.LHR;
   const originFull=AIRPORT_NAMES[origin]||origin;
-  return deals.slice(0,6).map(d=>`
-    <a class="deal-card-v2" href="${flightSearchUrl(origin,d.iata,'',1)}" target="_blank" rel="noopener">
+  function dealDate(weeksOut){const d=new Date();d.setDate(d.getDate()+weeksOut*7);while(d.getDay()!==2)d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);}
+  function fmtDate(s){return new Date(s).toLocaleDateString("en-GB",{day:"numeric",month:"short"});}
+  return deals.slice(0,6).map((d,i)=>{
+    const dep=dealDate(3+i%3);
+    const ret=new Date(dep);ret.setDate(ret.getDate()+7);
+    const retStr=ret.toISOString().slice(0,10);
+    const rawPrice=parseInt(d.price.replace(/[^0-9]/g,""))||99;
+    const url=`https://www.jetradar.com/search/${origin}${d.iata}${dep.replace(/-/g,"").slice(4)}${retStr.replace(/-/g,"").slice(4)}11?adults=1&currency=GBP&locale=en&marker=${MARKER}`;
+    return`<a class="deal-card-v2" href="${url}" target="_blank" rel="noopener" onclick="trackClick({event_type:'click',partner:'jetradar',section:'top_deals_fallback',price:${rawPrice}})">
       <div class="deal-img-wrap">
         <img src="${DEST_PHOTOS[d.iata]||d.img}" alt="${d.dest}" loading="lazy" onerror="this.src='${d.img}'">
         <div class="deal-img-overlay"></div>
@@ -3751,12 +3781,13 @@ function renderFallbackDeals(origin){
       </div>
       <div class="deal-body">
         <div class="deal-dest-name">${d.dest}</div>
-        <div class="deal-airport">from ${originFull} · Economy</div>
+        <div class="deal-airport">✈ ${originFull} → ${d.iata} · 1 adult · Economy</div>
+        <div style="font-size:11px;font-weight:700;color:var(--txt);margin:4px 0 2px">📅 ${fmtDate(dep)} → ${fmtDate(retStr)}</div>
         <div class="deal-tags">${d.tags.map(t=>`<span class="deal-tag">${t}</span>`).join("")}</div>
       </div>
       <div class="deal-sparkline">
         <div class="deal-sparkline-label">30-day price trend</div>
-        ${buildSparkline(parseInt(d.price.replace('£',''))||99)}
+        ${buildSparkline(rawPrice)}
       </div>
     </a>`).join("");
 }
@@ -6684,7 +6715,12 @@ function renderDealDiscovery(type) {
 }
 
 function buildBookingUrl_safe(origin, dest, dep, ret, adults) {
-  const MARKER = "499405";
+  // Always use date-encoded deep link so JetRadar pre-fills the search
+  if(dep && ret){
+    const d=dep.replace(/-/g,"").slice(4); // MMDD
+    const r=ret.replace(/-/g,"").slice(4);
+    return `https://www.jetradar.com/search/${origin}${d}${dest}${r}${adults}1?adults=${adults}&currency=GBP&locale=en&marker=${MARKER}`;
+  }
   return `https://www.jetradar.com/search/${origin}${dest}?adults=${adults}&currency=GBP&locale=en&marker=${MARKER}`;
 }
 
@@ -6717,8 +6753,11 @@ function subscribeAlerts() {
 
 /* ════ TASK 11: WHATSAPP SHARE ON FLIGHT CARDS ════════════════ */
 function shareToWhatsApp(origin, dest, price) {
-  const MARKER = "499405";
-  const url  = `https://www.jetradar.com/search/${origin}${dest}?currency=GBP&locale=en&marker=${MARKER}`;
+  // Build a date-encoded share URL so recipients see the deal pre-filled
+  const _dep=(()=>{const d=new Date();d.setDate(d.getDate()+21);while(d.getDay()!==2)d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})();
+  const _ret=(()=>{const d=new Date(_dep);d.setDate(d.getDate()+7);return d.toISOString().slice(0,10);})();
+  const _d=_dep.replace(/-/g,"").slice(4),_r=_ret.replace(/-/g,"").slice(4);
+  const url  = `https://www.jetradar.com/search/${origin}${_d}${dest}${_r}11?adults=1&currency=GBP&locale=en&marker=${MARKER}`;
   const text = `✈️ Found a great deal! ${origin} → ${dest} from £${price}pp — check it out on TripHunt`;
   window.open(`https://wa.me/?text=${encodeURIComponent(text + "\n" + url)}`, "_blank");
 }

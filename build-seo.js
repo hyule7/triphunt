@@ -108,7 +108,112 @@ const AIRPORTS = [
   { code:"MEL", name:"Melbourne Airport",          city:"Melbourne",     country:"Australia",       lat:-37.67,  lon:144.84             },
   { code:"AKL", name:"Auckland Airport",           city:"Auckland",      country:"New Zealand",     lat:-37.01,  lon:174.79             },
   { code:"MRU", name:"Mauritius Sir Seewoosagur",  city:"Mauritius",     country:"Mauritius",       lat:-20.43,  lon:57.68              },
-  { code:"SEZ", name:"Seychelles International",   city:"Mahe",          country:"Seychelles",      lat:-4.67,   lon:55.52              },
+  { code:"SEZ", name:"Seychelles International Airport", city:"Mahe",          country:"Seychelles",     lat:-4.67,  lon:55.52  },
+  { code:"ACE", name:"Lanzarote Airport",            city:"Lanzarote",     country:"Spain",           lat:28.95,  lon:-13.61 },
+  { code:"FUE", name:"Fuerteventura Airport",        city:"Fuerteventura", country:"Spain",           lat:28.45,  lon:-13.86 },
+  { code:"GRX", name:"Granada Airport",              city:"Granada",       country:"Spain",           lat:37.19,  lon:-3.79  },
+  { code:"MAH", name:"Menorca Airport",              city:"Menorca",       country:"Spain",           lat:39.86,  lon:4.22   },
+  { code:"ORY", name:"Paris Orly Airport",           city:"Paris",         country:"France",          lat:48.72,  lon:2.36   },
+  { code:"NCE", name:"Nice Cote d'Azur Airport",     city:"Nice",          country:"France",          lat:43.66,  lon:7.22   },
+  { code:"MRS", name:"Marseille Provence Airport",   city:"Marseille",     country:"France",          lat:43.44,  lon:5.21   },
+  { code:"LYS", name:"Lyon Saint-Exupery Airport",   city:"Lyon",          country:"France",          lat:45.73,  lon:5.09   },
+  { code:"BOD", name:"Bordeaux Merignac Airport",    city:"Bordeaux",      country:"France",          lat:44.83,  lon:-0.72  },
+  { code:"TLS", name:"Toulouse Blagnac Airport",     city:"Toulouse",      country:"France",          lat:43.63,  lon:1.37   },
+  { code:"NTE", name:"Nantes Atlantique Airport",    city:"Nantes",        country:"France",          lat:47.15,  lon:-1.61  },
+  { code:"CIA", name:"Rome Ciampino Airport",        city:"Rome",          country:"Italy",           lat:41.80,  lon:12.59  },
+  { code:"BGY", name:"Milan Bergamo Airport",        city:"Milan",         country:"Italy",           lat:45.67,  lon:9.70   },
+  { code:"NAP", name:"Naples International Airport", city:"Naples",        country:"Italy",           lat:40.89,  lon:14.29  },
+  { code:"VCE", name:"Venice Marco Polo Airport",    city:"Venice",        country:"Italy",           lat:45.51,  lon:12.35  },
+  { code:"CTA", name:"Catania Fontanarossa Airport", city:"Catania",       country:"Italy",           lat:37.47,  lon:15.07  },
+  { code:"PMO", name:"Palermo Falcone Airport",      city:"Palermo",       country:"Italy",           lat:38.18,  lon:13.10  },
+  { code:"BLQ", name:"Bologna Marconi Airport",      city:"Bologna",       country:"Italy",           lat:44.53,  lon:11.29  },
+  { code:"FLR", name:"Florence Peretola Airport",    city:"Florence",      country:"Italy",           lat:43.81,  lon:11.20  },
+  { code:"OPO", name:"Porto Francisco Sa Airport",   city:"Porto",         country:"Portugal",        lat:41.24,  lon:-8.68  },
+  { code:"FNC", name:"Madeira Airport",              city:"Madeira",       country:"Portugal",        lat:32.70,  lon:-16.78 },
+  { code:"CFU", name:"Corfu Ioannis Kapodistrias",   city:"Corfu",         country:"Greece",          lat:39.60,  lon:19.91  },
+  { code:"KGS", name:"Kos Island International",     city:"Kos",           country:"Greece",          lat:36.79,  lon:27.09  },
+  { code:"ZTH", name:"Zakynthos International",      city:"Zakynthos",     country:"Greece",          lat:37.75,  lon:20.88  },
+  { code:"JMK", name:"Mykonos Island Airport",       city:"Mykonos",       country:"Greece",          lat:37.44,  lon:25.35  },
+  { code:"JTR", name:"Santorini Thira Airport",      city:"Santorini",     country:"Greece",          lat:36.40,  lon:25.48  },
+  { code:"CHQ", name:"Chania International Airport", city:"Chania",        country:"Greece",          lat:35.53,  lon:24.15  },
+  { code:"HAM", name:"Hamburg Airport",              city:"Hamburg",       country:"Germany",         lat:53.63,  lon:10.01  },
+  { code:"DUS", name:"Dusseldorf Airport",           city:"Dusseldorf",    country:"Germany",         lat:51.29,  lon:6.77   },
+  { code:"CGN", name:"Cologne Bonn Airport",         city:"Cologne",       country:"Germany",         lat:50.87,  lon:7.14   },
+  { code:"STR", name:"Stuttgart Airport",            city:"Stuttgart",     country:"Germany",         lat:48.69,  lon:9.22   },
+  { code:"EIN", name:"Eindhoven Airport",            city:"Eindhoven",     country:"Netherlands",     lat:51.45,  lon:5.37   },
+  { code:"BRU", name:"Brussels Airport",             city:"Brussels",      country:"Belgium",         lat:50.90,  lon:4.48   },
+  { code:"BGO", name:"Bergen Airport",               city:"Bergen",        country:"Norway",          lat:60.29,  lon:5.22   },
+  { code:"GOT", name:"Gothenburg Landvetter Airport",city:"Gothenburg",    country:"Sweden",          lat:57.67,  lon:12.29  },
+  { code:"BLL", name:"Billund Airport",              city:"Billund",       country:"Denmark",         lat:55.74,  lon:9.15   },
+  { code:"RVN", name:"Rovaniemi Airport",            city:"Rovaniemi",     country:"Finland",         lat:66.56,  lon:25.83  },
+  { code:"GDN", name:"Gdansk Lech Walesa Airport",   city:"Gdansk",        country:"Poland",          lat:54.38,  lon:18.47  },
+  { code:"WRO", name:"Wroclaw Airport",              city:"Wroclaw",       country:"Poland",          lat:51.10,  lon:16.89  },
+  { code:"CLJ", name:"Cluj-Napoca Airport",          city:"Cluj-Napoca",   country:"Romania",         lat:46.79,  lon:23.69  },
+  { code:"VAR", name:"Varna Airport",                city:"Varna",         country:"Bulgaria",        lat:43.23,  lon:27.82  },
+  { code:"RIX", name:"Riga International Airport",   city:"Riga",          country:"Latvia",          lat:56.92,  lon:23.97  },
+  { code:"TLL", name:"Tallinn Airport",              city:"Tallinn",       country:"Estonia",         lat:59.41,  lon:24.83  },
+  { code:"VNO", name:"Vilnius Airport",              city:"Vilnius",       country:"Lithuania",       lat:54.63,  lon:25.28  },
+  { code:"LJU", name:"Ljubljana Airport",            city:"Ljubljana",     country:"Slovenia",        lat:46.22,  lon:14.45  },
+  { code:"TIA", name:"Tirana International Airport", city:"Tirana",        country:"Albania",         lat:41.41,  lon:19.72  },
+  { code:"PUY", name:"Pula Airport",                 city:"Pula",          country:"Croatia",         lat:44.89,  lon:13.92  },
+  { code:"ZAD", name:"Zadar Airport",                city:"Zadar",         country:"Croatia",         lat:44.11,  lon:15.35  },
+  { code:"SAW", name:"Istanbul Sabiha Gokcen",       city:"Istanbul",      country:"Turkey",          lat:40.90,  lon:29.31  },
+  { code:"ADB", name:"Izmir Adnan Menderes Airport", city:"Izmir",         country:"Turkey",          lat:38.29,  lon:27.16  },
+  { code:"AGA", name:"Agadir Al Massira Airport",    city:"Agadir",        country:"Morocco",         lat:30.32,  lon:-9.41  },
+  { code:"LXR", name:"Luxor International Airport",  city:"Luxor",         country:"Egypt",           lat:25.67,  lon:32.71  },
+  { code:"TUN", name:"Tunis Carthage Airport",       city:"Tunis",         country:"Tunisia",         lat:36.85,  lon:10.23  },
+  { code:"AUH", name:"Abu Dhabi International",      city:"Abu Dhabi",     country:"UAE",             lat:24.43,  lon:54.65  },
+  { code:"BAH", name:"Bahrain International Airport",city:"Manama",        country:"Bahrain",         lat:26.27,  lon:50.64  },
+  { code:"MCT", name:"Muscat International Airport", city:"Muscat",        country:"Oman",            lat:23.59,  lon:58.28  },
+  { code:"AMM", name:"Amman Queen Alia Airport",     city:"Amman",         country:"Jordan",          lat:31.72,  lon:35.99  },
+  { code:"RUH", name:"Riyadh King Khalid Airport",   city:"Riyadh",        country:"Saudi Arabia",    lat:24.96,  lon:46.70  },
+  { code:"JED", name:"Jeddah King Abdulaziz Airport",city:"Jeddah",        country:"Saudi Arabia",    lat:21.68,  lon:39.16  },
+  { code:"ABJ", name:"Abidjan Felix Houphouet",      city:"Abidjan",       country:"Ivory Coast",     lat:5.26,   lon:-3.93  },
+  { code:"ACC", name:"Accra Kotoka Airport",         city:"Accra",         country:"Ghana",           lat:5.61,   lon:-0.17  },
+  { code:"LOS", name:"Lagos Murtala Mohammed",       city:"Lagos",         country:"Nigeria",         lat:6.58,   lon:3.32   },
+  { code:"DAR", name:"Dar es Salaam Airport",        city:"Dar es Salaam", country:"Tanzania",        lat:-6.88,  lon:39.20  },
+  { code:"ADD", name:"Addis Ababa Bole Airport",     city:"Addis Ababa",   country:"Ethiopia",        lat:8.98,   lon:38.80  },
+  { code:"COK", name:"Kochi International Airport",  city:"Kochi",         country:"India",           lat:10.15,  lon:76.40  },
+  { code:"BLR", name:"Bengaluru Kempegowda Airport", city:"Bengaluru",     country:"India",           lat:13.20,  lon:77.71  },
+  { code:"HYD", name:"Hyderabad Rajiv Gandhi Airport",city:"Hyderabad",    country:"India",           lat:17.23,  lon:78.43  },
+  { code:"MAA", name:"Chennai International Airport",city:"Chennai",       country:"India",           lat:12.99,  lon:80.18  },
+  { code:"CNX", name:"Chiang Mai International",     city:"Chiang Mai",    country:"Thailand",        lat:18.77,  lon:98.96  },
+  { code:"DMK", name:"Bangkok Don Mueang Airport",   city:"Bangkok",       country:"Thailand",        lat:13.91,  lon:100.61 },
+  { code:"CGK", name:"Jakarta Soekarno Hatta",       city:"Jakarta",       country:"Indonesia",       lat:-6.13,  lon:106.65 },
+  { code:"HAN", name:"Hanoi Noi Bai Airport",        city:"Hanoi",         country:"Vietnam",         lat:21.22,  lon:105.81 },
+  { code:"SGN", name:"Ho Chi Minh City Airport",     city:"Ho Chi Minh City",country:"Vietnam",       lat:10.82,  lon:106.66 },
+  { code:"DAD", name:"Da Nang International Airport",city:"Da Nang",       country:"Vietnam",         lat:16.04,  lon:108.20 },
+  { code:"MNL", name:"Manila Ninoy Aquino Airport",  city:"Manila",        country:"Philippines",     lat:14.52,  lon:121.02 },
+  { code:"HND", name:"Tokyo Haneda Airport",         city:"Tokyo",         country:"Japan",           lat:35.55,  lon:139.78 },
+  { code:"KIX", name:"Osaka Kansai Airport",         city:"Osaka",         country:"Japan",           lat:34.43,  lon:135.24 },
+  { code:"ICN", name:"Seoul Incheon Airport",        city:"Seoul",         country:"South Korea",     lat:37.46,  lon:126.44 },
+  { code:"HKG", name:"Hong Kong International",      city:"Hong Kong",     country:"Hong Kong",       lat:22.31,  lon:113.91 },
+  { code:"PEK", name:"Beijing Capital Airport",      city:"Beijing",       country:"China",           lat:40.08,  lon:116.60 },
+  { code:"PVG", name:"Shanghai Pudong Airport",      city:"Shanghai",      country:"China",           lat:31.14,  lon:121.80 },
+  { code:"TPE", name:"Taipei Taoyuan Airport",       city:"Taipei",        country:"Taiwan",          lat:25.08,  lon:121.23 },
+  { code:"KTM", name:"Kathmandu Tribhuvan Airport",  city:"Kathmandu",     country:"Nepal",           lat:27.70,  lon:85.36  },
+  { code:"EWR", name:"New York Newark Airport",      city:"New York",      country:"USA",             lat:40.69,  lon:-74.17 },
+  { code:"BOS", name:"Boston Logan Airport",         city:"Boston",        country:"USA",             lat:42.37,  lon:-71.00 },
+  { code:"LAS", name:"Las Vegas Harry Reid Airport", city:"Las Vegas",     country:"USA",             lat:36.08,  lon:-115.15},
+  { code:"MCO", name:"Orlando International Airport",city:"Orlando",       country:"USA",             lat:28.43,  lon:-81.31 },
+  { code:"SEA", name:"Seattle Tacoma Airport",       city:"Seattle",       country:"USA",             lat:47.45,  lon:-122.31},
+  { code:"ATL", name:"Atlanta Hartsfield Airport",   city:"Atlanta",       country:"USA",             lat:33.64,  lon:-84.43 },
+  { code:"YUL", name:"Montreal Pierre Trudeau Airport",city:"Montreal",    country:"Canada",          lat:45.47,  lon:-73.74 },
+  { code:"GIG", name:"Rio de Janeiro Galeao Airport",city:"Rio de Janeiro",country:"Brazil",          lat:-22.81, lon:-43.25 },
+  { code:"EZE", name:"Buenos Aires Ezeiza Airport",  city:"Buenos Aires",  country:"Argentina",       lat:-34.82, lon:-58.54 },
+  { code:"SCL", name:"Santiago Arturo Merino Airport",city:"Santiago",     country:"Chile",           lat:-33.39, lon:-70.79 },
+  { code:"BOG", name:"Bogota El Dorado Airport",     city:"Bogota",        country:"Colombia",        lat:4.70,   lon:-74.15 },
+  { code:"LIM", name:"Lima Jorge Chavez Airport",    city:"Lima",          country:"Peru",            lat:-12.02, lon:-77.11 },
+  { code:"MBJ", name:"Montego Bay Sangster Airport", city:"Montego Bay",   country:"Jamaica",         lat:18.50,  lon:-77.91 },
+  { code:"BGI", name:"Bridgetown Grantley Adams",    city:"Bridgetown",    country:"Barbados",        lat:13.07,  lon:-59.49 },
+  { code:"PUJ", name:"Punta Cana International",     city:"Punta Cana",    country:"Dominican Republic",lat:18.57,lon:-68.36},
+  { code:"NAS", name:"Nassau Lynden Pindling Airport",city:"Nassau",       country:"Bahamas",         lat:25.04,  lon:-77.47 },
+  { code:"BNE", name:"Brisbane Airport",             city:"Brisbane",      country:"Australia",       lat:-27.38, lon:153.12 },
+  { code:"PER", name:"Perth Airport",                city:"Perth",         country:"Australia",       lat:-31.94, lon:115.97 },
+  { code:"ADL", name:"Adelaide Airport",             city:"Adelaide",      country:"Australia",       lat:-34.95, lon:138.53 },
+  { code:"CHC", name:"Christchurch International",   city:"Christchurch",  country:"New Zealand",     lat:-43.49, lon:172.53 },
+  { code:"PPT", name:"Papeete Faaa Airport",         city:"Tahiti",        country:"French Polynesia",lat:-17.55, lon:-149.61},
+  { code:"NAN", name:"Nadi International Airport",   city:"Nadi",          country:"Fiji",            lat:-17.76, lon:177.44 },
 ];
 
 const ROUTE_AVG = {
@@ -121,6 +226,18 @@ const ROUTE_AVG = {
   BJV:160,DOH:260,MRU:620,SEZ:680,HKG:490,ICN:550,KIX:600,SOF:120,OTP:115,
   WAW:95,KRK:90,BUD:100,CPH:120,ARN:130,OSL:125,HEL:130,ZRH:160,BRU:100,
   SPU:150,FRA:110,MUC:115,TXL:105,
+  ACE:165,FUE:170,GRX:145,MAH:135,ORY:88,MRS:110,LYS:115,BOD:110,TLS:108,
+  NTE:105,CIA:110,BGY:108,NAP:125,VCE:120,CTA:130,PMO:128,BLQ:118,FLR:122,
+  OPO:112,FNC:160,CFU:145,KGS:148,ZTH:145,JMK:165,JTR:165,CHQ:140,
+  HAM:108,DUS:112,CGN:108,STR:110,EIN:88,BGO:128,GOT:120,BLL:115,
+  RVN:145,GDN:92,WRO:93,CLJ:110,VAR:130,RIX:110,TLL:112,VNO:108,LJU:118,
+  TIA:120,PUY:148,ZAD:145,SAW:185,ADB:162,AGA:170,LXR:275,TUN:190,
+  AUH:275,BAH:290,MCT:300,AMM:265,RUH:340,JED:330,ABJ:520,ACC:510,LOS:530,
+  DAR:480,ADD:490,COK:450,BLR:440,HYD:445,MAA:448,CNX:530,DMK:510,CGK:580,
+  HAN:540,SGN:550,DAD:545,MNL:560,HND:615,PEK:580,PVG:575,TPE:570,KTM:520,
+  EWR:375,BOS:370,LAS:450,MCO:420,SEA:440,ATL:410,YUL:365,GIG:615,EZE:680,
+  SCL:690,BOG:620,LIM:650,MBJ:580,BGI:560,PUJ:570,NAS:545,BNE:790,PER:810,
+  ADL:795,CHC:845,PPT:890,NAN:820,
 };
 
 const AIRLINES = {
@@ -137,7 +254,67 @@ const AIRLINES = {
   "Italy":        ["ITA Airways","Ryanair","easyJet","British Airways"],
   "Portugal":     ["TAP Air Portugal","Ryanair","easyJet","Jet2"],
   "Germany":      ["Lufthansa","Ryanair","easyJet","British Airways"],
-  default:        ["British Airways","Emirates","Qatar Airways","Lufthansa"],
+  "France":        ["Air France","easyJet","British Airways","Ryanair"],
+  "Italy":         ["ITA Airways","Ryanair","easyJet","British Airways"],
+  "Netherlands":   ["KLM","easyJet","Ryanair","British Airways"],
+  "Belgium":       ["Brussels Airlines","Ryanair","easyJet","British Airways"],
+  "Norway":        ["Norwegian","British Airways","SAS","easyJet"],
+  "Sweden":        ["SAS","Norwegian","Ryanair","British Airways"],
+  "Denmark":       ["SAS","easyJet","Ryanair","British Airways"],
+  "Finland":       ["Finnair","British Airways","Norwegian","Ryanair"],
+  "Poland":        ["LOT","Ryanair","Wizz Air","easyJet"],
+  "Croatia":       ["easyJet","British Airways","Ryanair","Jet2"],
+  "Bulgaria":      ["Wizz Air","Ryanair","easyJet","British Airways"],
+  "Romania":       ["Wizz Air","Ryanair","TAROM","British Airways"],
+  "Czech Republic":["Czech Airlines","easyJet","Ryanair","British Airways"],
+  "Hungary":       ["Wizz Air","Ryanair","British Airways","easyJet"],
+  "Austria":       ["Austrian Airlines","easyJet","Ryanair","British Airways"],
+  "Switzerland":   ["Swiss","British Airways","easyJet","Edelweiss"],
+  "Qatar":         ["Qatar Airways","British Airways"],
+  "Saudi Arabia":  ["British Airways","Saudi Arabian Airlines","Virgin Atlantic"],
+  "Oman":          ["Oman Air","British Airways","Emirates"],
+  "Jordan":        ["Royal Jordanian","British Airways","easyJet"],
+  "Morocco":       ["Royal Air Maroc","easyJet","Ryanair","British Airways"],
+  "Egypt":         ["EgyptAir","easyJet","TUI Airways","Jet2"],
+  "Tunisia":       ["Tunisair","British Airways","TUI Airways","Jet2"],
+  "South Africa":  ["British Airways","Virgin Atlantic","South African Airways"],
+  "Kenya":         ["Kenya Airways","British Airways","Ethiopian Airlines"],
+  "Ethiopia":      ["Ethiopian Airlines","British Airways"],
+  "Ghana":         ["British Airways","Virgin Atlantic","Ethiopian Airlines"],
+  "Nigeria":       ["British Airways","Virgin Atlantic","Air Peace"],
+  "India":         ["British Airways","Air India","Jet2","Virgin Atlantic"],
+  "Sri Lanka":     ["SriLankan Airlines","British Airways","Emirates"],
+  "Maldives":      ["British Airways","Emirates","Qatar Airways","Sri Lankan"],
+  "Nepal":         ["Nepal Airlines","British Airways","Qatar Airways"],
+  "Thailand":      ["Thai Airways","British Airways","Emirates","Qatar Airways"],
+  "Indonesia":     ["Garuda","Singapore Airlines","Emirates","Qatar Airways"],
+  "Vietnam":       ["Vietnam Airlines","British Airways","Emirates","Qatar Airways"],
+  "Philippines":   ["Philippine Airlines","British Airways","Emirates"],
+  "Malaysia":      ["AirAsia","Malaysia Airlines","British Airways"],
+  "Cambodia":      ["Cambodia Angkor Air","British Airways","Qatar Airways"],
+  "Japan":         ["Japan Airlines","ANA","British Airways","Virgin Atlantic"],
+  "South Korea":   ["Korean Air","Asiana","British Airways"],
+  "Hong Kong":     ["Cathay Pacific","British Airways","Virgin Atlantic"],
+  "China":         ["Air China","British Airways","Virgin Atlantic"],
+  "Taiwan":        ["EVA Air","China Airlines","British Airways"],
+  "USA":           ["Virgin Atlantic","British Airways","American Airlines","Delta"],
+  "Canada":        ["Air Canada","British Airways","Virgin Atlantic","WestJet"],
+  "Mexico":        ["Aeromexico","British Airways","Virgin Atlantic","TUI"],
+  "Jamaica":       ["British Airways","Virgin Atlantic","TUI Airways","Jet2"],
+  "Barbados":      ["British Airways","Virgin Atlantic","TUI Airways","Jet2"],
+  "Dominican Republic":["British Airways","TUI Airways","Virgin Atlantic","Jet2"],
+  "Bahamas":       ["British Airways","Virgin Atlantic","American Airlines"],
+  "Brazil":        ["British Airways","LATAM","TAP Air Portugal","Virgin Atlantic"],
+  "Argentina":     ["British Airways","LATAM","Iberia","Air Europa"],
+  "Chile":         ["British Airways","LATAM","Iberia"],
+  "Colombia":      ["Avianca","British Airways","Iberia","Virgin Atlantic"],
+  "Peru":          ["LATAM","British Airways","Iberia","Air Europa"],
+  "Australia":     ["Qantas","British Airways","Singapore Airlines","Emirates"],
+  "New Zealand":   ["Air New Zealand","British Airways","Qantas","Singapore Airlines"],
+  "Fiji":          ["Fiji Airways","British Airways","Singapore Airlines"],
+  "Mauritius":     ["Air Mauritius","British Airways","Emirates","Air France"],
+  "Seychelles":    ["Air Seychelles","British Airways","Emirates","Qatar Airways"],
+  default:         ["British Airways","Emirates","Qatar Airways","Lufthansa"],
 };
 
 const MONTHS = [
@@ -180,6 +357,21 @@ function flightHrs(a,b){
 function write(p, html){
   fs.mkdirSync(path.dirname(p),{recursive:true});
   fs.writeFileSync(p, html, "utf8");
+}
+
+const MARKER = "499405";
+
+// Build a JetRadar deep-link with pre-filled dates/pax
+// Path format: /search/LHR0601BCN080111 (origin+MMDD+dest+MMDD+adults+1)
+function jrUrl(orig, dest, weeksOut=3, nights=7, adults=1){
+  const dep=new Date();
+  dep.setDate(dep.getDate()+weeksOut*7);
+  while(dep.getDay()!==2) dep.setDate(dep.getDate()+1);
+  const ret=new Date(dep);
+  ret.setDate(ret.getDate()+nights);
+  const dd=String(dep.getMonth()+1).padStart(2,'0')+String(dep.getDate()).padStart(2,'0');
+  const rd=String(ret.getMonth()+1).padStart(2,'0')+String(ret.getDate()).padStart(2,'0');
+  return `https://www.jetradar.com/search/${orig}${dd}${dest}${rd}${adults}1?adults=${adults}&currency=GBP&locale=en&marker=${MARKER}`;
 }
 
 // ─── Shared CSS ───────────────────────────────────────────────────────────────
@@ -346,7 +538,7 @@ ${header()}
   <div class="hero-label">✈️ ${o.code} → ${d.code} · ${d.country}</div>
   <h1 class="h1">Cheap Flights ${o.city} to <span class="dest">${d.city}</span><br>from <span class="price">£${cp}</span></h1>
   <p class="hsub">Compare 100+ airlines · Book in GBP · No hidden fees · Free price alerts</p>
-  <a href="/?origin=${o.code}&destination=${d.code}" class="sbtn">✈️ Search Flights Now</a>
+  <a href="${jrUrl(o.code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn" onclick="if(window.trackClick)trackClick({event_type:'click',partner:'jetradar',section:'seo_hero'})">✈️ See Live Prices on JetRadar →</a>
 </div></div>
 <div class="container">
   <div class="stats">
@@ -424,7 +616,7 @@ ${header()}
   <div class="hero-label">📅 ${m.label} · ${o.code} → ${d.code}</div>
   <h1 class="h1">${o.city} to <span class="dest">${d.city}</span><br>in <span class="dest">${m.label}</span> from <span class="price">£${mp}</span></h1>
   <p class="hsub">${m.peak?"Peak season — book early for best prices.":"Good value month — lower fares, fewer crowds."} Compare 100+ airlines.</p>
-  <a href="/?origin=${o.code}&destination=${d.code}" class="sbtn">✈️ Search ${m.label} Flights</a>
+  <a href="${jrUrl(o.code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn" onclick="if(window.trackClick)trackClick({event_type:'click',partner:'jetradar',section:'seo_month_hero'})">✈️ See ${m.label} Prices on JetRadar →</a>
 </div></div>
 <div class="container">
   <div class="stats">
@@ -475,7 +667,7 @@ ${header()}
   <div class="hero-label">✈️ Cheap Flights to ${d.country}</div>
   <h1 class="h1">Cheap Flights to <span class="dest">${d.city}</span><br>from <span class="price">£${cp}</span></h1>
   <p class="hsub">Compare from all UK airports · 100+ airlines · No hidden fees</p>
-  <a href="/?destination=${d.code}" class="sbtn">✈️ Find Cheapest Flights</a>
+  <a href="${jrUrl(UK[0].code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ See Cheapest Flights on JetRadar →</a>
 </div></div>
 <div class="container">
   <section class="sec">
@@ -512,7 +704,7 @@ ${header()}
   <div class="hero-label">✈️ ${o.name} · ${o.code}</div>
   <h1 class="h1">Flights from <span class="dest">${o.city}</span></h1>
   <p class="hsub">Search hundreds of destinations from ${o.name}. Compare 100+ airlines. No hidden fees.</p>
-  <a href="/?origin=${o.code}" class="sbtn">✈️ Search from ${o.city}</a>
+  <a href="${jrUrl(o.code,'BCN',3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ Search from ${o.city} on JetRadar →</a>
 </div></div>
 <div class="container">
   <section class="sec">
@@ -546,7 +738,7 @@ ${header()}
   <div class="hero-label">🛫 ${a.code} · ${a.city}, ${a.country}</div>
   <h1 class="h1"><span class="dest">${a.name}</span><br>Airport Guide</h1>
   <p class="hsub">Compare cheap flights from ${a.name}. 200+ destinations. No hidden fees.</p>
-  <a href="/?origin=${a.code}" class="sbtn">✈️ Search from ${a.code}</a>
+  <a href="${jrUrl(a.code,'BCN',3,7,1)}" target="_blank" rel="noopener" class="sbtn" onclick="if(window.trackClick)trackClick({event_type:'click',partner:'jetradar',section:'seo_airport'})">✈️ Search Flights from ${a.city} on JetRadar →</a>
 </div></div>
 <div class="container">
   <div class="stats">
@@ -582,7 +774,7 @@ ${header()}
   <div class="hero-label">🌍 ${d.country} · ${d.code}</div>
   <h1 class="h1"><span class="dest">${d.city}</span><br>Travel Guide</h1>
   <p class="hsub">Flights from £${cp} · ${d.name} · Compare 100+ airlines</p>
-  <a href="/?destination=${d.code}" class="sbtn">✈️ Find Flights to ${d.city}</a>
+  <a href="${jrUrl(UK[0].code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ Find Flights to ${d.city} on JetRadar →</a>
 </div></div>
 <div class="container">
   <div class="stats">
@@ -631,6 +823,110 @@ ${maps.map(s=>`  <sitemap>\n    <loc>${SITE_URL}${s}</loc>\n    <lastmod>${TODAY
 }
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
+// ─── bestTimePage ─────────────────────────────────────────────────────────────
+function bestTimePage(d){
+  const url=`/best-time-to-visit/${cSlug(d)}`;
+  const title=`Best Time to Visit ${d.city} | When to Go | TripHunt`;
+  const desc=`Plan your trip to ${d.city}. Find out the best time to visit, weather by month, peak seasons, and when to get the cheapest flights from the UK.`;
+  const pF=cheap(d);
+  const monthRows=MONTHS.map(m=>{
+    const p=Math.round(avg(d)*m.factor*0.72);
+    return `<div class="mpill ${m.peak?"peak":p<pF*1.1?"cheap":""}">${m.label}<strong>£${p}</strong>${m.peak?"🔥":"✅"}</div>`;
+  }).join("");
+  const schemas=[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":SITE_URL},
+    {"@type":"ListItem","position":2,"name":"Best Time to Visit","item":`${SITE_URL}/best-time-to-visit/`},
+    {"@type":"ListItem","position":3,"name":d.city,"item":`${SITE_URL}${url}`}
+  ]},faqSchema([
+    {q:`When is the best time to visit ${d.city}?`,a:`The best time to visit ${d.city} depends on your priorities. For cheapest flights, try ${cheapMonth(d)}. For best weather, the ideal time is typically spring or autumn when crowds are lower and prices more reasonable.`},
+    {q:`What is the cheapest month to fly to ${d.city}?`,a:`${cheapMonth(d)} is typically the cheapest month to fly from the UK to ${d.city}, with fares starting from £${pF}.`},
+  ])];
+  return `${head({title,desc,canonical:`${SITE_URL}${url}`,schema:schemas})}
+<body>${header()}
+<div class="container">${bcrumb([{n:"Home",u:"/"},{n:"Best Time to Visit",u:"/best-time-to-visit/"},{n:d.city,u:url}])}</div>
+<div class="hero"><div class="container">
+  <div class="hero-label">📅 When to Visit · ${d.city} · ${d.country}</div>
+  <h1 class="h1">Best Time to Visit <span class="dest">${d.city}</span></h1>
+  <p class="hsub">Month-by-month weather, prices and tips for visiting ${d.city} from the UK</p>
+  <a href="${jrUrl(UK[0].code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn" onclick="if(window.trackClick)trackClick({event_type:'click',partner:'jetradar',section:'seo_best_time'})">✈️ Find Cheap Flights to ${d.city} on JetRadar →</a>
+</div></div>
+<div class="container">
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Flights to ${d.city} by Month</h2><p class="sec-s">Green = cheapest · Orange = peak season</p></div>
+    <div class="months">${monthRows}</div>
+  </section>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Fly to ${d.city} from Your Nearest Airport</h2></div>
+    <div class="dgrid">${UK.slice(0,8).map(o=>`<a href="/flights/${cSlug(o)}-to-${cSlug(d)}" class="dcard"><div class="dcard-c">${o.city}</div><div class="dcard-n">${o.name}</div><div class="dcard-p">£${cheap(d)}</div><div class="dcard-l">to ${d.city}</div></a>`).join("")}</div>
+  </section>
+</div>${footer()}</body></html>`;
+}
+
+// ─── weekendPage ──────────────────────────────────────────────────────────────
+function weekendPage(o, dests){
+  const url=`/weekend-trips/${cSlug(o)}`;
+  const title=`Weekend Trips from ${o.city} | Cheap Short Breaks | TripHunt`;
+  const desc=`Find the best weekend breaks from ${o.city}. Compare cheap flights to Europe and beyond. Prices from £${cheap(dests[0]||FOREIGN[0])}.`;
+  const schemas=[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Home","item":SITE_URL},
+    {"@type":"ListItem","position":2,"name":"Weekend Trips","item":`${SITE_URL}/weekend-trips/`},
+    {"@type":"ListItem","position":3,"name":`From ${o.city}`,"item":`${SITE_URL}${url}`}
+  ]}];
+  return `${head({title,desc,canonical:`${SITE_URL}${url}`,schema:schemas})}
+<body>${header()}
+<div class="container">${bcrumb([{n:"Home",u:"/"},{n:"Weekend Trips",u:"/weekend-trips/"},{n:`From ${o.city}`,u:url}])}</div>
+<div class="hero"><div class="container">
+  <div class="hero-label">🏙️ Weekend Breaks · ${o.code}</div>
+  <h1 class="h1">Weekend Trips from <span class="dest">${o.city}</span></h1>
+  <p class="hsub">Compare cheap short break flights from ${o.name}. Perfect for 2–4 night getaways.</p>
+  <a href="${jrUrl(o.code,'BCN',2,3,1)}" target="_blank" rel="noopener" class="sbtn" onclick="if(window.trackClick)trackClick({event_type:'click',partner:'jetradar',section:'seo_weekend'})">✈️ Search Weekend Flights on JetRadar →</a>
+</div></div>
+<div class="container">
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Top Weekend Destinations from ${o.city}</h2><p class="sec-s">Easy 1–3 hour flights · European city breaks and beach getaways</p></div>
+    <div class="dgrid">${dests.map(d=>`<a href="/flights/${cSlug(o)}-to-${cSlug(d)}" class="dcard"><div class="dcard-c">${d.city}</div><div class="dcard-n">${d.country}</div><div class="dcard-p">£${cheap(d)}</div><div class="dcard-l">from ${o.city} · ${flightHrs(o,d)}</div></a>`).join("")}</div>
+  </section>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Weekend Trips from Other UK Airports</h2></div>
+    <div class="chips">${UK.filter(a=>a.code!==o.code).map(a=>`<a href="/weekend-trips/${cSlug(a)}" class="chip">✈️ From ${a.city}</a>`).join("")}</div>
+  </section>
+</div>${footer()}</body></html>`;
+}
+
+// ─── weekendIndexPage ─────────────────────────────────────────────────────────
+function weekendIndexPage(){
+  return `${head({title:"Weekend Breaks from the UK | Cheap Short Breaks | TripHunt",desc:"Find cheap weekend breaks from UK airports. Compare flights to 200+ destinations for the perfect 2–4 night getaway.",canonical:`${SITE_URL}/weekend-trips/`,schema:[]})}
+<body>${header()}
+<div class="hero"><div class="container">
+  <h1 class="h1">Weekend Breaks from the <span class="dest">UK</span></h1>
+  <p class="hsub">Short-haul flights for the perfect 2–4 night getaway. Compare prices from all major UK airports.</p>
+</div></div>
+<div class="container">
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Find Weekend Trips from Your Airport</h2></div>
+    <div class="dgrid">${UK.map(o=>`<a href="/weekend-trips/${cSlug(o)}" class="dcard"><div class="dcard-c">${o.city}</div><div class="dcard-n">${o.name}</div><div class="dcard-p">${o.code}</div></a>`).join("")}</div>
+  </section>
+</div>${footer()}</body></html>`;
+}
+
+// ─── cheapToIndexPage ─────────────────────────────────────────────────────────
+function cheapToIndexPage(){
+  const sorted=FOREIGN.sort((a,b)=>(ROUTE_AVG[a.code]||999)-(ROUTE_AVG[b.code]||999));
+  return `${head({title:"Cheap Flights To | All Destinations | TripHunt",desc:"Find cheap flights to 200+ destinations from the UK. Compare prices and book with TripHunt.",canonical:`${SITE_URL}/cheap-flights-to/`,schema:[]})}
+<body>${header()}
+<div class="hero"><div class="container">
+  <h1 class="h1">Cheap Flights To <span class="dest">Everywhere</span></h1>
+  <p class="hsub">Browse every destination we cover. All prices from UK airports.</p>
+</div></div>
+<div class="container">
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">All Destinations</h2></div>
+    <div class="dgrid">${sorted.map(d=>`<a href="/cheap-flights-to/${cSlug(d)}" class="dcard"><div class="dcard-c">${d.city}</div><div class="dcard-n">${d.country}</div><div class="dcard-p">£${cheap(d)}</div><div class="dcard-l">from UK</div></a>`).join("")}</div>
+  </section>
+</div>${footer()}</body></html>`;
+}
+
+
 function main(){
   console.log("\n🚀 TripHunt SEO Engine");
   console.log(`📁 Output: ${SEO_OUT}`);
@@ -672,7 +968,7 @@ function main(){
       console.log("📅  Month pages...");
       let mc=0;
       mout: for(const o of HUBS){
-        for(const d of FOREIGN.slice(0,30)){
+        for(const d of FOREIGN){
           for(const m of MONTHS){
             if(total>=LIMIT) break mout;
             write(`${SEO_OUT}/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}/index.html`, monthPage(o,d,m));
@@ -724,6 +1020,34 @@ function main(){
       total++;
     }
     console.log(`   ✅ ${FOREIGN.length} destination pages`);
+
+    // Best-time-to-visit pages
+    console.log("📅  Best-time pages...");
+    for(const d of FOREIGN){
+      if(total>=LIMIT) break;
+      write(`${SEO_OUT}/best-time-to-visit/${cSlug(d)}/index.html`, bestTimePage(d));
+      destUrls.push({loc:`/best-time-to-visit/${cSlug(d)}/`,priority:"0.72",changefreq:"monthly"});
+      total++;
+    }
+    console.log(`   ✅ ${FOREIGN.length} best-time pages`);
+
+    // Weekend trip pages (UK hubs only)
+    console.log("🏙️   Weekend trip pages...");
+    let wc=0;
+    const weekendDests = FOREIGN.filter(d=>["Europe"].includes(d.region)||["Morocco","Tunisia"].includes(d.country)).slice(0,40);
+    for(const o of UK){
+      if(total>=LIMIT) break;
+      write(`${SEO_OUT}/weekend-trips/${cSlug(o)}/index.html`, weekendPage(o, weekendDests));
+      flightUrls.push({loc:`/weekend-trips/${cSlug(o)}/`,priority:"0.75",changefreq:"weekly"});
+      wc++;total++;
+    }
+    write(`${SEO_OUT}/weekend-trips/index.html`, weekendIndexPage());
+    flightUrls.push({loc:"/weekend-trips/",priority:"0.85",changefreq:"weekly"});
+    console.log(`   ✅ ${wc} weekend trip pages`);
+
+    // Cheap-flights-to index
+    write(`${SEO_OUT}/cheap-flights-to/index.html`, cheapToIndexPage());
+    destUrls.push({loc:"/cheap-flights-to/",priority:"0.88",changefreq:"daily"});
   }
 
   // Sitemaps
