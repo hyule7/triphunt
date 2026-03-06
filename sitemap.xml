@@ -1,0 +1,50 @@
+[build]
+  publish   = "."
+  functions = "netlify/functions"
+  command   = ""
+
+[build.processing]
+  skip_processing = true
+
+[functions]
+  node_bundler = "zisi"
+
+[functions.checkPriceAlerts]
+  schedule = "0 7 * * *"
+
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options        = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/flights/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=43200"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Cache-Control = "no-store"
