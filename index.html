@@ -146,7 +146,7 @@ body {
 
 /* ═══ HERO ════════════════════════════════════════════════════= */
 .hero {
-  position: relative; overflow: hidden;
+  position: relative;
   background: linear-gradient(160deg, #0a0f1e 0%, #0d1630 50%, #0a1428 100%);
   padding: 72px 24px 0;
   min-height: 420px;
@@ -188,7 +188,7 @@ body {
   position: relative; z-index: 10;
   width: 100%; max-width: 1100px;
   margin: 0 auto;
-  transform: translateY(32px);
+  padding-bottom: 40px;
 }
 .search-tabs {
   display: flex; gap: 4px; padding: 0 4px;
@@ -1536,7 +1536,7 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
   .nav-links { display: none; }
   .hero { padding: 48px 16px 0; min-height: 380px; }
   .hero h1 { font-size: 34px; }
-  .search-container { transform: translateY(24px); }
+  .search-container { padding-bottom: 24px; }
   .search-panel { border-radius: 0 var(--r16) var(--r16) var(--r16); padding: 16px; }
   .search-fields { grid-template-columns: 1fr 1fr; }
   .search-fields .btn-search { grid-column: 1 / -1; }
@@ -1817,9 +1817,6 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
     </div>
   </div>
 </section>
-
-<!-- spacer for transformed search box -->
-<div style="height: 48px"></div>
 
 <!-- ═══ RECENT SEARCHES ══════════════════════════════════════════ -->
 <div id="recent-searches">
@@ -2735,7 +2732,9 @@ function revealEl(el) {
   el.style.pointerEvents = '';
 }
 function initScrollReveal() {
-  const els = document.querySelectorAll('.sec-hdr, .pkg-card, .deal-card, .deal-card-v2, .flight-card-v2, .tool-card, .hiw-card, .tip-card');
+  // Only apply to static elements in HTML — NOT to dynamically rendered cards
+  // pkg-card, deal-card, deal-card-v2 are rendered by JS after this runs, so skip them
+  const els = document.querySelectorAll('.sec-hdr, .tool-card, .hiw-card, .tip-card');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) { revealEl(e.target); io.unobserve(e.target); }
@@ -2747,8 +2746,8 @@ function initScrollReveal() {
     el.style.pointerEvents = 'none';
     io.observe(el);
   });
-  // Fallback: force-reveal everything after 2s so nothing stays hidden/unclickable
-  setTimeout(() => { els.forEach(el => revealEl(el)); }, 2000);
+  // Fallback: force-reveal everything after 1.5s so nothing stays hidden/unclickable
+  setTimeout(() => { els.forEach(el => revealEl(el)); }, 1500);
 }
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(initScrollReveal, 300);
@@ -3245,8 +3244,15 @@ function renderItems(list, items, cfg, key, isPopular) {
   });
 }
 
-// Fetch from TravelPayouts autocomplete API
+// Fetch from TravelPayouts autocomplete API (with CORS fallback to local airport search)
 async function fetchAC(q, list, cfg, key) {
+  // First try local airport search (instant, no network needed)
+  const localResults = searchLocalAirports(q, cfg.type);
+  if (localResults.length) {
+    renderItems(list, localResults, cfg, key, false);
+    return;
+  }
+  // If no local match, try the external API
   try {
     const r = await fetch(`https://autocomplete.travelpayouts.com/places2?term=${encodeURIComponent(q)}&locale=en&types[]=airport&types[]=city`);
     if(!r.ok) { showPopular(list, cfg, key); return; }
@@ -3261,6 +3267,108 @@ async function fetchAC(q, list, cfg, key) {
   } catch(e) {
     showPopular(list, cfg, key);
   }
+}
+
+// Local airport search — searches UK_AIRPORTS + common destinations
+function searchLocalAirports(q, type) {
+  const term = q.toLowerCase();
+  const allAirports = [
+    // UK airports
+    {name:"London Heathrow",code:"LHR",sub:"London, UK"},
+    {name:"London Gatwick",code:"LGW",sub:"London, UK"},
+    {name:"London Stansted",code:"STN",sub:"London, UK"},
+    {name:"London Luton",code:"LTN",sub:"London, UK"},
+    {name:"London City",code:"LCY",sub:"London, UK"},
+    {name:"Manchester",code:"MAN",sub:"Manchester, UK"},
+    {name:"Edinburgh",code:"EDI",sub:"Edinburgh, UK"},
+    {name:"Birmingham",code:"BHX",sub:"Birmingham, UK"},
+    {name:"Bristol",code:"BRS",sub:"Bristol, UK"},
+    {name:"Glasgow",code:"GLA",sub:"Glasgow, UK"},
+    {name:"Leeds Bradford",code:"LBA",sub:"Leeds, UK"},
+    {name:"Newcastle",code:"NCL",sub:"Newcastle, UK"},
+    {name:"Liverpool",code:"LPL",sub:"Liverpool, UK"},
+    {name:"East Midlands",code:"EMA",sub:"Nottingham, UK"},
+    {name:"Belfast International",code:"BFS",sub:"Belfast, UK"},
+    {name:"Cardiff",code:"CWL",sub:"Cardiff, UK"},
+    {name:"Exeter",code:"EXT",sub:"Exeter, UK"},
+    {name:"Southampton",code:"SOU",sub:"Southampton, UK"},
+    {name:"Aberdeen",code:"ABZ",sub:"Aberdeen, UK"},
+    {name:"Inverness",code:"INV",sub:"Inverness, UK"},
+    // Popular destinations
+    {name:"Barcelona",code:"BCN",sub:"Spain"},
+    {name:"Madrid",code:"MAD",sub:"Spain"},
+    {name:"Malaga",code:"AGP",sub:"Spain"},
+    {name:"Palma de Mallorca",code:"PMI",sub:"Spain"},
+    {name:"Tenerife South",code:"TFS",sub:"Spain"},
+    {name:"Gran Canaria",code:"LPA",sub:"Spain"},
+    {name:"Lanzarote",code:"ACE",sub:"Spain"},
+    {name:"Alicante",code:"ALC",sub:"Spain"},
+    {name:"Amsterdam",code:"AMS",sub:"Netherlands"},
+    {name:"Dubai",code:"DXB",sub:"UAE"},
+    {name:"New York JFK",code:"JFK",sub:"USA"},
+    {name:"Los Angeles",code:"LAX",sub:"USA"},
+    {name:"Miami",code:"MIA",sub:"USA"},
+    {name:"Rome Fiumicino",code:"FCO",sub:"Italy"},
+    {name:"Milan Malpensa",code:"MXP",sub:"Italy"},
+    {name:"Naples",code:"NAP",sub:"Italy"},
+    {name:"Lisbon",code:"LIS",sub:"Portugal"},
+    {name:"Porto",code:"OPO",sub:"Portugal"},
+    {name:"Faro",code:"FAO",sub:"Portugal"},
+    {name:"Paris CDG",code:"CDG",sub:"France"},
+    {name:"Nice",code:"NCE",sub:"France"},
+    {name:"Athens",code:"ATH",sub:"Greece"},
+    {name:"Crete Heraklion",code:"HER",sub:"Greece"},
+    {name:"Rhodes",code:"RHO",sub:"Greece"},
+    {name:"Santorini",code:"JTR",sub:"Greece"},
+    {name:"Mykonos",code:"JMK",sub:"Greece"},
+    {name:"Corfu",code:"CFU",sub:"Greece"},
+    {name:"Prague",code:"PRG",sub:"Czech Republic"},
+    {name:"Vienna",code:"VIE",sub:"Austria"},
+    {name:"Budapest",code:"BUD",sub:"Hungary"},
+    {name:"Warsaw",code:"WAW",sub:"Poland"},
+    {name:"Krakow",code:"KRK",sub:"Poland"},
+    {name:"Dubrovnik",code:"DBV",sub:"Croatia"},
+    {name:"Split",code:"SPU",sub:"Croatia"},
+    {name:"Istanbul",code:"IST",sub:"Turkey"},
+    {name:"Antalya",code:"AYT",sub:"Turkey"},
+    {name:"Bodrum",code:"BJV",sub:"Turkey"},
+    {name:"Bangkok Suvarnabhumi",code:"BKK",sub:"Thailand"},
+    {name:"Phuket",code:"HKT",sub:"Thailand"},
+    {name:"Bali Denpasar",code:"DPS",sub:"Indonesia"},
+    {name:"Singapore Changi",code:"SIN",sub:"Singapore"},
+    {name:"Kuala Lumpur",code:"KUL",sub:"Malaysia"},
+    {name:"Tokyo Narita",code:"NRT",sub:"Japan"},
+    {name:"Tokyo Haneda",code:"HND",sub:"Japan"},
+    {name:"Sydney",code:"SYD",sub:"Australia"},
+    {name:"Melbourne",code:"MEL",sub:"Australia"},
+    {name:"Cape Town",code:"CPT",sub:"South Africa"},
+    {name:"Nairobi",code:"NBO",sub:"Kenya"},
+    {name:"Marrakech",code:"RAK",sub:"Morocco"},
+    {name:"Mexico City",code:"MEX",sub:"Mexico"},
+    {name:"Cancun",code:"CUN",sub:"Mexico"},
+    {name:"Toronto Pearson",code:"YYZ",sub:"Canada"},
+    {name:"Vancouver",code:"YVR",sub:"Canada"},
+    {name:"Delhi",code:"DEL",sub:"India"},
+    {name:"Mumbai",code:"BOM",sub:"India"},
+    {name:"Hong Kong",code:"HKG",sub:"Hong Kong"},
+    {name:"Seoul Incheon",code:"ICN",sub:"South Korea"},
+    {name:"Reykjavik Keflavik",code:"KEF",sub:"Iceland"},
+    {name:"Oslo",code:"OSL",sub:"Norway"},
+    {name:"Copenhagen",code:"CPH",sub:"Denmark"},
+    {name:"Stockholm Arlanda",code:"ARN",sub:"Sweden"},
+    {name:"Brussels",code:"BRU",sub:"Belgium"},
+    {name:"Zurich",code:"ZRH",sub:"Switzerland"},
+    {name:"Geneva",code:"GVA",sub:"Switzerland"},
+    {name:"Frankfurt",code:"FRA",sub:"Germany"},
+    {name:"Munich",code:"MUC",sub:"Germany"},
+    {name:"Berlin",code:"BER",sub:"Germany"},
+  ];
+
+  return allAirports.filter(a =>
+    a.name.toLowerCase().includes(term) ||
+    a.code.toLowerCase().includes(term) ||
+    a.sub.toLowerCase().includes(term)
+  ).slice(0, 8);
 }
 
 // Select an airport from the dropdown
@@ -4027,22 +4135,22 @@ async function loadTopDeals(){
   const origin=document.getElementById("top-deals-origin").value||"LHR";
   const grid=document.getElementById("top-deals-grid");
   const sub=document.getElementById("top-deals-sub");
-  const skel=`<div class="deal-skel"><div class="deal-skel-img"></div><div class="deal-skel-body"><div class="deal-skel-line" style="width:55%"></div><div class="deal-skel-line" style="width:35%"></div></div></div>`;
-  grid.innerHTML=Array(8).fill(skel).join("");
+
+  // Show fallback deals IMMEDIATELY — so cards are always visible without waiting for API
+  grid.innerHTML=renderFallbackDeals(origin);
+  if(sub) sub.textContent="Popular routes from "+origin+" · Prices updated regularly · Click to book";
+
+  // Then try to upgrade with live data from Netlify function
   try{
     const res=await fetch(`${FN_FLIGHTS}?type=top_deals&origin=${origin}&limit=12`);
-    if(!res.ok){ grid.innerHTML=renderFallbackDeals(origin); if(sub) sub.textContent="Popular routes · prices updated regularly"; return; }
+    if(!res.ok) return; // keep fallback shown above
     const text=await res.text();
     let data;
-    try{ data=JSON.parse(text); } catch(e){ throw new Error("Invalid JSON from server"); }
-    if(data.error) throw new Error(data.error);
+    try{ data=JSON.parse(text); } catch(e){ return; }
+    if(data.error) return;
     const raw=Array.isArray(data)?data:(data.data||data.prices||[]);
     const deals=raw.filter(d=>d&&(d.value||d.price)>0).slice(0,10);
-    if(!deals.length){
-      grid.innerHTML=renderFallbackDeals(origin);
-      sub.textContent="Showing popular routes · Live prices loading";
-      return;
-    }
+    if(!deals.length) return; // keep fallback shown above
     const destImg={};
     Object.values(TRENDING).flat().forEach(d=>{if(d.iata)destImg[d.iata]=d.img;});
     const fallback="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&q=80";
@@ -4095,8 +4203,7 @@ async function loadTopDeals(){
       ? `${deals.length} live fares from ${origin} · Dates confirmed · Click to book`
       : `${deals.length} popular routes from ${origin} · Prices updated regularly · Click to compare`;
   }catch(err){
-    grid.innerHTML=renderFallbackDeals(origin);
-    if(sub) sub.textContent="Popular routes · prices updated regularly";
+    // Keep the fallback that was already rendered above — don't show blank
   }
 }
 
