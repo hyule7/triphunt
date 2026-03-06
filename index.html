@@ -64,6 +64,7 @@ body {
 
 /* ── SELECTION ── */
 ::selection { background: rgba(37,99,235,.35); }
+:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 4px; }
 
 /* ═══ LAYOUT ═══════════════════════════════════════════════════ */
 .container { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
@@ -271,7 +272,8 @@ select.search-input { cursor: pointer; appearance: none; }
   transition: background .12s; color: var(--txt2); border-bottom: 1px solid var(--border);
 }
 .autocomplete-item:last-child { border-bottom: none; }
-.autocomplete-item:hover, .autocomplete-item:focus { background: var(--navy2); color: var(--txt); outline: none; }
+.autocomplete-item:hover, .autocomplete-item:focus, .autocomplete-item.focused { background: var(--navy2); color: var(--txt); outline: none; }
+.autocomplete-item.focused { border-left: 2px solid var(--acc); }
 .iata-badge {
   background: var(--navy3); color: var(--acc3);
   font-size: 10px; font-weight: 700; padding: 3px 7px;
@@ -1553,7 +1555,7 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
 <!-- ═══ GLOBAL LOADER ═══════════════════════════════════════════ -->
 <div id="global-loader">
   <div class="loader-ring"></div>
-  <div class="loader-text" id="loader-text">Searching flights…</div>
+  <div class="loader-text" id="loader-text" role="status" aria-live="polite">Searching flights…</div>
 </div>
 
 <!-- ═══ SITE NAV ════════════════════════════════════════════════ -->
@@ -1616,18 +1618,18 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
       </div>
 
       <!-- Main search fields -->
-      <div class="search-fields">
+      <div class="search-fields" role="search" aria-label="Flight search">
         <div class="field-wrap" style="position:relative">
           <label>From</label>
-          <input type="text" class="search-input" id="origin-input" placeholder="City or airport" autocomplete="off" oninput="handleAutocomplete(this,'origin')" onfocus="handleFocus(this,'origin')">
+          <input type="text" class="search-input" id="origin-input" placeholder="City or airport" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="list" aria-controls="origin-ac" role="combobox" autocomplete="off" oninput="handleAutocomplete(this,'origin')" onfocus="handleFocus(this,'origin')">
           <input type="hidden" id="origin-iata" value="LHR">
-          <div class="autocomplete-list" id="origin-ac"></div>
+          <div class="autocomplete-list" id="origin-ac" role="listbox" aria-label="Airport suggestions"></div>
         </div>
         <div class="field-wrap" style="position:relative">
           <label>To</label>
-          <input type="text" class="search-input" id="dest-input" placeholder="Anywhere" autocomplete="off" oninput="handleAutocomplete(this,'dest')" onfocus="handleFocus(this,'dest')">
+          <input type="text" class="search-input" id="dest-input" placeholder="Anywhere" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="list" aria-controls="dest-ac" role="combobox" autocomplete="off" oninput="handleAutocomplete(this,'dest')" onfocus="handleFocus(this,'dest')">
           <input type="hidden" id="dest-iata" value="">
-          <div class="autocomplete-list" id="dest-ac"></div>
+          <div class="autocomplete-list" id="dest-ac" role="listbox" aria-label="Destination suggestions"></div>
         </div>
         <div class="field-wrap">
           <label>Depart</label>
@@ -1635,7 +1637,8 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
         </div>
         <div class="field-wrap" id="return-date-wrap">
           <label>Return</label>
-          <input type="date" class="search-input" id="return-date">
+          <input type="date" class="search-input" id="return-date"
+            onchange="const d=document.getElementById('depart-date').value;if(d&&this.value<d)this.value=d">
         </div>
         <div class="field-wrap">
           <label>Passengers</label>
@@ -1908,7 +1911,7 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
 
       <!-- MAIN RESULTS -->
       <div class="results-main">
-        <div class="results-grid" id="results-grid"></div>
+        <div class="results-grid" id="results-grid" aria-live="polite" aria-label="Flight search results"></div>
       </div>
     </div>
 
@@ -2032,7 +2035,7 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
     <section class="contextual-section" id="ctx-section" style="display:none">
       <div class="collapsible-hdr" onclick="toggleSection('ctx-body','ctx-arrow')">
         <div>
-          <div class="sec-title">Everything You Need for <span id="ctx-dest">Your Trip</span></div>
+          <h2 class="sec-title">Everything You Need for <span id="ctx-dest">Your Trip</span></h2>
           <div class="sec-sub">Personalised add-ons</div>
         </div>
         <span class="collapsible-arrow" id="ctx-arrow" style="transform:rotate(-90deg)">▼</span>
@@ -2093,7 +2096,7 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
   <section class="homepage-section packages-section" id="packages-section">
     <div class="sec-hdr">
       <div>
-        <div class="sec-title">✈️🏨 Package Holidays from the UK</div>
+        <h2 class="sec-title">✈️🏨 Package Holidays from the UK</h2>
         <div class="sec-sub">Sorted cheapest first · Live flight prices + hotel + activities</div>
       </div>
       <button class="sec-alert-btn" onclick="openAlertModal({destName:'a package holiday',origin:'LHR',label:'Package Holiday Price'})">🔔 Price alert</button>
@@ -2178,7 +2181,7 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
   <section class="homepage-section" id="top-deals-section">
     <div class="sec-hdr">
       <div>
-        <div class="sec-title">✈️ Top Flight Deals</div>
+        <h2 class="sec-title">✈️ Top Flight Deals</h2>
         <div class="sec-sub" id="top-deals-sub">Live cheapest fares right now · updated hourly</div>
       </div>
       <select id="top-deals-origin" class="tool-select" onchange="loadTopDeals()">
@@ -2206,7 +2209,7 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
   <section class="homepage-section deal-discovery-section" id="deal-discovery-section">
     <div class="sec-hdr">
       <div>
-        <div class="sec-title">🔍 Deal Discovery Engine</div>
+        <h2 class="sec-title">🔍 Deal Discovery Engine</h2>
         <div class="sec-sub">Curated deals by category — updated daily</div>
       </div>
     </div>
@@ -2225,7 +2228,7 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
   <section class="homepage-section viral-tool-section" id="viral-tool-section">
     <div class="sec-hdr">
       <div>
-        <div class="sec-title">🗺️ Where Can I Fly for £___?</div>
+        <h2 class="sec-title">🗺️ Where Can I Fly for £___?</h2>
         <div class="sec-sub">Enter your budget and we'll show everywhere you can fly for less</div>
       </div>
     </div>
@@ -2304,7 +2307,7 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
   <section class="homepage-section tools-section" id="tools-section">
     <div class="sec-hdr">
       <div>
-        <div class="sec-title">🔧 Travel Tools</div>
+        <h2 class="sec-title">🔧 Travel Tools</h2>
         <div class="sec-sub">Free calculators for savvy travellers</div>
       </div>
     </div>
@@ -2415,7 +2418,7 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
   <section class="homepage-section tips-section" id="tips-section">
     <div class="sec-hdr">
       <div>
-        <div class="sec-title">💡 Flight Booking Tips</div>
+        <h2 class="sec-title">💡 Flight Booking Tips</h2>
         <div class="sec-sub">Insider knowledge to save you more</div>
       </div>
     </div>
@@ -2432,7 +2435,7 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
   <!-- ════ SECTION: FAQ ════════════════════════════════════════ -->
   <section class="homepage-section faq-section" id="faq-section">
     <div class="sec-hdr">
-      <div><div class="sec-title">❓ Frequently Asked Questions</div></div>
+      <div><h2 class="sec-title">❓ Frequently Asked Questions</h2></div>
     </div>
     <div class="faq-list">
       <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does TripHunt make money?<span class="faq-icon">+</span></div><div class="faq-a">We earn a small affiliate commission from our booking partners (like Aviasales, Booking.com, Klook) when you click through and make a booking. This never adds to your cost — you always pay the same price as booking directly. TripHunt is completely free to use.</div></div>
@@ -2448,7 +2451,7 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
   <section class="wishlist-sec homepage-section" id="wishlist-sec" style="display:none">
     <div class="wl-header">
       <div>
-        <div class="sec-title">❤️ Saved Packages</div>
+        <h2 class="sec-title">❤️ Saved Packages</h2>
         <div class="sec-sub"><span id="wishlist-count-line">0 saved</span></div>
       </div>
       <button class="btn-sm" onclick="wlClear()">Clear all</button>
@@ -2625,7 +2628,7 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
 
 <!-- Price Alert Modal -->
 <div class="alert-modal-bd" id="alert-modal-bd" onclick="if(event.target===this)closeAlertModal()">
-  <div class="alert-modal">
+  <div class="alert-modal" role="dialog" aria-modal="true" aria-label="Set price alert">
     <div id="am-form-state">
       <div class="am-title">🔔 Price Drop Alert</div>
       <div class="am-sub" id="am-sub-text">We will email you the moment this price drops.</div>
@@ -2776,15 +2779,7 @@ const VISA_DATA = {
   EU: { req: 'Visa-Free', cost: 'Free', link: null, note: 'UK passport — Schengen allows 90 days in any 180-day period.' },
   AE: { req: 'Visa on Arrival', cost: 'Free', link: null, note: 'UK passport — 30-day visa granted free at Dubai airport.' }
 };
-function checkVisa() {
-  const dest = document.getElementById('visa-dest')?.value;
-  const data = VISA_DATA[dest];
-  const result = document.getElementById('visa-result');
-  if (!data || !result) return;
-  result.style.display = 'block';
-  const isOk = data.req === 'Visa-Free' || data.req === 'Visa on Arrival' || data.req === 'Visa Exemption';
-  result.innerHTML = `<b>${data.req}</b> · ${data.cost}<br>${data.note}${data.link ? ` <a href="${data.link}" target="_blank" style="color:var(--acc3)">Apply here →</a>` : ''}`;
-}
+
 // Currency converter
 const FX_TOOL = { EUR: 1.17, USD: 1.27, THB: 44.2, JPY: 190, AED: 4.66, TRY: 40.5, MAD: 12.5, AUD: 1.95 };
 function convertCurrency() {
@@ -2908,8 +2903,8 @@ let ghostDealData=null,ghostTimer=null,priceChart=null,aiContext={};
 let lastOrigin="",lastDest="",lastDestName="",lastDate="";
 
 /* LOADER */
-function showLoader(m="Searching…"){document.getElementById("loader-text").textContent=m;document.getElementById("global-loader").classList.add("active")}
-function hideLoader(){document.getElementById("global-loader").classList.remove("active")}
+
+
 
 /* TABS */
 function switchTab(id,btn){
@@ -3123,6 +3118,12 @@ const AC_CONFIG = {
 
 let _acTimer = null;
 
+// Toggle aria-expanded on combobox inputs
+function _setExpanded(cfg, isOpen) {
+  const el = document.getElementById(cfg?.inputId);
+  if(el && el.hasAttribute("aria-expanded")) el.setAttribute("aria-expanded", isOpen ? "true" : "false");
+}
+
 // Called oninput on every search text field
 function handleAutocomplete(inputEl, key) {
   const q = inputEl.value.trim();
@@ -3163,8 +3164,9 @@ function showPopular(list, cfg, key) {
 
 // Render a list of results into the dropdown
 function renderItems(list, items, cfg, key, isPopular) {
-  if(!items.length) { list.innerHTML = ""; return; }
+  if(!items.length) { list.innerHTML = ""; _setExpanded(cfg, false); return; }
   list.innerHTML = "";
+  _setExpanded(cfg, true);
   if(isPopular) {
     const hdr = document.createElement("div");
     hdr.style.cssText = "padding:8px 14px 4px;font-size:10px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.7px";
@@ -3249,11 +3251,42 @@ document.addEventListener("mousedown", e => {
   });
 });
 
-// Close on ESC
+// Keyboard: ESC closes dropdowns, Enter submits search, Arrow keys navigate dropdown
 document.addEventListener("keydown", e => {
   if(e.key === "Escape") {
     document.querySelectorAll(".autocomplete-list").forEach(l => l.innerHTML = "");
+    return;
   }
+  // Arrow key navigation in open autocomplete lists
+  const openList = [...document.querySelectorAll(".autocomplete-list")].find(l => l.children.length > 0);
+  if(openList && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+    e.preventDefault();
+    const items = [...openList.querySelectorAll(".autocomplete-item")];
+    if(!items.length) return;
+    const focused = openList.querySelector(".autocomplete-item.focused");
+    let idx = focused ? items.indexOf(focused) : -1;
+    if(focused) focused.classList.remove("focused");
+    idx = e.key === "ArrowDown" ? Math.min(idx+1, items.length-1) : Math.max(idx-1, 0);
+    items[idx].classList.add("focused");
+    items[idx].scrollIntoView({block:"nearest"});
+    return;
+  }
+  // Enter on focused autocomplete item
+  if(e.key === "Enter" && openList) {
+    const focused = openList.querySelector(".autocomplete-item.focused");
+    if(focused){ e.preventDefault(); focused.dispatchEvent(new MouseEvent("mousedown")); return; }
+  }
+});
+
+// Enter key on search inputs triggers search
+["origin-input","dest-input","depart-date","return-date"].forEach(id => {
+  const el = document.getElementById(id);
+  if(el) el.addEventListener("keydown", e => {
+    if(e.key === "Enter") {
+      const openList = [...document.querySelectorAll(".autocomplete-list")].find(l => l.children.length > 0);
+      if(!openList) searchFlights();
+    }
+  });
 });
 
 /* NEARBY AIRPORTS */
@@ -3286,16 +3319,38 @@ function showNearbyAirports(){
 
 /* FLIGHT SEARCH */
 async function searchFlights(){
+  // ── Double-click protection ─────────────────────────────────────
+  if(window._searchLock) return;
+  window._searchLock = true;
+  const btn = document.getElementById("main-search-btn");
+  if(btn){ btn.disabled = true; btn.textContent = "Searching…"; }
+
+  // ── Read values ─────────────────────────────────────────────────
   const originIata = document.getElementById("origin-iata").value ||
     (document.getElementById("origin-input").value.match(/\(([A-Z]{3})\)/)||[])[1];
   const destIata   = document.getElementById("dest-iata").value ||
     (document.getElementById("dest-input").value.match(/\(([A-Z]{3})\)/)||[])[1];
   const date       = document.getElementById("depart-date").value;
   const returnDate = document.getElementById("return-date").value;
-  const adults     = document.getElementById("passengers").value || "1";
+  const adults     = document.getElementById("adults")?.value || document.getElementById("passengers")?.value || "1";
 
-  if(!originIata || !destIata){
-    alert("Please select origin and destination airports from the dropdown.");
+  // ── Inline validation ───────────────────────────────────────────
+  const originInput = document.getElementById("origin-input");
+  const destInput   = document.getElementById("dest-input");
+  let valid = true;
+  if(!originIata){
+    originInput.style.borderColor = "var(--red)";
+    originInput.placeholder = "⚠ Please select a departure airport";
+    valid = false;
+  } else { originInput.style.borderColor = ""; }
+  if(!destIata){
+    destInput.style.borderColor = "var(--red)";
+    destInput.placeholder = "⚠ Please select a destination";
+    valid = false;
+  } else { destInput.style.borderColor = ""; }
+  if(!valid){
+    window._searchLock = false;
+    if(btn){ btn.disabled = false; btn.innerHTML = "🔍 Search Flights"; }
     return;
   }
 
@@ -3311,8 +3366,14 @@ async function searchFlights(){
   sec.classList.remove("active");
   grid.innerHTML = "";
 
-  // ── Fetch flights ───────────────────────────────────────────────
+  // ── Analytics: search initiated ────────────────────────────────
+  trackClick({event_type:"search_initiated", section:"flights",
+    origin:originIata, destination:destIata, depart_date:date, adults});
+
+  // ── Fetch flights with timeout ──────────────────────────────────
   let flights = [];
+  const _ctrl = new AbortController();
+  const _timeout = setTimeout(() => _ctrl.abort(), 12000); // 12s timeout
   try {
     aiContext = {origin:originIata, destination:destIata, destName, departDate:date, returnDate:returnDate||""};
 
@@ -3322,20 +3383,32 @@ async function searchFlights(){
       ...(returnDate && { return_date: returnDate })
     });
 
-    let res  = await fetch(`${FN_FLIGHTS}?${params}`);
+    let res = await fetch(`${FN_FLIGHTS}?${params}`, {signal: _ctrl.signal});
     if(res.ok){
       let data = await res.json();
       flights  = data.data || [];
       // Fallback: no date exact match -> retry flexible
       if(!flights.length && date){
         params = new URLSearchParams({ origin:originIata, destination:destIata, adults });
-        const res2 = await fetch(`${FN_FLIGHTS}?${params}`);
+        const res2 = await fetch(`${FN_FLIGHTS}?${params}`, {signal: _ctrl.signal});
         if(res2.ok){ const data2 = await res2.json(); flights = data2.data || []; }
       }
     }
   } catch(err){
-    // silent — show empty state / fallback below
+    if(err.name === "AbortError"){
+      toast("Search timed out — showing best available results");
+    }
+    // continue to show empty state / fallback below
+  } finally {
+    clearTimeout(_timeout);
+    // ── Unlock search button ──────────────────────────────────────
+    window._searchLock = false;
+    if(btn){ btn.disabled = false; btn.innerHTML = "🔍 Search Flights"; }
   }
+
+  // ── Analytics: results shown ────────────────────────────────────
+  trackClick({event_type:"search_results_shown", section:"flights",
+    origin:originIata, destination:destIata, result_count:flights.length});
 
   // ── Always hide loader & show results page ──────────────────────
   document.getElementById("global-loader").classList.remove("active");
@@ -3350,8 +3423,8 @@ async function searchFlights(){
   document.getElementById("results-title").textContent    = `${origName} → ${destName}`;
   document.getElementById("results-sub").textContent      =
     flights.length
-      ? `${flights.length} fares found · ${fmtD(date)}${returnDate?" → "+fmtD(returnDate):""} · All prices GBP`
-      : "Showing flexible dates — exact date unavailable";
+      ? `${flights.length} fares found · ${fmtD(date)}${returnDate?" → "+fmtD(returnDate):""} · Prices in GBP · Updated just now`
+      : "No exact match — showing closest flexible dates";
   document.getElementById("results-count-chip").textContent = `${flights.length} flight${flights.length!==1?"s":""}`;
 
   // ── Update summary strip ────────────────────────────────────────
@@ -3570,7 +3643,10 @@ function renderFlightCards(flights, originIata, destIata, origName, destName, da
                onclick="event.preventDefault();openAlertModal({origin:'${originIata}',destination:'${f.destination||destIata}',destName:'${destName}',price:${price}})">🔔</a>
             <a href="${bookUrl}" target="_blank" rel="noopener"
                class="fc2-btn-book ${isCheapest ? 'best' : ''}"
-               onclick="trackClick({event_type:'click',partner:'jetradar',section:'flights',price:${price}})">
+               aria-label="Book flight for £${price} - opens JetRadar"
+               onclick="trackClick({event_type:'checkout_initiated',partner:'jetradar',section:'flights',
+                 price:${price},origin:'${originIata}',destination:'${f.destination||destIata}',
+                 airline:'${airline}',depart_date:'${depDate}'})">
               ✈ Book £${price}
             </a>
           </div>
@@ -3582,7 +3658,19 @@ function renderFlightCards(flights, originIata, destIata, origName, destName, da
         ${retDate ? `<div class="fc2-bd-item">🔄 Return <strong>${fmtDShort(retDate)}</strong></div>` : ""}
         <div class="fc2-bd-item">👥 <strong>${adults} passenger${adults>1?"s":""}</strong></div>
         <div class="fc2-bd-item" style="margin-left:auto;color:var(--grn);font-weight:800">Total: £${price * parseInt(adults)}</div>
+        <div class="fc2-bd-item" style="color:var(--txt3);font-size:10px;margin-left:4px">↗ You'll be redirected to JetRadar to complete booking — no hidden fees</div>
       </div>`;
+    // Intersection Observer for offer_viewed tracking
+    const _obs = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          trackClick({event_type:'offer_viewed',partner:'jetradar',section:'flights',
+            price:price,origin:originIata,destination:f.destination||destIata});
+          obs.unobserve(entry.target);
+        }
+      });
+    }, {threshold: 0.5});
+    _obs.observe(card);
     grid.appendChild(card);
   });
 }
@@ -3734,11 +3822,7 @@ function buildAirportTabs(){
   tabs.innerHTML=UK_AIRPORTS.map((ap,i)=>`<button class="atab${i===0?" active":""}" onclick="selectAirport('${ap.code}',this)">${ap.code} <span style="color:var(--txt3)">· ${ap.city}</span></button>`).join("");
   renderDeals("LHR");
 }
-function selectAirport(code,btn){
-  document.querySelectorAll(".atab").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  renderDeals(code);
-}
+
 function renderDeals(code){
   const grid=document.getElementById("deals-grid");
   const deals=TRENDING[code]||TRENDING.LHR;
@@ -3748,7 +3832,7 @@ function renderDeals(code){
     while(d.getDay()!==2)d.setDate(d.getDate()+1);
     return d.toISOString().slice(0,10);
   }
-  function fmtDate(s){return new Date(s).toLocaleDateString("en-GB",{day:"numeric",month:"short"});}
+
   grid.innerHTML=deals.map((d,i)=>{
     const dep=dealDate(3+i%3);
     const ret=new Date(dep);ret.setDate(ret.getDate()+7);
@@ -3845,12 +3929,7 @@ function showAI(prefill){
 }
 
 /* TOOLS */
-function convertCurrency(){
-  const amount=parseFloat(document.getElementById("curr-amount").value),to=document.getElementById("curr-to").value,el=document.getElementById("curr-result");
-  if(isNaN(amount)||amount<=0){el.className="tool-result warn";el.innerHTML="Please enter a valid amount.";return}
-  el.className="tool-result ok";
-  el.innerHTML=`<b>£${amount.toFixed(2)} = ${FX_SYM[to]||""}${(amount*FX[to]).toFixed(2)} ${to}</b><br><small style="color:var(--txt2)">Indicative rate · Always confirm with your bank before travel.</small>`;
-}
+
 function checkBaggage(){
   const w=parseFloat(document.getElementById("bag-weight").value),a=document.getElementById("bag-airline").value,t=document.getElementById("bag-type").value,el=document.getElementById("bag-result");
   if(isNaN(w)||w<=0){el.className="tool-result warn";el.innerHTML="Please enter a valid bag weight.";return}
@@ -3969,7 +4048,7 @@ async function loadTopDeals(){
 function renderFallbackDeals(origin){
   const deals=TRENDING[origin]||TRENDING.LHR;
   const originFull=AIRPORT_NAMES[origin]||origin;
-  function dealDate(weeksOut){const d=new Date();d.setDate(d.getDate()+weeksOut*7);while(d.getDay()!==2)d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);}
+
   function fmtDate(s){return new Date(s).toLocaleDateString("en-GB",{day:"numeric",month:"short"});}
   return deals.slice(0,6).map((d,i)=>{
     const dep=dealDate(3+i%3);
@@ -5414,6 +5493,27 @@ const PKG_REGISTRY = new Map();
 let _modalData = null;
 let _bookedSteps = new Set();
 
+// ── Focus trap utility ──────────────────────────────────────────
+function _trapFocus(modalEl) {
+  const focusable = 'a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])';
+  const els = [...modalEl.querySelectorAll(focusable)];
+  if(!els.length) return;
+  const first = els[0], last = els[els.length-1];
+  modalEl._trapHandler = (e) => {
+    if(e.key !== "Tab") return;
+    if(e.shiftKey){ if(document.activeElement===first){ e.preventDefault(); last.focus(); } }
+    else { if(document.activeElement===last){ e.preventDefault(); first.focus(); } }
+  };
+  document.addEventListener("keydown", modalEl._trapHandler);
+  modalEl._returnFocus = document.activeElement;
+  setTimeout(() => first?.focus(), 50);
+}
+function _releaseFocus(modalEl) {
+  if(!modalEl) return;
+  if(modalEl._trapHandler) document.removeEventListener("keydown", modalEl._trapHandler);
+  modalEl._returnFocus?.focus();
+}
+
 function openPkgModal(idOrObj){
   const r = typeof idOrObj === "string" ? (PKG_REGISTRY.get(idOrObj) || {}) : idOrObj;
   _modalData = r;
@@ -5572,6 +5672,7 @@ function openPkgModal(idOrObj){
 
   // Open modal
   document.getElementById("pkg-modal-backdrop").classList.add("open");
+  _trapFocus(document.getElementById("pkg-modal"));
   document.body.style.overflow = "hidden";
 }
 
@@ -5632,6 +5733,7 @@ function toggleExtras(){
 }
 
 function closePkgModal(event){
+  _releaseFocus(document.getElementById("pkg-modal"));
   if(event && event.target !== document.getElementById("pkg-modal-backdrop")) return;
   document.getElementById("pkg-modal-backdrop").classList.remove("open");
   document.body.style.overflow = "";
@@ -5656,8 +5758,12 @@ document.addEventListener("DOMContentLoaded",()=>{
   loadFeaturedPackages();
   setTimeout(renderWL, 300);
   applyABTests();
+  const today=new Date().toISOString().split("T")[0];
   const dep=new Date();dep.setDate(dep.getDate()+7);
   const ret=new Date();ret.setDate(ret.getDate()+14);
+  ["depart-date","return-date","pkg-from","pkg-to"].forEach(id => {
+    const el=document.getElementById(id); if(el) el.min=today;
+  });
   document.getElementById("depart-date").value=dep.toISOString().split("T")[0];
   document.getElementById("return-date").value=ret.toISOString().split("T")[0];
   document.getElementById("comp-date").value=new Date().toISOString().split("T")[0];
@@ -6259,6 +6365,7 @@ function openAlertModal(opts={}){
 }
 
 function closeAlertModal(){
+  _releaseFocus(document.querySelector(".alert-modal"));
   document.getElementById("alert-modal-bd").classList.remove("open");
   document.body.style.overflow = "";
 }
