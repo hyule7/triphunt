@@ -113,7 +113,29 @@ async function getLowestPrice(origin, dest, token) {
 
 async function sendAlertEmail(alert, price) {
   if (!RESEND) return;
-  const bookingUrl = "https://www.jetradar.com/search/" + alert.origin_code + alert.dest_code + "?adults=1&currency=GBP&locale=en&marker=" + MARKER;
+  // FIX: was origin+dest only — no dates so JetRadar opened blank and commission never fired
+  // Now uses DDMM format with depart date closest to alert trigger + 7-night return
+  function ddmm(s) {
+    if (!s) return "";
+    const p = String(s).slice(0,10).split("-");
+    return p.length === 3 ? p[2] + p[1] : "";
+  }
+  function addDays(s, n) {
+    const d = new Date(String(s).slice(0,10));
+    d.setDate(d.getDate() + n);
+    return d.toISOString().slice(0,10);
+  }
+  // Use next available Tuesday ~3 weeks out as suggested depart date
+  const now = new Date();
+  now.setDate(now.getDate() + 21);
+  while (now.getDay() !== 2) now.setDate(now.getDate() + 1);
+  const dep = now.toISOString().slice(0,10);
+  const ret = addDays(dep, 7);
+  const dd = ddmm(dep), rd = ddmm(ret);
+  const path = dd && rd
+    ? alert.origin_code + dd + alert.dest_code + rd + "11"
+    : alert.origin_code + alert.dest_code;
+  const bookingUrl = "https://www.jetradar.com/search/" + path + "?adults=1&currency=GBP&locale=en&marker=" + MARKER;
   const html = "<h2>Price Alert: " + alert.dest_name + "</h2><p>A flight from " + alert.origin_code + " to " + alert.dest_name + " is now available for <strong>GBP" + price + "</strong> - below your target of GBP" + alert.target_price + ".</p><a href='" + bookingUrl + "' style='background:#7c6af7;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;margin-top:16px'>Book Now</a><p style='color:#666;font-size:12px;margin-top:24px'>TripHunt - " + SITE_URL + "</p>";
 
   return new Promise(function(resolve, reject) {

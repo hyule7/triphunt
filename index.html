@@ -161,7 +161,7 @@ body {
     radial-gradient(ellipse 400px 200px at 10% 80%, rgba(37,99,235,.06) 0%, transparent 60%);
   pointer-events: none;
 }
-.hero-content { position: relative; z-index: 1; text-align: center; max-width: 720px; }
+.hero-content { position: relative; z-index: 1; text-align: center; max-width: 820px; }
 .hero h1 {
   font-family: 'Fraunces', Georgia, serif;
   font-size: clamp(36px, 6vw, 68px);
@@ -186,7 +186,7 @@ body {
 /* ═══ SEARCH BOX ════════════════════════════════════════════════ */
 .search-container {
   position: relative; z-index: 10;
-  width: 100%; max-width: 920px;
+  width: 100%; max-width: 1100px;
   margin: 0 auto;
   transform: translateY(32px);
 }
@@ -197,7 +197,7 @@ body {
 .stab {
   background: var(--navy2); border: 1px solid var(--border);
   border-bottom: none; border-radius: var(--r12) var(--r12) 0 0;
-  padding: 8px 20px; font-size: 13px; font-weight: 600;
+  padding: 10px 24px; font-size: 14px; font-weight: 600;
   color: var(--txt2); cursor: pointer; transition: all .2s;
   font-family: 'Outfit', sans-serif;
 }
@@ -207,44 +207,51 @@ body {
   display: none; background: var(--navy1);
   border: 1px solid var(--border2);
   border-radius: 0 var(--r20) var(--r20) var(--r20);
-  padding: 24px;
+  padding: 28px 32px;
   box-shadow: var(--shadow2);
 }
 .search-panel.active { display: block; }
 
 /* Trip type pills */
 .trip-type-row {
-  display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap;
+  display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
 }
 .stt-tab {
   background: var(--navy2); border: 1px solid var(--border);
-  border-radius: var(--r99); padding: 5px 14px;
-  font-size: 12px; font-weight: 600; color: var(--txt2);
+  border-radius: var(--r99); padding: 6px 18px;
+  font-size: 13px; font-weight: 600; color: var(--txt2);
   cursor: pointer; transition: all .2s;
   font-family: 'Outfit', sans-serif;
 }
 .stt-tab.active { background: rgba(37,99,235,.15); border-color: rgba(37,99,235,.4); color: var(--acc3); }
 
-/* Search fields */
+/* Search fields — 6-col: From | To | Depart | Return | Pax | Search */
 .search-fields {
-  display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto;
-  gap: 8px; align-items: end;
+  display: grid;
+  grid-template-columns: 1.6fr 1.6fr 1fr 1fr 0.8fr auto;
+  gap: 12px; align-items: end;
 }
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+  .search-fields { grid-template-columns: 1fr 1fr 1fr; }
+  .search-fields .field-wrap:nth-child(6) { grid-column: 1 / -1; }
+}
+@media (max-width: 600px) {
   .search-fields { grid-template-columns: 1fr 1fr; }
+  .search-fields .field-wrap:nth-child(6) { grid-column: 1 / -1; }
 }
 .field-wrap { position: relative; }
 .field-wrap label {
-  display: block; font-size: 10px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .7px;
-  color: var(--txt3); margin-bottom: 5px;
+  display: block; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .8px;
+  color: var(--txt3); margin-bottom: 6px;
 }
 .search-input {
   width: 100%; background: var(--navy2);
   border: 1px solid var(--border2); border-radius: var(--r12);
-  padding: 11px 14px; font-size: 14px; font-weight: 500;
+  padding: 13px 16px; font-size: 15px; font-weight: 500;
   color: var(--txt); font-family: 'Outfit', sans-serif;
   transition: border-color .2s, box-shadow .2s; outline: none;
+  min-width: 0;
 }
 .search-input:focus {
   border-color: rgba(37,99,235,.5);
@@ -286,13 +293,14 @@ select.search-input { cursor: pointer; appearance: none; }
   background: var(--acc); color: #fff;
   border: none; cursor: pointer;
   font-family: 'Outfit', sans-serif;
-  font-size: 15px; font-weight: 700;
-  padding: 12px 28px; border-radius: var(--r12);
+  font-size: 16px; font-weight: 700;
+  padding: 14px 32px; border-radius: var(--r12);
   transition: all .2s; white-space: nowrap;
   display: flex; align-items: center; gap: 8px;
-  box-shadow: 0 4px 16px rgba(37,99,235,.4);
+  box-shadow: 0 4px 20px rgba(37,99,235,.5);
+  width: 100%; justify-content: center; height: 100%;
 }
-.btn-search:hover { background: var(--acc2); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(37,99,235,.5); }
+.btn-search:hover { background: var(--acc2); transform: translateY(-1px); box-shadow: 0 8px 28px rgba(37,99,235,.6); }
 .btn-search:active { transform: translateY(0); }
 
 /* Nearby airports */
@@ -1526,7 +1534,7 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
 @media (max-width: 768px) {
   body { padding-bottom: 60px; }
   .nav-links { display: none; }
-  .hero { padding: 48px 16px 0; min-height: 360px; }
+  .hero { padding: 48px 16px 0; min-height: 380px; }
   .hero h1 { font-size: 34px; }
   .search-container { transform: translateY(24px); }
   .search-panel { border-radius: 0 var(--r16) var(--r16) var(--r16); padding: 16px; }
@@ -1631,14 +1639,22 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
           <input type="hidden" id="dest-iata" value="">
           <div class="autocomplete-list" id="dest-ac" role="listbox" aria-label="Destination suggestions"></div>
         </div>
-        <div class="field-wrap">
-          <label>Depart</label>
+        <div class="field-wrap" style="position:relative">
+          <label>Depart <span id="depart-anytime-lbl" style="color:var(--acc3);font-size:9px;margin-left:4px;display:none">ANY TIME</span></label>
           <input type="date" class="search-input" id="depart-date">
+          <button id="depart-anytime-btn" title="Search any dates — shows cheapest available"
+            onclick="toggleAnyTime('depart')"
+            style="position:absolute;right:8px;top:50%;margin-top:4px;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:11px;font-weight:700;color:var(--txt3);padding:2px 4px;border-radius:4px;transition:color .15s"
+            onmouseover="this.style.color='var(--acc3)'" onmouseout="this.style.color='var(--txt3)'">✕</button>
         </div>
-        <div class="field-wrap" id="return-date-wrap">
-          <label>Return</label>
+        <div class="field-wrap" id="return-date-wrap" style="position:relative">
+          <label>Return <span id="return-anytime-lbl" style="color:var(--acc3);font-size:9px;margin-left:4px;display:none">ANY TIME</span></label>
           <input type="date" class="search-input" id="return-date"
             onchange="const d=document.getElementById('depart-date').value;if(d&&this.value<d)this.value=d">
+          <button id="return-anytime-btn" title="No return — one way or flexible"
+            onclick="toggleAnyTime('return')"
+            style="position:absolute;right:8px;top:50%;margin-top:4px;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:11px;font-weight:700;color:var(--txt3);padding:2px 4px;border-radius:4px;transition:color .15s"
+            onmouseover="this.style.color='var(--acc3)'" onmouseout="this.style.color='var(--txt3)'">✕</button>
         </div>
         <div class="field-wrap">
           <label>Passengers</label>
@@ -2673,7 +2689,7 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
 </div>
 
 <!-- Ghost price notification -->
-<div id="price-ghost" onclick="window.open(this.dataset.url,'_blank');this.classList.remove('show')">
+<div id="price-ghost" onclick="ghostClick()">
   <div class="ghost-title">🔥 Live price found</div>
   <div class="ghost-price" id="ghost-price-val">£89</div>
   <div class="ghost-desc" id="ghost-desc">LHR → BCN · Return</div>
@@ -2731,6 +2747,36 @@ function initScrollReveal() {
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(initScrollReveal, 500);
 });
+
+// ── Any-time date toggle ──────────────────────────────────────────
+// When "any time" is active: clears the date input and routes to JetRadar
+// flexible-date search (no date in URL) which shows cheapest fares
+const _anyTime = { depart: false, return: false };
+function toggleAnyTime(which) {
+  _anyTime[which] = !_anyTime[which];
+  const inputId = which === 'depart' ? 'depart-date' : 'return-date';
+  const lblId   = which + '-anytime-lbl';
+  const btnId   = which + '-anytime-btn';
+  const input   = document.getElementById(inputId);
+  const lbl     = document.getElementById(lblId);
+  const btn     = document.getElementById(btnId);
+  if (_anyTime[which]) {
+    input.dataset.savedVal = input.value;
+    input.value = '';
+    input.style.color = 'var(--acc3)';
+    input.style.fontStyle = 'italic';
+    input.placeholder = 'Any time — cheapest dates';
+    if (lbl) lbl.style.display = 'inline';
+    if (btn) btn.textContent = '↺';
+  } else {
+    input.value = input.dataset.savedVal || '';
+    input.style.color = '';
+    input.style.fontStyle = '';
+    input.placeholder = '';
+    if (lbl) lbl.style.display = 'none';
+    if (btn) btn.textContent = '✕';
+  }
+}
 
 // Car hire search 
 function searchCarHire() {
@@ -3465,7 +3511,7 @@ async function searchFlights(){
         <div style="font-size:40px;margin-bottom:12px">✈️</div>
         <div style="font-size:18px;font-weight:700;margin-bottom:8px">No direct results found</div>
         <div style="font-size:13px;color:var(--txt2);margin-bottom:20px">Try different dates or use the flexible calendar below</div>
-        <a href="${flightSearchUrl(originIata,destIata,date||"",adults,returnDate||"")}" target="_blank" rel="noopener" class="btn-search" style="display:inline-flex;width:auto;padding:12px 28px">Search on JetRadar →</a>
+        <a href="${(()=>{const d=_anyTime.depart?'':date;const r=_anyTime.return?'':returnDate;return d?flightSearchUrl(originIata,destIata,d,adults,r||''):`https://www.jetradar.com/search/${originIata}${destIata}?adults=${adults}&currency=GBP&locale=en&marker=${MARKER}`;})()" target="_blank" rel="noopener" class="btn-search" style="display:inline-flex;width:auto;padding:12px 28px">Search on JetRadar →</a>
       </div>`;
     addHackerFare(originIata, destIata, date, adults, grid, destName);
   } else {
@@ -3837,7 +3883,8 @@ function renderDeals(code){
     const dep=dealDate(3+i%3);
     const ret=new Date(dep);ret.setDate(ret.getDate()+7);
     const retStr=ret.toISOString().slice(0,10);
-    const url=`https://www.jetradar.com/search/${code}${_ddmm(dep)}${d.iata}${_ddmm(retStr)}11?adults=1&currency=GBP&locale=en&marker=${MARKER}`;
+    const _tAdults = parseInt(document.getElementById("adults")?.value || "1");
+    const url=`https://www.jetradar.com/search/${code}${_ddmm(dep)}${d.iata}${_ddmm(retStr)}${_tAdults}1?adults=${_tAdults}&currency=GBP&locale=en&marker=${MARKER}`;
     return`<a class="deal-card" href="${url}" target="_blank" rel="noopener" onclick="trackClick({event_type:'click',partner:'jetradar',section:'trending',price:parseInt('${d.price}'.replace(/[^0-9]/g,''))||99})">
       <div class="deal-img-wrap">
         <img src="${d.img}" alt="${d.dest}" loading="lazy" onerror="this.parentElement.style.background='var(--c3)';this.remove()"/>
@@ -3865,7 +3912,7 @@ function scheduleGhost(o,d,price,date){
   },30000);
 }
 function closeGhost(){document.getElementById("price-ghost").classList.remove("show")}
-function ghostClick(){if(!ghostDealData)return;window.open(flightTicketUrl(ghostDealData.o,ghostDealData.d,ghostDealData.date||""),"_blank","noopener");closeGhost()}
+function ghostClick(){if(!ghostDealData)return;const dep=ghostDealData.date||"";const ret=dep?(()=>{const r=new Date(dep);r.setDate(r.getDate()+7);return r.toISOString().slice(0,10);})():"";window.open(flightTicketUrl(ghostDealData.o,ghostDealData.d,dep,1,ret),"_blank","noopener");closeGhost()}
 
 /* PRICE ALERT */
 function setAlert(){
@@ -3963,7 +4010,8 @@ function buildTicker(){
   const _td=(()=>{const d=new Date();d.setDate(d.getDate()+21);while(d.getDay()!==2)d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})();
   const _tr=(()=>{const d=new Date(_td);d.setDate(d.getDate()+7);return d.toISOString().slice(0,10);})();
   track.innerHTML=items.map(d=>{
-    const url=`https://www.jetradar.com/search/${d.o}${_ddmm(_td)}${d.d}${_ddmm(_tr)}11?adults=1&currency=GBP&locale=en&marker=${MARKER}`;
+    const _tkAdults = parseInt(document.getElementById("adults")?.value || "1");
+    const url=`https://www.jetradar.com/search/${d.o}${_ddmm(_td)}${d.d}${_ddmm(_tr)}${_tkAdults}1?adults=${_tkAdults}&currency=GBP&locale=en&marker=${MARKER}`;
     return`<span class="ticker-item" onclick="window.open('${url}','_blank','noopener')">✈️ ${d.r} <span class="t-price">${d.p}</span> ${d.a} <span class="ticker-dot">●</span></span>`;
   }).join("");
 }
@@ -4000,7 +4048,8 @@ async function loadTopDeals(){
       // Deep link: use booking_url from API if present (already has dates), else build it
       const depDate=d.depart_date||d.departure_at||"";
       const retDate=d.return_date||d.return_at||"";
-      const url=d.booking_url||flightTicketUrl(orig,dest,depDate,1,retDate);
+      const _tdAdults = parseInt(document.getElementById("adults")?.value || "1");
+      const url=d.booking_url||flightTicketUrl(orig,dest,depDate,_tdAdults,retDate);
       const depDisplay=depDate?new Date(depDate).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}):"Flexible dates";
       const retDisplay=retDate?new Date(retDate).toLocaleDateString("en-GB",{day:"numeric",month:"short"}):"";
       const direct=d.number_of_changes===0?`<span class="deal-tag" style="background:rgba(16,185,129,.2);color:#10b981">✈ Direct</span>`:`<span class="deal-tag">${d.number_of_changes||1} stop${(d.number_of_changes||1)>1?"s":""}</span>`;
@@ -4055,7 +4104,8 @@ function renderFallbackDeals(origin){
     const ret=new Date(dep);ret.setDate(ret.getDate()+7);
     const retStr=ret.toISOString().slice(0,10);
     const rawPrice=parseInt(d.price.replace(/[^0-9]/g,""))||99;
-    const url=`https://www.jetradar.com/search/${origin}${_ddmm(dep)}${d.iata}${_ddmm(retStr)}11?adults=1&currency=GBP&locale=en&marker=${MARKER}`;
+    const _hfAdults = parseInt(document.getElementById("adults")?.value || "1");
+    const url=`https://www.jetradar.com/search/${origin}${_ddmm(dep)}${d.iata}${_ddmm(retStr)}${_hfAdults}1?adults=${_hfAdults}&currency=GBP&locale=en&marker=${MARKER}`;
     return`<a class="deal-card-v2" href="${url}" target="_blank" rel="noopener" onclick="trackClick({event_type:'click',partner:'jetradar',section:'top_deals_fallback',price:${rawPrice}})">
       <div class="deal-img-wrap">
         <img src="${DEST_PHOTOS[d.iata]||d.img}" alt="${d.dest}" loading="lazy" onerror="this.src='${d.img}'">
@@ -4135,7 +4185,8 @@ async function loadHotDealChips(){
       const depDate = d.depart_date||d.departure_at||nextTueOrWed(3);
       const retDate = d.return_date||d.return_at||addDays(depDate,7);
       // Deep link with exact dates pre-filled
-      const url = d.booking_url || flightTicketUrl(orig, dest, depDate, 1, retDate);
+      const _hdAdults = parseInt(document.getElementById("adults")?.value || "1");
+      const url = d.booking_url || flightTicketUrl(orig, dest, depDate, _hdAdults, retDate);
       const depStr  = new Date(depDate).toLocaleDateString("en-GB",{day:"numeric",month:"short"});
       const retStr  = new Date(retDate).toLocaleDateString("en-GB",{day:"numeric",month:"short"});
       const flag    = DEST_FLAGS[dest]||"🌍";
@@ -4401,7 +4452,8 @@ function showDestGuide(iata, destName, departDate) {
 
 /* SHARE DEAL */
 function shareDeal(origin, dest, date, price) {
-  const url = flightSearchUrl(origin, dest, date, 1);
+  const _adults = (window._lastFlightMeta && window._lastFlightMeta.adults) || document.getElementById("adults")?.value || "1";
+  const url = flightSearchUrl(origin, dest, date, _adults);
   const text = `✈️ ${origin} → ${dest} from £${price} - found on TripHunt`;
   if (navigator.share) {
     navigator.share({ title: text, url }).catch(() => {});
@@ -4492,7 +4544,9 @@ function triggerExitPopup() {
     document.getElementById("exit-deal-route").textContent = `${ghostDealData.o} → ${ghostDealData.d}`;
     document.getElementById("exit-deal-price").textContent = `£${ghostDealData.price}`;
     document.getElementById("exit-deal-meta").textContent = `Economy · ${ghostDealData.date || "Flexible dates"} · from UK`;
-    const url = flightTicketUrl(ghostDealData.o, ghostDealData.d, ghostDealData.date || "");
+    const _exitDep = ghostDealData.date || "";
+    const _exitRet = _exitDep ? (()=>{const r=new Date(_exitDep);r.setDate(r.getDate()+7);return r.toISOString().slice(0,10);})() : "";
+    const url = flightTicketUrl(ghostDealData.o, ghostDealData.d, _exitDep, 1, _exitRet);
     document.getElementById("exit-cta-btn").href = url;
     document.getElementById("exit-sub").textContent =
       `The fare below was found just moments ago for your search. Prices update every 20 minutes - it may not be here when you come back.`;
@@ -4501,7 +4555,8 @@ function triggerExitPopup() {
     document.getElementById("exit-deal-route").textContent = `${lastOrigin} → ${lastDest}`;
     document.getElementById("exit-deal-price").textContent = "See Prices";
     document.getElementById("exit-deal-meta").textContent = "Live fares in GBP · 100+ airlines compared";
-    document.getElementById("exit-cta-btn").href = flightSearchUrl(lastOrigin, lastDest, lastDate || "");
+    const _exitAdults = (window._lastFlightMeta && window._lastFlightMeta.adults) || document.getElementById("adults")?.value || "1";
+    document.getElementById("exit-cta-btn").href = flightSearchUrl(lastOrigin, lastDest, lastDate || "", _exitAdults);
   }
 
   document.getElementById("exit-popup").classList.add("show");
@@ -5310,7 +5365,7 @@ function buildPkgCard(r){
 
       <!-- Quick-book partner strip -->
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
-        <a href="${r.flightUrl||flightTicketUrl("LHR",dest.iata,fromDate,pax,toDate)}" target="_blank" rel="noopener"
+        <a href="${r.flightUrl||flightTicketUrl(originIata||"LHR",dest.iata,fromDate||(()=>{const d=new Date();d.setDate(d.getDate()+21);while(d.getDay()!==2)d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})(),pax,toDate||(()=>{const d=new Date();d.setDate(d.getDate()+28);while(d.getDay()!==2)d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})())}" target="_blank" rel="noopener"
            class="pkg-quick-btn flight" onclick="trackClick({event_type:'click',partner:'jetradar',section:'pkg_card',price:${flightPrice}})">✈ Flights from £${flightPrice}</a>
         <a href="${r.hotelUrl||buildHotelUrl(dest.name,dest.iata,fromDate,toDate,pax)}" target="_blank" rel="noopener"
            class="pkg-quick-btn hotel" onclick="trackClick({event_type:'click',partner:'booking',section:'pkg_card'})">🏨 Hotels</a>
@@ -5766,6 +5821,13 @@ document.addEventListener("DOMContentLoaded",()=>{
   });
   document.getElementById("depart-date").value=dep.toISOString().split("T")[0];
   document.getElementById("return-date").value=ret.toISOString().split("T")[0];
+  // Ensure origin field shows LHR by default so user sees a real airport, not a blank box
+  const _originInput = document.getElementById("origin-input");
+  const _originIata  = document.getElementById("origin-iata");
+  if (_originInput && !_originInput.value) {
+    _originInput.value = "London Heathrow (LHR)";
+    if (_originIata) _originIata.value = "LHR";
+  }
   document.getElementById("comp-date").value=new Date().toISOString().split("T")[0];
   const chat=document.getElementById("ai-chat");
   const g=document.createElement("div");g.className="ai-msg assistant";
@@ -6090,7 +6152,7 @@ async function applyQuiz(){
       hotelTotal:hotel.price_per_night*n,
       actTotal:80, total, individual:totalPP,
       weather:null, nights:n,
-      flightUrl:flightTicketUrl("LHR",dest.iata,"",2),
+      flightUrl:flightTicketUrl("LHR",dest.iata,(()=>{const d=new Date();d.setDate(d.getDate()+21);while(d.getDay()!==2)d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})(),(2),(()=>{const d=new Date();d.setDate(d.getDate()+28);while(d.getDay()!==2)d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})()), 
       hotelUrl:hotel.link,
       packageExpediaUrl:`https://www.expedia.co.uk/Vacation-Packages?destination=${encodeURIComponent(dest.name)}&adults=2&camref=1110lzVJt`,
       pax:2, fromDate:"", toDate:"", originIata:"LHR"};
@@ -6688,7 +6750,8 @@ function searchMultiCity(){
     const dd = leg.date ? _ddmm(leg.date) : "";
     return dd ? `${leg.from}${dd}${leg.to}` : `${leg.from}-${leg.to}`;
   }).join(",");
-  const url=`https://www.jetradar.com/flights/?marker=${MARKER}&currency=GBP&locale=en&multi_city=${encodeURIComponent(legStrings)}&adults=1`;
+  const _mcAdults = parseInt(document.getElementById("adults")?.value || "1");
+  const url=`https://www.jetradar.com/flights/?marker=${MARKER}&currency=GBP&locale=en&multi_city=${encodeURIComponent(legStrings)}&adults=${_mcAdults}`;
   trackClick({event_type:"click",partner:"jetradar",section:"multi-city"});
   window.open(url,"_blank","noopener");
 }
@@ -6950,8 +7013,11 @@ function runViralTool() {
       const saving    = Math.round(budget - d.price);
       const dealGrade = d.price < budget * 0.5 ? "great" : "good";
       const dealLabel = d.price < budget * 0.5 ? "🔥 Great value" : "✓ Within budget";
-      const bookUrl   = `/?origin=${origin}&destination=${d.code}`;
-      return `<a href="${bookUrl}" class="viral-dest-card" onclick="event.preventDefault();quickSearch('${origin}','${d.code}')">
+      // Always build a real JetRadar deep link so clicking the card works even if JS search fails
+      const _vDep = (()=>{const d=new Date();d.setDate(d.getDate()+21);while(d.getDay()!==2)d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})();
+      const _vRet = (()=>{const r=new Date(_vDep);r.setDate(r.getDate()+7);return r.toISOString().slice(0,10);})();
+      const bookUrl = buildBookingUrl_safe(origin, d.code, _vDep, _vRet, 1);
+      return `<a href="${bookUrl}" target="_blank" rel="noopener" class="viral-dest-card" onclick="event.preventDefault();event.stopPropagation();quickSearch('${origin}','${d.code}')">
         <div class="viral-dest-city">${d.city}</div>
         <div class="viral-dest-price">£${d.price}</div>
         <div class="viral-dest-country">${d.country}</div>
@@ -7035,11 +7101,21 @@ function renderDealDiscovery(type) {
   const grid = document.getElementById("deal-discovery-grid");
   if (!grid) return;
 
-  grid.innerHTML = data.map(d => {
+  // Generate a suggested future date (next Tuesday ~3 weeks out) so JetRadar opens pre-filled
+  function ddSuggestDate(weeksOut) {
+    const d = new Date(); d.setDate(d.getDate() + (weeksOut||3) * 7);
+    while (d.getDay() !== 2) d.setDate(d.getDate() + 1);
+    return d.toISOString().slice(0,10);
+  }
+
+  grid.innerHTML = data.map((d,i) => {
     const saving   = Math.round(((d.avg - d.price) / d.avg) * 100);
     const badge    = d.badge || (saving > 40 ? "fire" : "good");
     const badgeLabel = d.badge === "fire" ? "🤫 Possible Mistake Fare" : d.badge === "last" ? "⚡ Last Minute" : `🔥 ${saving}% below average`;
-    const bookUrl  = buildBookingUrl_safe(d.o, d.iata, "", "", 1);
+    // Always include dates so JetRadar opens pre-filled and commission fires
+    const dep    = ddSuggestDate(3 + (i % 4));
+    const ret    = (()=>{ const r=new Date(dep); r.setDate(r.getDate()+7); return r.toISOString().slice(0,10); })();
+    const bookUrl = buildBookingUrl_safe(d.o, d.iata, dep, ret, 1);
     return `<a class="dd-card" href="${bookUrl}" target="_blank" rel="noopener"
               onclick="trackClick&&trackClick({event_type:'click',partner:'deals',section:'deal_discovery',price:${d.price}})">
       <div class="dd-card-route">${d.route}</div>
@@ -7093,7 +7169,8 @@ function shareToWhatsApp(origin, dest, price) {
   const _dep=(()=>{const d=new Date();d.setDate(d.getDate()+21);while(d.getDay()!==2)d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})();
   const _ret=(()=>{const d=new Date(_dep);d.setDate(d.getDate()+7);return d.toISOString().slice(0,10);})();
   const _d=_ddmm(_dep),_r=_ddmm(_ret);
-  const url  = `https://www.jetradar.com/search/${origin}${_d}${dest}${_r}11?adults=1&currency=GBP&locale=en&marker=${MARKER}`;
+  const _vsAdults = parseInt(document.getElementById("viral-pax")?.value || document.getElementById("adults")?.value || "1");
+  const url  = `https://www.jetradar.com/search/${origin}${_d}${dest}${_r}${_vsAdults}1?adults=${_vsAdults}&currency=GBP&locale=en&marker=${MARKER}`;
   const text = `✈️ Found a great deal! ${origin} → ${dest} from £${price}pp — check it out on TripHunt`;
   window.open(`https://wa.me/?text=${encodeURIComponent(text + "\n" + url)}`, "_blank");
 }

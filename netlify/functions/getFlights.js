@@ -172,7 +172,8 @@ function enrich(items, origin, params) {
     const price   = item.price || item.value || 0;
     const dest    = (item.destination || "").toUpperCase();
     const dep     = item.depart_date || item.departure_at || params.depart_date || "";
-    const ret     = item.return_date  || params.return_date || "";
+    // FIX: derive return_date from dep if missing, so booking_url always has both dates
+    const ret     = item.return_date || params.return_date || (dep ? addDays(dep, 7) : "");
     const adults  = parseInt(params.adults) || 1;
     const g       = grade(price, dest);
     return Object.assign({}, item, {
@@ -269,7 +270,8 @@ async function fetchFlights(params, token) {
   const q = new URLSearchParams({ origin:params.origin, destination:params.destination, currency:"GBP", locale:"en", token });
   if (params.depart_date) q.set("depart_date", params.depart_date);
   if (params.return_date) q.set("return_date", params.return_date);
-  if (params.adults)      q.set("adults", params.adults);
+  // FIX: adults was missing — API returned 1-pax price even when user picked 2+
+  q.set("adults", String(parseInt(params.adults) || 1));
   return fetchJson("https://api.travelpayouts.com/aviasales/v3/prices_for_dates?" + q);
 }
 

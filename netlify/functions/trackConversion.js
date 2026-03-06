@@ -18,15 +18,19 @@ exports.handler = async function(event) {
   let body;
   try { body = JSON.parse(event.body); } catch(e) { return { statusCode:400, headers:cors, body:JSON.stringify({ error:"Invalid JSON" }) }; }
 
+  // FIX: frontend spreads trackClick data object which uses snake_case keys
+  //      (deal_score, session_id) — was reading camelCase dealScore/sessionId so these were always null
   const record = {
-    origin_code: body.origin || null,
+    origin_code: body.origin      || null,
     dest_code:   body.destination || null,
-    price:       body.price || null,
-    partner:     body.partner || "unknown",
-    deal_score:  body.dealScore || null,
-    session_id:  body.sessionId || null,
+    price:       body.price       || null,
+    partner:     body.partner     || "unknown",
+    event_type:  body.event_type  || null,
+    section:     body.section     || null,
+    deal_score:  body.deal_score  || body.dealScore  || null,   // accept both
+    session_id:  body.session_id  || body.sessionId  || null,   // accept both
     user_agent:  event.headers["user-agent"] || null,
-    referrer:    event.headers["referer"] || null
+    referrer:    body.referrer || event.headers["referer"] || null,
   };
 
   if (SUPABASE && SUPA_KEY) {
