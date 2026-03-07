@@ -1,13 +1,6 @@
 // TripHunt - priceCalendar.js
-// FIX: bookingUrl now uses DDMM (not MMDD), includes return date + adults for commission
 const https = require("https");
 
-// JetRadar path needs DDMM e.g. "0504" for 5 Apr — NOT MMDD "0405"
-function ddmm(s) {
-  if (!s) return "";
-  const p = String(s).slice(0, 10).split("-");
-  return p.length === 3 ? p[2] + p[1] : "";
-}
 function addDays(s, n) {
   const d = new Date(String(s).slice(0, 10));
   d.setDate(d.getDate() + n);
@@ -15,13 +8,28 @@ function addDays(s, n) {
 }
 
 const cors = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin":  "*",
   "Access-Control-Allow-Headers": "Content-Type",
   "Access-Control-Allow-Methods": "GET, OPTIONS",
   "Content-Type": "application/json"
 };
 
 const MARKER = process.env.TRAVELPAYOUTS_MARKER || "499405";
+
+function bookingUrl(origin, dest, dep, ret) {
+  // Query-string format — reliable, pre-fills all fields on JetRadar
+  const p = new URLSearchParams({
+    marker:           MARKER,
+    currency:         "GBP",
+    locale:           "en",
+    origin_iata:      origin,
+    destination_iata: dest,
+    adults:           2,
+  });
+  if (dep) p.set("depart_date", dep);
+  if (ret) p.set("return_date",  ret);
+  return "https://www.jetradar.com/flights/?" + p.toString();
+}
 
 exports.handler = async function(event) {
   if (event.httpMethod === "OPTIONS") return { statusCode:200, headers:cors, body:"" };
@@ -32,37 +40,43 @@ exports.handler = async function(event) {
   const params = event.queryStringParameters || {};
   const origin = (params.origin || "LHR").toUpperCase();
   const dest   = (params.destination || "").toUpperCase();
-  const month  = params.month || new Date().toISOString().slice(0,7);
+  const month  = params.month || new Date().toISOString().slice(0, 7);
 
   try {
-    const q = new URLSearchParams({ origin, destination:dest, month, currency:"GBP", token });
+    const q   = new URLSearchParams({ origin, destination:dest, month, currency:"GBP", token });
     const url = "https://api.travelpayouts.com/v2/prices/month-matrix?" + q;
     console.log("Calendar:", url.replace(token, "***"));
 
     const data = await fetchJson(url, token);
 
     if (data && data.data) {
-      const calendar = data.data.map(function(d) {
-        return {
-          date:  d.depart_date || d.date,
-          price: d.price || d.value,
-          // FIX: was .replace(/-/g,"").slice(4) which gave MMDD (wrong)
-          // ddmm() gives DDMM e.g. "0504" = 5 Apr; include 7-night return + adults for commission
-          url: (function() {
-            var dep = d.depart_date || d.date || "";
-            var ret = dep ? addDays(dep, 7) : "";
-            var dd  = ddmm(dep), rd = ddmm(ret);
-            var path = dd && rd ? origin + dd + dest + rd + "11" : origin + dest;
-            return "https://www.jetradar.com/search/" + path + "?adults=1&currency=GBP&locale=en&marker=" + MARKER;
-          })()
-        };
+      // Build keyed object { "YYYY-MM-DD": { price, booking_url, grade } }
+      const calendar = {};
+      const prices   = data.data.map(d => d.price || d.value || 0).filter(Boolean);
+      const minP     = prices.length ? Math.min(...prices) : 0;
+      const medP     = prices.length ? prices.sort((a,b)=>a-b)[Math.floor(prices.length/2)] : 0;
+
+      data.data.forEach(function(d) {
+        const dep   = d.depart_date || d.date || "";
+        const ret   = dep ? addDays(dep, 7) : "";
+        const price = d.price || d.value || 0;
+        const grade = price <= minP * 1.05 ? "best"
+                    : price <= medP * 0.85 ? "good"
+                    : "fair";
+        if (dep) {
+          calendar[dep] = {
+            price,
+            grade,
+            booking_url: bookingUrl(origin, dest, dep, ret),
+          };
+        }
       });
-      // FIX: frontend reads data.calendar — was returning as 'data' key so calendar always showed empty
+
       return { statusCode:200, headers:cors, body:JSON.stringify({ success:true, origin, destination:dest, month, calendar }) };
     }
-    return { statusCode:200, headers:cors, body:JSON.stringify({ success:false, data:[] }) };
+    return { statusCode:200, headers:cors, body:JSON.stringify({ success:false, calendar:{} }) };
   } catch(err) {
-    return { statusCode:500, headers:cors, body:JSON.stringify({ error:err.message, data:[] }) };
+    return { statusCode:500, headers:cors, body:JSON.stringify({ error:err.message, calendar:{} }) };
   }
 };
 
