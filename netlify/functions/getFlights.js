@@ -160,7 +160,7 @@ function getFallbackDeals(origin) {
       deal_label:         g.label,
       deal_color:         g.grade,
       seats_left:         seats(r.price, r.airline),
-      booking_url:        bookingUrl(origin, r.destination, dep, ret, 1),
+      booking_url:        bookingUrl(origin, r.destination, dep, ret, 2),
       _fallback:          true,
     };
   });
@@ -174,7 +174,7 @@ function enrich(items, origin, params) {
     const dep     = item.depart_date || item.departure_at || params.depart_date || "";
     // FIX: derive return_date from dep if missing, so booking_url always has both dates
     const ret     = item.return_date || params.return_date || (dep ? addDays(dep, 7) : "");
-    const adults  = parseInt(params.adults) || 1;
+    const adults  = parseInt(params.adults) || 2;
     const g       = grade(price, dest);
     return Object.assign({}, item, {
       deal_score:  g.score,
@@ -271,7 +271,7 @@ async function fetchFlights(params, token) {
   if (params.depart_date) q.set("depart_date", params.depart_date);
   if (params.return_date) q.set("return_date", params.return_date);
   // FIX: adults was missing — API returned 1-pax price even when user picked 2+
-  q.set("adults", String(parseInt(params.adults) || 1));
+  q.set("adults", String(parseInt(params.adults) || 2));
   return fetchJson("https://api.travelpayouts.com/aviasales/v3/prices_for_dates?" + q);
 }
 
@@ -312,8 +312,7 @@ async function fetchTopDeals(params, token) {
 
 async function fetchPackages(params, token) {
   const nights = parseInt(params.nights) || 7;
-  const adults = parseInt(params.adults) || 1;
-  const limit  = parseInt(params.limit)  || 8;
+  const adults = parseInt(params.adults) || 2;
   const fd     = await fetchTopDeals({ origin:params.origin, limit:String(limit) }, token);
   if (fd && fd.data && fd.data.length) {
     const items = fd.data.map(f => {

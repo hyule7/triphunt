@@ -1644,17 +1644,17 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
           <input type="date" class="search-input" id="depart-date">
           <button id="depart-anytime-btn" title="Search any dates — shows cheapest available"
             onclick="toggleAnyTime('depart')"
-            style="position:absolute;right:8px;top:50%;margin-top:4px;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:11px;font-weight:700;color:var(--txt3);padding:2px 4px;border-radius:4px;transition:color .15s"
-            onmouseover="this.style.color='var(--acc3)'" onmouseout="this.style.color='var(--txt3)'">✕</button>
+            style="position:absolute;right:6px;top:50%;margin-top:5px;transform:translateY(-50%);background:var(--navy3);border:1px solid var(--border2);cursor:pointer;font-size:9px;font-weight:700;color:var(--acc3);padding:3px 7px;border-radius:var(--r99);transition:all .15s;white-space:nowrap"
+            onmouseover="this.style.background='var(--acc)';this.style.color='#fff'" onmouseout="this.style.background='var(--navy3)';this.style.color='var(--acc3)'">✨ Any</button>
         </div>
         <div class="field-wrap" id="return-date-wrap" style="position:relative">
           <label>Return <span id="return-anytime-lbl" style="color:var(--acc3);font-size:9px;margin-left:4px;display:none">ANY TIME</span></label>
           <input type="date" class="search-input" id="return-date"
             onchange="const d=document.getElementById('depart-date').value;if(d&&this.value<d)this.value=d">
-          <button id="return-anytime-btn" title="No return — one way or flexible"
+          <button id="return-anytime-btn" title="No fixed return — flexible dates"
             onclick="toggleAnyTime('return')"
-            style="position:absolute;right:8px;top:50%;margin-top:4px;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:11px;font-weight:700;color:var(--txt3);padding:2px 4px;border-radius:4px;transition:color .15s"
-            onmouseover="this.style.color='var(--acc3)'" onmouseout="this.style.color='var(--txt3)'">✕</button>
+            style="position:absolute;right:6px;top:50%;margin-top:5px;transform:translateY(-50%);background:var(--navy3);border:1px solid var(--border2);cursor:pointer;font-size:9px;font-weight:700;color:var(--acc3);padding:3px 7px;border-radius:var(--r99);transition:all .15s;white-space:nowrap"
+            onmouseover="this.style.background='var(--acc)';this.style.color='#fff'" onmouseout="this.style.background='var(--navy3)';this.style.color='var(--acc3)'">✨ Any</button>
         </div>
         <div class="field-wrap">
           <label>Passengers</label>
@@ -2988,7 +2988,7 @@ function aviasalesUrl(o,d,date,adults=1,retDate=""){
   const ret = retDate || _defaultRet(dep);
   const dd = _ddmm(dep);  // DDMM e.g. "3103"
   const rd = _ddmm(ret);  // DDMM e.g. "0704"
-  const p = parseInt(adults)||1;
+  const p = parseInt(adults)||2;
   return `https://www.jetradar.com/search/${o}${dd}${d}${rd}${p}1?adults=${p}&currency=GBP&locale=en&marker=${MARKER}`;
 }
 function flightSearchUrl(o,d,date,adults=1,retDate=""){ return aviasalesUrl(o,d,date,adults,retDate); }
@@ -3187,12 +3187,20 @@ function handleAutocomplete(inputEl, key) {
   const hidden = document.getElementById(cfg.hiddenId);
   if(hidden) hidden.value = "";
 
-  if(q.length < 2) {
-    // Show popular suggestions instead of empty dropdown
+  if(q.length < 1) {
+    // Show popular suggestions when field is empty/short
     showPopular(list, cfg, key);
     return;
   }
-  // Debounce API call 200ms
+
+  // Local search fires INSTANTLY - no debounce needed
+  const localResults = searchLocalAirports(q, cfg.type);
+  if(localResults.length) {
+    renderItems(list, localResults, cfg, key, false);
+    return;
+  }
+
+  // No local match - try external API with debounce
   clearTimeout(_acTimer);
   _acTimer = setTimeout(() => fetchAC(q, list, cfg, key), 200);
 }
@@ -3492,7 +3500,7 @@ async function searchFlights(){
     (document.getElementById("dest-input").value.match(/\(([A-Z]{3})\)/)||[])[1];
   const date       = document.getElementById("depart-date").value;
   const returnDate = document.getElementById("return-date").value;
-  const adults     = document.getElementById("adults")?.value || document.getElementById("passengers")?.value || "1";
+  const adults     = document.getElementById("adults")?.value || document.getElementById("passengers")?.value || "2";
 
   // ── Inline validation ───────────────────────────────────────────
   const originInput = document.getElementById("origin-input");
@@ -3997,7 +4005,7 @@ function renderDeals(code){
     const dep=dealDate(3+i%3);
     const ret=new Date(dep);ret.setDate(ret.getDate()+7);
     const retStr=ret.toISOString().slice(0,10);
-    const _tAdults = parseInt(document.getElementById("adults")?.value || "1");
+    const _tAdults = parseInt(document.getElementById("adults")?.value || "2");
     const url=`https://www.jetradar.com/search/${code}${_ddmm(dep)}${d.iata}${_ddmm(retStr)}${_tAdults}1?adults=${_tAdults}&currency=GBP&locale=en&marker=${MARKER}`;
     return`<a class="deal-card" href="${url}" target="_blank" rel="noopener" onclick="trackClick({event_type:'click',partner:'jetradar',section:'trending',price:parseInt('${d.price}'.replace(/[^0-9]/g,''))||99})">
       <div class="deal-img-wrap">
@@ -4026,7 +4034,7 @@ function scheduleGhost(o,d,price,date){
   },30000);
 }
 function closeGhost(){document.getElementById("price-ghost").classList.remove("show")}
-function ghostClick(){if(!ghostDealData)return;const dep=ghostDealData.date||"";const ret=dep?(()=>{const r=new Date(dep);r.setDate(r.getDate()+7);return r.toISOString().slice(0,10);})():"";window.open(flightTicketUrl(ghostDealData.o,ghostDealData.d,dep,1,ret),"_blank","noopener");closeGhost()}
+function ghostClick(){if(!ghostDealData)return;const dep=ghostDealData.date||"";const ret=dep?(()=>{const r=new Date(dep);r.setDate(r.getDate()+7);return r.toISOString().slice(0,10);})():"";window.open(flightTicketUrl(ghostDealData.o,ghostDealData.d,dep,2,ret),"_blank","noopener");closeGhost()}
 
 /* PRICE ALERT */
 function setAlert(){
@@ -4124,7 +4132,7 @@ function buildTicker(){
   const _td=(()=>{const d=new Date();d.setDate(d.getDate()+21);while(d.getDay()!==2)d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})();
   const _tr=(()=>{const d=new Date(_td);d.setDate(d.getDate()+7);return d.toISOString().slice(0,10);})();
   track.innerHTML=items.map(d=>{
-    const _tkAdults = parseInt(document.getElementById("adults")?.value || "1");
+    const _tkAdults = parseInt(document.getElementById("adults")?.value || "2");
     const url=`https://www.jetradar.com/search/${d.o}${_ddmm(_td)}${d.d}${_ddmm(_tr)}${_tkAdults}1?adults=${_tkAdults}&currency=GBP&locale=en&marker=${MARKER}`;
     return`<span class="ticker-item" onclick="window.open('${url}','_blank','noopener')">✈️ ${d.r} <span class="t-price">${d.p}</span> ${d.a} <span class="ticker-dot">●</span></span>`;
   }).join("");
@@ -4142,7 +4150,7 @@ async function loadTopDeals(){
 
   // Then try to upgrade with live data from Netlify function
   try{
-    const res=await fetch(`${FN_FLIGHTS}?type=top_deals&origin=${origin}&limit=12`);
+    const res=await fetch(`${FN_FLIGHTS}?type=top_deals&origin=${origin}&limit=12&adults=2`);
     if(!res.ok) return; // keep fallback shown above
     const text=await res.text();
     let data;
@@ -4162,7 +4170,7 @@ async function loadTopDeals(){
       // Deep link: use booking_url from API if present (already has dates), else build it
       const depDate=d.depart_date||d.departure_at||"";
       const retDate=d.return_date||d.return_at||"";
-      const _tdAdults = parseInt(document.getElementById("adults")?.value || "1");
+      const _tdAdults = parseInt(document.getElementById("adults")?.value || "2");
       const url=d.booking_url||flightTicketUrl(orig,dest,depDate,_tdAdults,retDate);
       const depDisplay=depDate?new Date(depDate).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}):"Flexible dates";
       const retDisplay=retDate?new Date(retDate).toLocaleDateString("en-GB",{day:"numeric",month:"short"}):"";
@@ -4217,17 +4225,17 @@ function renderFallbackDeals(origin){
     const ret=new Date(dep);ret.setDate(ret.getDate()+7);
     const retStr=ret.toISOString().slice(0,10);
     const rawPrice=parseInt(d.price.replace(/[^0-9]/g,""))||99;
-    const _hfAdults = parseInt(document.getElementById("adults")?.value || "1");
+    const _hfAdults = parseInt(document.getElementById("adults")?.value || "2");
     const url=`https://www.jetradar.com/search/${origin}${_ddmm(dep)}${d.iata}${_ddmm(retStr)}${_hfAdults}1?adults=${_hfAdults}&currency=GBP&locale=en&marker=${MARKER}`;
     return`<a class="deal-card-v2" href="${url}" target="_blank" rel="noopener" onclick="trackClick({event_type:'click',partner:'jetradar',section:'top_deals_fallback',price:${rawPrice}})">
       <div class="deal-img-wrap">
         <img src="${DEST_PHOTOS[d.iata]||d.img}" alt="${d.dest}" loading="lazy" onerror="this.src='${d.img}'">
         <div class="deal-img-overlay"></div>
-        <div class="deal-price-badge">${d.price}</div>
+        <div class="deal-price-badge">${d.price}pp</div>
       </div>
       <div class="deal-body">
         <div class="deal-dest-name">${d.dest}</div>
-        <div class="deal-airport">✈ ${originFull} → ${d.iata} · 1 adult · Economy</div>
+        <div class="deal-airport">✈ ${originFull} → ${d.iata} · 2 adults · Economy</div>
         <div style="font-size:11px;font-weight:700;color:var(--txt);margin:4px 0 2px">📅 ${fmtDate(dep)} → ${fmtDate(retStr)}</div>
         <div class="deal-tags">${d.tags.map(t=>`<span class="deal-tag">${t}</span>`).join("")}</div>
       </div>
@@ -4272,7 +4280,9 @@ async function loadHotDealChips(){
   const grid = document.getElementById("hot-deals-grid");
   const sub  = document.getElementById("hot-deals-sub-pkg");
   if(!grid) return;
-  grid.innerHTML = `<div class="hot-deal-chip-loading">🔍 Finding live deals from ${origin}…</div>`;
+
+  // Show fallback IMMEDIATELY so chips are always visible
+  renderFallbackHotChips(origin);
 
   // Calculate a near-future departure (next available Tue/Wed, ~3 weeks out)
   function nextTueOrWed(weeksOut=3){
@@ -4283,14 +4293,14 @@ async function loadHotDealChips(){
   function addDays(str,n){ const d=new Date(str); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
 
   try{
-    const res = await fetch(`${FN_FLIGHTS}?type=top_deals&origin=${origin}&limit=12`);
-    if(!res.ok){ renderFallbackHotChips(origin); return; }
+    const res = await fetch(`${FN_FLIGHTS}?type=top_deals&origin=${origin}&limit=12&adults=2`);
+    if(!res.ok) return; // keep fallback
     const data = await res.json();
     const raw = Array.isArray(data)?data:(data.data||[]);
     const deals = raw.filter(d=>d&&(d.value||d.price)>0).slice(0,10);
+    if(!deals.length) return; // keep fallback
 
-    if(!deals.length){ renderFallbackHotChips(origin); return; }
-
+    const _hdAdults = parseInt(document.getElementById("adults")?.value || "2");
     grid.innerHTML = deals.map(d=>{
       const price = Math.round(d.value||d.price||0);
       const dest  = (d.destination||"").toUpperCase();
@@ -4298,7 +4308,6 @@ async function loadHotDealChips(){
       const depDate = d.depart_date||d.departure_at||nextTueOrWed(3);
       const retDate = d.return_date||d.return_at||addDays(depDate,7);
       // Deep link with exact dates pre-filled
-      const _hdAdults = parseInt(document.getElementById("adults")?.value || "1");
       const url = d.booking_url || flightTicketUrl(orig, dest, depDate, _hdAdults, retDate);
       const depStr  = new Date(depDate).toLocaleDateString("en-GB",{day:"numeric",month:"short"});
       const retStr  = new Date(retDate).toLocaleDateString("en-GB",{day:"numeric",month:"short"});
@@ -4314,7 +4323,7 @@ async function loadHotDealChips(){
         <div class="hot-deal-chip-dest">${name}</div>
         <div class="hot-deal-chip-from">from ${origFull}</div>
         <div class="hot-deal-chip-date">📅 ${depStr} → ${retStr}</div>
-        <div class="hot-deal-chip-price">£${price}</div>
+        <div class="hot-deal-chip-price">£${price}pp</div>
         <div class="hot-deal-chip-bottom">
           <span class="hot-deal-chip-tag ${grade.cls}">${grade.tag}</span>
           <span class="hot-deal-chip-direct">${direct?"✈ Direct":"1+ stop"}</span>
@@ -4324,10 +4333,10 @@ async function loadHotDealChips(){
     }).join("");
     const isLivePkg = !deals[0]?._fallback;
     if(sub) sub.textContent = isLivePkg
-      ? `${deals.length} live deals from ${origin} · Dates confirmed · Click to book`
+      ? `${deals.length} live deals from ${origin} · 2 adults · Click to book`
       : `${deals.length} popular deals from ${origin} · Click to compare prices`;
   }catch(err){
-    renderFallbackHotChips(origin);
+    // fallback already shown
   }
 }
 
@@ -4350,7 +4359,7 @@ function renderFallbackHotChips(origin){
   grid.innerHTML = fallbacks.map(f=>{
     const retDate = new Date(f.dep); retDate.setDate(retDate.getDate()+f.nights);
     const ret = retDate.toISOString().slice(0,10);
-    const url = flightTicketUrl(f.orig, f.dest, f.dep, 1, ret);
+    const url = flightTicketUrl(f.orig, f.dest, f.dep, 2, ret);
     return `<a class="hot-deal-chip" href="${url}" target="_blank" rel="noopener"
         onclick="trackClick({event_type:'click',partner:'jetradar',section:'hot_deals_fallback',price:${f.price}})">
       <div class="hot-deal-chip-flag">${f.flag}</div>
@@ -4565,7 +4574,7 @@ function showDestGuide(iata, destName, departDate) {
 
 /* SHARE DEAL */
 function shareDeal(origin, dest, date, price) {
-  const _adults = (window._lastFlightMeta && window._lastFlightMeta.adults) || document.getElementById("adults")?.value || "1";
+  const _adults = (window._lastFlightMeta && window._lastFlightMeta.adults) || document.getElementById("adults")?.value || "2";
   const url = flightSearchUrl(origin, dest, date, _adults);
   const text = `✈️ ${origin} → ${dest} from £${price} - found on TripHunt`;
   if (navigator.share) {
@@ -4668,7 +4677,7 @@ function triggerExitPopup() {
     document.getElementById("exit-deal-route").textContent = `${lastOrigin} → ${lastDest}`;
     document.getElementById("exit-deal-price").textContent = "See Prices";
     document.getElementById("exit-deal-meta").textContent = "Live fares in GBP · 100+ airlines compared";
-    const _exitAdults = (window._lastFlightMeta && window._lastFlightMeta.adults) || document.getElementById("adults")?.value || "1";
+    const _exitAdults = (window._lastFlightMeta && window._lastFlightMeta.adults) || document.getElementById("adults")?.value || "2";
     document.getElementById("exit-cta-btn").href = flightSearchUrl(lastOrigin, lastDest, lastDate || "", _exitAdults);
   }
 
@@ -6386,7 +6395,7 @@ function sortFlightResults(mode, btn){
   else sorted = flights;
   const {originIata,destIata,origName,destName,date,adults,returnDate} = window._lastFlightMeta||{};
   const grid = document.getElementById("results-grid");
-  renderFlightCards(sorted, originIata, destIata, origName||originIata, destName||destIata, date, returnDate, adults||"1", grid);
+  renderFlightCards(sorted, originIata, destIata, origName||originIata, destName||destIata, date, returnDate, adults||"2", grid);
 }
 
 function mnavClick(section){
@@ -6863,7 +6872,7 @@ function searchMultiCity(){
     const dd = leg.date ? _ddmm(leg.date) : "";
     return dd ? `${leg.from}${dd}${leg.to}` : `${leg.from}-${leg.to}`;
   }).join(",");
-  const _mcAdults = parseInt(document.getElementById("adults")?.value || "1");
+  const _mcAdults = parseInt(document.getElementById("adults")?.value || "2");
   const url=`https://www.jetradar.com/flights/?marker=${MARKER}&currency=GBP&locale=en&multi_city=${encodeURIComponent(legStrings)}&adults=${_mcAdults}`;
   trackClick({event_type:"click",partner:"jetradar",section:"multi-city"});
   window.open(url,"_blank","noopener");
@@ -7282,7 +7291,7 @@ function shareToWhatsApp(origin, dest, price) {
   const _dep=(()=>{const d=new Date();d.setDate(d.getDate()+21);while(d.getDay()!==2)d.setDate(d.getDate()+1);return d.toISOString().slice(0,10);})();
   const _ret=(()=>{const d=new Date(_dep);d.setDate(d.getDate()+7);return d.toISOString().slice(0,10);})();
   const _d=_ddmm(_dep),_r=_ddmm(_ret);
-  const _vsAdults = parseInt(document.getElementById("viral-pax")?.value || document.getElementById("adults")?.value || "1");
+  const _vsAdults = parseInt(document.getElementById("viral-pax")?.value || document.getElementById("adults")?.value || "2");
   const url  = `https://www.jetradar.com/search/${origin}${_d}${dest}${_r}${_vsAdults}1?adults=${_vsAdults}&currency=GBP&locale=en&marker=${MARKER}`;
   const text = `✈️ Found a great deal! ${origin} → ${dest} from £${price}pp — check it out on TripHunt`;
   window.open(`https://wa.me/?text=${encodeURIComponent(text + "\n" + url)}`, "_blank");
