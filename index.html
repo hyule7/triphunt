@@ -209,6 +209,7 @@ body {
   border-radius: 0 var(--r20) var(--r20) var(--r20);
   padding: 28px 32px;
   box-shadow: var(--shadow2);
+  overflow: visible;
 }
 .search-panel.active { display: block; }
 
@@ -230,6 +231,7 @@ body {
   display: grid;
   grid-template-columns: 1.6fr 1.6fr 1fr 1fr 0.8fr auto;
   gap: 12px; align-items: end;
+  overflow: visible;
 }
 @media (max-width: 900px) {
   .search-fields { grid-template-columns: 1fr 1fr 1fr; }
@@ -3188,7 +3190,7 @@ function handleAutocomplete(inputEl, key) {
   if(hidden) hidden.value = "";
 
   if(q.length < 1) {
-    // Show popular suggestions when field is empty/short
+    // Show popular suggestions when field is cleared
     showPopular(list, cfg, key);
     return;
   }
@@ -3200,9 +3202,9 @@ function handleAutocomplete(inputEl, key) {
     return;
   }
 
-  // No local match - try external API with debounce
+  // No local match - hit the proxy with short debounce
   clearTimeout(_acTimer);
-  _acTimer = setTimeout(() => fetchAC(q, list, cfg, key), 200);
+  _acTimer = setTimeout(() => fetchAC(q, list, cfg, key), 150);
 }
 
 // Called onfocus on every search text field  
@@ -3212,7 +3214,12 @@ function handleFocus(inputEl, key) {
   const list = document.getElementById(cfg.listId);
   if(!list) return;
   const q = inputEl.value.trim();
-  if(q.length < 2) showPopular(list, cfg, key);
+  // Always show suggestions on focus so user always sees options
+  if(q.length >= 1) {
+    const localResults = searchLocalAirports(q, cfg.type);
+    if(localResults.length) { renderItems(list, localResults, cfg, key, false); return; }
+  }
+  showPopular(list, cfg, key);
 }
 
 // Render popular airports/destinations before user has typed
@@ -3252,26 +3259,21 @@ function renderItems(list, items, cfg, key, isPopular) {
   });
 }
 
-// Fetch from TravelPayouts autocomplete API (with CORS fallback to local airport search)
+// Fetch from our Netlify proxy (no CORS issues) with local fallback
 async function fetchAC(q, list, cfg, key) {
-  // First try local airport search (instant, no network needed)
+  // Local search first — instant, no network
   const localResults = searchLocalAirports(q, cfg.type);
   if (localResults.length) {
     renderItems(list, localResults, cfg, key, false);
     return;
   }
-  // If no local match, try the external API
+  // Hit our own Netlify proxy — avoids all CORS issues
   try {
-    const r = await fetch(`https://autocomplete.travelpayouts.com/places2?term=${encodeURIComponent(q)}&locale=en&types[]=airport&types[]=city`);
+    const r = await fetch(`/.netlify/functions/getAutocomplete?term=${encodeURIComponent(q)}`);
     if(!r.ok) { showPopular(list, cfg, key); return; }
     const data = await r.json();
     if(!data.length) { showPopular(list, cfg, key); return; }
-    const mapped = data.slice(0,8).map(item => ({
-      name: item.name,
-      code: item.code,
-      sub:  item.country_name || item.city_name || ""
-    }));
-    renderItems(list, mapped, cfg, key, false);
+    renderItems(list, data, cfg, key, false);
   } catch(e) {
     showPopular(list, cfg, key);
   }

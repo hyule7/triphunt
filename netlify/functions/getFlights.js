@@ -313,6 +313,7 @@ async function fetchTopDeals(params, token) {
 async function fetchPackages(params, token) {
   const nights = parseInt(params.nights) || 7;
   const adults = parseInt(params.adults) || 2;
+  const limit  = parseInt(params.limit)  || 8;
   const fd     = await fetchTopDeals({ origin:params.origin, limit:String(limit) }, token);
   if (fd && fd.data && fd.data.length) {
     const items = fd.data.map(f => {
