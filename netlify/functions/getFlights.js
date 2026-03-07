@@ -59,12 +59,18 @@ function addDays(s, n) {
   return d.toISOString().slice(0,10);
 }
 function bookingUrl(orig, dest, dep, ret, adults) {
-  const d = ddmm(dep), r = ddmm(ret), p = parseInt(adults) || 1;
-  let path;
-  if (d && r) path = orig + d + dest + r + p + "1";
-  else if (d)  path = orig + d + dest + p + "1";
-  else         path = orig + dest;
-  return `https://www.jetradar.com/search/${path}?adults=${p}&currency=GBP&locale=en&marker=${MARKER}`;
+  const p = parseInt(adults) || 2;
+  const params = new URLSearchParams({
+    marker:           MARKER,
+    currency:         "GBP",
+    locale:           "en",
+    origin_iata:      orig,
+    destination_iata: dest,
+    adults:           p,
+  });
+  if (dep) params.set("depart_date", dep);
+  if (ret) params.set("return_date", ret);
+  return "https://www.jetradar.com/flights/?" + params.toString();
 }
 
 // ── Static fallback deals (used when no API token) ────────────────

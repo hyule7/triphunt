@@ -2984,14 +2984,20 @@ function _ddmm(s){
   const p=String(s).slice(0,10).split("-");
   return p.length===3 ? p[2]+p[1] : "";
 }
-function aviasalesUrl(o,d,date,adults=1,retDate=""){
-  // Always encode dates - JetRadar pre-fills origin, destination, dates and passenger count
-  const dep = date || _defaultDep();
-  const ret = retDate || _defaultRet(dep);
-  const dd = _ddmm(dep);  // DDMM e.g. "3103"
-  const rd = _ddmm(ret);  // DDMM e.g. "0704"
-  const p = parseInt(adults)||2;
-  return `https://www.jetradar.com/search/${o}${dd}${d}${rd}${p}1?adults=${p}&currency=GBP&locale=en&marker=${MARKER}`;
+function aviasalesUrl(o, d, date, adults, retDate) {
+  // Use query-string format — reliable across all routes, pre-fills all fields on JetRadar
+  const p = parseInt(adults) || 2;
+  const params = new URLSearchParams({
+    marker:           MARKER,
+    currency:         "GBP",
+    locale:           "en",
+    origin_iata:      o,
+    destination_iata: d,
+    adults:           p,
+  });
+  if (date)    params.set("depart_date", date);
+  if (retDate) params.set("return_date", retDate);
+  return "https://www.jetradar.com/flights/?" + params.toString();
 }
 function flightSearchUrl(o,d,date,adults=1,retDate=""){ return aviasalesUrl(o,d,date,adults,retDate); }
 function flightTicketUrl(o,d,date,adults=1,retDate=""){ return aviasalesUrl(o,d,date,adults,retDate); }
@@ -3492,8 +3498,7 @@ function showNearbyAirports(){
 function _noResultsUrl(orig, dest, date, returnDate, adults) {
   const d = _anyTime.depart ? '' : (date || '');
   const r = _anyTime.return ? '' : (returnDate || '');
-  if (d) return flightSearchUrl(orig, dest, d, adults, r);
-  return 'https://www.jetradar.com/search/' + orig + dest + '?adults=' + adults + '&currency=GBP&locale=en&marker=' + MARKER;
+  return aviasalesUrl(orig, dest, d, adults, r);
 }
 
 async function searchFlights(){
@@ -4016,7 +4021,7 @@ function renderDeals(code){
     const ret=new Date(dep);ret.setDate(ret.getDate()+7);
     const retStr=ret.toISOString().slice(0,10);
     const _tAdults = parseInt(document.getElementById("adults")?.value || "2");
-    const url=`https://www.jetradar.com/search/${code}${_ddmm(dep)}${d.iata}${_ddmm(retStr)}${_tAdults}1?adults=${_tAdults}&currency=GBP&locale=en&marker=${MARKER}`;
+    const url=aviasalesUrl(code,d.iata,dep,_tAdults,retStr);
     return`<a class="deal-card" href="${url}" target="_blank" rel="noopener" onclick="trackClick({event_type:'click',partner:'jetradar',section:'trending',price:parseInt('${d.price}'.replace(/[^0-9]/g,''))||99})">
       <div class="deal-img-wrap">
         <img src="${d.img}" alt="${d.dest}" loading="lazy" onerror="this.parentElement.style.background='var(--c3)';this.remove()"/>
@@ -4143,7 +4148,7 @@ function buildTicker(){
   const _tr=(()=>{const d=new Date(_td);d.setDate(d.getDate()+7);return d.toISOString().slice(0,10);})();
   track.innerHTML=items.map(d=>{
     const _tkAdults = parseInt(document.getElementById("adults")?.value || "2");
-    const url=`https://www.jetradar.com/search/${d.o}${_ddmm(_td)}${d.d}${_ddmm(_tr)}${_tkAdults}1?adults=${_tkAdults}&currency=GBP&locale=en&marker=${MARKER}`;
+    const url=aviasalesUrl(d.o,d.d,_td,_tkAdults,_tr);
     return`<span class="ticker-item" onclick="window.open('${url}','_blank','noopener')">✈️ ${d.r} <span class="t-price">${d.p}</span> ${d.a} <span class="ticker-dot">●</span></span>`;
   }).join("");
 }
@@ -4236,7 +4241,7 @@ function renderFallbackDeals(origin){
     const retStr=ret.toISOString().slice(0,10);
     const rawPrice=parseInt(d.price.replace(/[^0-9]/g,""))||99;
     const _hfAdults = parseInt(document.getElementById("adults")?.value || "2");
-    const url=`https://www.jetradar.com/search/${origin}${_ddmm(dep)}${d.iata}${_ddmm(retStr)}${_hfAdults}1?adults=${_hfAdults}&currency=GBP&locale=en&marker=${MARKER}`;
+    const url=aviasalesUrl(origin,d.iata,dep,_hfAdults,retStr);
     return`<a class="deal-card-v2" href="${url}" target="_blank" rel="noopener" onclick="trackClick({event_type:'click',partner:'jetradar',section:'top_deals_fallback',price:${rawPrice}})">
       <div class="deal-img-wrap">
         <img src="${DEST_PHOTOS[d.iata]||d.img}" alt="${d.dest}" loading="lazy" onerror="this.src='${d.img}'">
@@ -7259,13 +7264,14 @@ function renderDealDiscovery(type) {
 }
 
 function buildBookingUrl_safe(origin, dest, dep, ret, adults) {
-  // Always use date-encoded deep link so JetRadar pre-fills the search
-  if(dep && ret){
-    const d=_ddmm(dep);
-    const r=_ddmm(ret);
-    return `https://www.jetradar.com/search/${origin}${d}${dest}${r}${adults}1?adults=${adults}&currency=GBP&locale=en&marker=${MARKER}`;
-  }
-  return `https://www.jetradar.com/search/${origin}${dest}?adults=${adults}&currency=GBP&locale=en&marker=${MARKER}`;
+  const p = parseInt(adults) || 2;
+  const params = new URLSearchParams({
+    marker: MARKER, currency: "GBP", locale: "en",
+    origin_iata: origin, destination_iata: dest, adults: p,
+  });
+  if (dep) params.set("depart_date", dep);
+  if (ret) params.set("return_date", ret);
+  return "https://www.jetradar.com/flights/?" + params.toString();
 }
 
 /* ════ EMAIL ALERT CAPTURE ═════════════════════════════════════ */
@@ -7302,7 +7308,7 @@ function shareToWhatsApp(origin, dest, price) {
   const _ret=(()=>{const d=new Date(_dep);d.setDate(d.getDate()+7);return d.toISOString().slice(0,10);})();
   const _d=_ddmm(_dep),_r=_ddmm(_ret);
   const _vsAdults = parseInt(document.getElementById("viral-pax")?.value || document.getElementById("adults")?.value || "2");
-  const url  = `https://www.jetradar.com/search/${origin}${_d}${dest}${_r}${_vsAdults}1?adults=${_vsAdults}&currency=GBP&locale=en&marker=${MARKER}`;
+  const url  = aviasalesUrl(origin,dest,_dep,_vsAdults,_ret);
   const text = `✈️ Found a great deal! ${origin} → ${dest} from £${price}pp — check it out on TripHunt`;
   window.open(`https://wa.me/?text=${encodeURIComponent(text + "\n" + url)}`, "_blank");
 }
