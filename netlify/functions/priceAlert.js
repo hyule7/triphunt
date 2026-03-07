@@ -135,7 +135,7 @@ async function sendAlertEmail(alert, price) {
   const path = dd && rd
     ? alert.origin_code + dd + alert.dest_code + rd + "11"
     : alert.origin_code + alert.dest_code;
-  const bookingUrl = "https://www.jetradar.com/search/" + path + "?adults=1&currency=GBP&locale=en&marker=" + MARKER;
+  const bookingUrl = "https://www.aviasales.com/search/" + path + "?marker=" + MARKER + "&currency=GBP&locale=en-GB";
   const html = "<h2>Price Alert: " + alert.dest_name + "</h2><p>A flight from " + alert.origin_code + " to " + alert.dest_name + " is now available for <strong>GBP" + price + "</strong> - below your target of GBP" + alert.target_price + ".</p><a href='" + bookingUrl + "' style='background:#7c6af7;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;margin-top:16px'>Book Now</a><p style='color:#666;font-size:12px;margin-top:24px'>TripHunt - " + SITE_URL + "</p>";
 
   return new Promise(function(resolve, reject) {

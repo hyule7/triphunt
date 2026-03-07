@@ -372,7 +372,7 @@ function jrUrl(orig, dest, weeksOut=3, nights=7, adults=1){
   // JetRadar path format: DDMM (day first, then month)
   const dd=String(dep.getDate()).padStart(2,'0')+String(dep.getMonth()+1).padStart(2,'0');
   const rd=String(ret.getDate()).padStart(2,'0')+String(ret.getMonth()+1).padStart(2,'0');
-  return `https://www.jetradar.com/search/${orig}${dd}${dest}${rd}${adults}1?adults=${adults}&currency=GBP&locale=en&marker=${MARKER}`;
+  return `https://www.aviasales.com/search/${orig}${dd}${dest}${rd}${adults}1?marker=${MARKER}&currency=GBP&locale=en-GB`;
 }
 
 // ─── Shared CSS ───────────────────────────────────────────────────────────────

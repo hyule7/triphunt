@@ -59,18 +59,15 @@ function addDays(s, n) {
   return d.toISOString().slice(0,10);
 }
 function bookingUrl(orig, dest, dep, ret, adults) {
-  const p = parseInt(adults) || 2;
-  const params = new URLSearchParams({
-    marker:           MARKER,
-    currency:         "GBP",
-    locale:           "en",
-    origin_iata:      orig,
-    destination_iata: dest,
-    adults:           p,
-  });
-  if (dep) params.set("depart_date", dep);
-  if (ret) params.set("return_date", ret);
-  return "https://www.jetradar.com/flights/?" + params.toString();
+  // TravelPayouts confirmed deeplink: aviasales.com/search/{ORIG}{DDMM_dep}{DEST}{DDMM_ret}{pax}{cabin}
+  const p  = parseInt(adults) || 2;
+  const dd = ddmm(dep);
+  const rd = ddmm(ret);
+  let path;
+  if (dd && rd) path = orig + dd + dest + rd + p + "1";
+  else if (dd)  path = orig + dd + dest + p + "1";
+  else          path = orig + dest;
+  return "https://www.aviasales.com/search/" + path + "?marker=" + MARKER + "&currency=GBP&locale=en-GB";
 }
 
 // ── Static fallback deals (used when no API token) ────────────────

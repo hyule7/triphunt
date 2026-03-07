@@ -1,6 +1,11 @@
 // TripHunt - priceCalendar.js
 const https = require("https");
 
+function ddmm(s) {
+  if (!s) return "";
+  const p = String(s).slice(0, 10).split("-");
+  return p.length === 3 ? p[2] + p[1] : "";
+}
 function addDays(s, n) {
   const d = new Date(String(s).slice(0, 10));
   d.setDate(d.getDate() + n);
@@ -17,18 +22,14 @@ const cors = {
 const MARKER = process.env.TRAVELPAYOUTS_MARKER || "499405";
 
 function bookingUrl(origin, dest, dep, ret) {
-  // Query-string format — reliable, pre-fills all fields on JetRadar
-  const p = new URLSearchParams({
-    marker:           MARKER,
-    currency:         "GBP",
-    locale:           "en",
-    origin_iata:      origin,
-    destination_iata: dest,
-    adults:           2,
-  });
-  if (dep) p.set("depart_date", dep);
-  if (ret) p.set("return_date",  ret);
-  return "https://www.jetradar.com/flights/?" + p.toString();
+  // TravelPayouts confirmed deeplink: aviasales.com/search/{ORIG}{DDMM_dep}{DEST}{DDMM_ret}{pax}{cabin}
+  const dd = ddmm(dep);
+  const rd = ddmm(ret);
+  let path;
+  if (dd && rd) path = origin + dd + dest + rd + "21";
+  else if (dd)  path = origin + dd + dest + "21";
+  else          path = origin + dest;
+  return "https://www.aviasales.com/search/" + path + "?marker=" + MARKER + "&currency=GBP&locale=en-GB";
 }
 
 exports.handler = async function(event) {

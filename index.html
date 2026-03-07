@@ -2882,8 +2882,8 @@ function calcCostPerMile() {
 <script>
 /* ════ CONFIG ══════════════════════════════════════════════════ */
 const MARKER     = "499405";
-const AVI_SEARCH = "https://www.jetradar.com/flights/";
-const AVI_TICKET = "https://www.jetradar.com/flights/";
+const AVI_SEARCH = "https://www.aviasales.com/search/";
+const AVI_TICKET = "https://www.aviasales.com/search/";
 const FN_FLIGHTS = "/.netlify/functions/getFlights";
 const FN_AI      = "/.netlify/functions/getTravelAI";
 const FN_KLOOK   = "/.netlify/functions/getKlook";
@@ -2999,19 +2999,15 @@ function _ddmm(s){
   return p.length===3 ? p[2]+p[1] : "";
 }
 function aviasalesUrl(o, d, date, adults, retDate) {
-  // Use query-string format — reliable across all routes, pre-fills all fields on JetRadar
-  const p = parseInt(adults) || 2;
-  const params = new URLSearchParams({
-    marker:           MARKER,
-    currency:         "GBP",
-    locale:           "en",
-    origin_iata:      o,
-    destination_iata: d,
-    adults:           p,
-  });
-  if (date)    params.set("depart_date", date);
-  if (retDate) params.set("return_date", retDate);
-  return "https://www.jetradar.com/flights/?" + params.toString();
+  // TravelPayouts confirmed deeplink: aviasales.com/search/{ORIG}{DDMM_dep}{DEST}{DDMM_ret}{pax}{cabin}
+  const p  = parseInt(adults) || 2;
+  const dd = _ddmm(date);
+  const rd = _ddmm(retDate);
+  let path;
+  if (dd && rd) path = o + dd + d + rd + p + "1";
+  else if (dd)  path = o + dd + d + p + "1";
+  else          path = o + d;
+  return "https://www.aviasales.com/search/" + path + "?marker=" + MARKER + "&currency=GBP&locale=en-GB";
 }
 
 // ── Skyscanner deep link (always works for any route) ──────────────
@@ -6953,7 +6949,11 @@ function searchMultiCity(){
     return dd ? `${leg.from}${dd}${leg.to}` : `${leg.from}-${leg.to}`;
   }).join(",");
   const _mcAdults = parseInt(document.getElementById("adults")?.value || "2");
-  const url=`https://www.jetradar.com/flights/?marker=${MARKER}&currency=GBP&locale=en&multi_city=${encodeURIComponent(legStrings)}&adults=${_mcAdults}`;
+  // Multi-city: open aviasales.com with first leg pre-filled, user can add more legs there
+  const firstLeg = legs[0];
+  const _dd = firstLeg.date ? _ddmm(firstLeg.date) : "";
+  const _mcPath = _dd ? firstLeg.from+_dd+firstLeg.to+_mcAdults+"1" : firstLeg.from+firstLeg.to;
+  const url = "https://www.aviasales.com/search/"+_mcPath+"?marker="+MARKER+"&currency=GBP&locale=en-GB";
   trackClick({event_type:"click",partner:"jetradar",section:"multi-city"});
   window.open(url,"_blank","noopener");
 }
@@ -7329,14 +7329,14 @@ function renderDealDiscovery(type) {
 }
 
 function buildBookingUrl_safe(origin, dest, dep, ret, adults) {
-  const p = parseInt(adults) || 2;
-  const params = new URLSearchParams({
-    marker: MARKER, currency: "GBP", locale: "en",
-    origin_iata: origin, destination_iata: dest, adults: p,
-  });
-  if (dep) params.set("depart_date", dep);
-  if (ret) params.set("return_date", ret);
-  return "https://www.jetradar.com/flights/?" + params.toString();
+  const p  = parseInt(adults) || 2;
+  const dd = _ddmm(dep);
+  const rd = _ddmm(ret);
+  let path;
+  if (dd && rd) path = origin + dd + dest + rd + p + "1";
+  else if (dd)  path = origin + dd + dest + p + "1";
+  else          path = origin + dest;
+  return "https://www.aviasales.com/search/" + path + "?marker=" + MARKER + "&currency=GBP&locale=en-GB";
 }
 
 /* ════ EMAIL ALERT CAPTURE ═════════════════════════════════════ */
