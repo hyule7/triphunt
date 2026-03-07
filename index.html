@@ -3488,6 +3488,14 @@ function showNearbyAirports(){
 }
 
 /* FLIGHT SEARCH */
+// Helper: build the JetRadar fallback URL (avoids nested template literal syntax errors)
+function _noResultsUrl(orig, dest, date, returnDate, adults) {
+  const d = _anyTime.depart ? '' : (date || '');
+  const r = _anyTime.return ? '' : (returnDate || '');
+  if (d) return flightSearchUrl(orig, dest, d, adults, r);
+  return 'https://www.jetradar.com/search/' + orig + dest + '?adults=' + adults + '&currency=GBP&locale=en&marker=' + MARKER;
+}
+
 async function searchFlights(){
   // ── Double-click protection ─────────────────────────────────────
   if(window._searchLock) return;
@@ -3635,7 +3643,7 @@ async function searchFlights(){
         <div style="font-size:40px;margin-bottom:12px">✈️</div>
         <div style="font-size:18px;font-weight:700;margin-bottom:8px">No direct results found</div>
         <div style="font-size:13px;color:var(--txt2);margin-bottom:20px">Try different dates or use the flexible calendar below</div>
-        <a href="${(()=>{const d=_anyTime.depart?'':date;const r=_anyTime.return?'':returnDate;return d?flightSearchUrl(originIata,destIata,d,adults,r||''):`https://www.jetradar.com/search/${originIata}${destIata}?adults=${adults}&currency=GBP&locale=en&marker=${MARKER}`;})()" target="_blank" rel="noopener" class="btn-search" style="display:inline-flex;width:auto;padding:12px 28px">Search on JetRadar →</a>
+        <a href="${_noResultsUrl(originIata,destIata,date,returnDate,adults)}" target="_blank" rel="noopener" class="btn-search" style="display:inline-flex;width:auto;padding:12px 28px">Search on JetRadar →</a>
       </div>`;
     addHackerFare(originIata, destIata, date, adults, grid, destName);
   } else {
