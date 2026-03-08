@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore Destinations — Where to Fly from the UK | TripHunt</title>
+<meta name="description" content="Explore the best flight destinations from UK airports. Filter by budget, continent and travel style. Find the cheapest month to fly.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://triphunt.org/destinations">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,wght@0,700;0,900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a0f1e;--navy1:#0e1528;--navy2:#141d35;--navy3:#1a2442;--navy4:#243058;
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.12);
+  --acc:#2563eb;--acc2:#3b82f6;--acc3:#60a5fa;
+  --grn:#10b981;--amber:#f59e0b;
+  --txt:#f0f4ff;--txt2:#8b9cbf;--txt3:#4a5878;
+  --r8:8px;--r12:12px;--r16:16px;--r24:24px;--r99:9999px;--max:1240px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--txt);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+.container{max-width:var(--max);margin:0 auto;padding:0 20px;}
+
+/* Nav */
+.site-nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:8px;padding:0 24px;height:56px;background:rgba(10,15,30,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Fraunces',Georgia,serif;font-size:20px;font-weight:900;color:var(--txt);text-decoration:none;letter-spacing:-.5px;}
+.nav-links{display:flex;gap:4px;margin-left:8px;}
+.nav-link{font-size:13px;font-weight:500;color:var(--txt2);padding:6px 12px;border-radius:var(--r99);text-decoration:none;transition:all .2s;}
+.nav-link:hover,.nav-link.active{color:var(--txt);background:var(--navy3);}
+
+/* Hero */
+.hero{padding:56px 20px 40px;text-align:center;position:relative;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(37,99,235,.1),transparent);pointer-events:none;}
+.hero-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--acc3);margin-bottom:8px;}
+.hero h1{font-family:'Fraunces',Georgia,serif;font-size:clamp(36px,6vw,58px);font-weight:900;margin-bottom:8px;line-height:1.05;}
+.hero h1 em{color:var(--acc3);font-style:italic;}
+.hero-sub{font-size:15px;color:var(--txt2);max-width:460px;margin:0 auto 28px;}
+
+/* Filters */
+.filters{background:var(--navy1);border-bottom:1px solid var(--border);padding:16px 0;position:sticky;top:56px;z-index:100;}
+.filters-inner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.filter-group{display:flex;gap:4px;flex-wrap:wrap;}
+.filter-btn{padding:7px 14px;background:none;border:1px solid var(--border2);border-radius:var(--r99);color:var(--txt2);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif;white-space:nowrap;}
+.filter-btn:hover{color:var(--txt);border-color:var(--txt3);}
+.filter-btn.active{background:var(--acc);color:#fff;border-color:var(--acc);}
+.filter-sep{width:1px;height:24px;background:var(--border);flex-shrink:0;}
+.filter-count{margin-left:auto;font-size:12px;color:var(--txt3);}
+.search-filter{background:var(--navy2);border:1px solid var(--border);border-radius:var(--r99);padding:7px 14px;color:var(--txt);font-size:12px;font-family:'Outfit',sans-serif;width:160px;}
+.search-filter::placeholder{color:var(--txt3);}
+.search-filter:focus{outline:none;border-color:var(--acc);}
+
+/* Grid */
+.dest-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;padding:32px 0 64px;}
+
+/* Destination card */
+.dest-card{background:var(--navy1);border:1px solid var(--border);border-radius:var(--r24);overflow:hidden;transition:all .25s;cursor:pointer;position:relative;}
+.dest-card:hover{border-color:var(--border2);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.6);}
+.dest-card-img{height:180px;position:relative;overflow:hidden;}
+.dest-card-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:80px;transition:transform .4s;}
+.dest-card:hover .dest-card-bg{transform:scale(1.1);}
+.dest-card-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(10,15,30,.9) 100%);}
+.dest-card-country{position:absolute;top:12px;left:12px;background:rgba(10,15,30,.6);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);border-radius:var(--r99);padding:4px 10px;font-size:11px;font-weight:600;color:var(--txt2);}
+.dest-card-badge{position:absolute;top:12px;right:12px;border-radius:var(--r99);padding:4px 10px;font-size:10px;font-weight:700;}
+.badge-hot{background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.3);color:#fca5a5;}
+.badge-trending{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.25);color:var(--amber);}
+.badge-value{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.2);color:var(--grn);}
+.dest-card-body{padding:18px;}
+.dest-name{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:900;margin-bottom:2px;}
+.dest-iata{font-size:11px;color:var(--txt3);font-weight:700;letter-spacing:.5px;}
+.dest-desc{font-size:13px;color:var(--txt2);margin:10px 0 14px;line-height:1.5;}
+
+/* Best month bar */
+.best-month{margin-bottom:14px;}
+.best-month-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--txt3);margin-bottom:6px;}
+.month-dots{display:flex;gap:3px;}
+.month-dot{flex:1;height:6px;border-radius:99px;background:var(--navy3);}
+.month-dot.best{background:var(--grn);}
+.month-dot.good{background:var(--amber);}
+.month-dot.ok{background:var(--navy4);}
+.month-names{display:flex;justify-content:space-between;margin-top:3px;}
+.month-names span{font-size:9px;color:var(--txt3);}
+
+.dest-card-footer{display:flex;align-items:center;justify-content:space-between;}
+.dest-price{display:flex;flex-direction:column;}
+.dest-from{font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;}
+.dest-amount{font-family:'Fraunces',Georgia,serif;font-size:28px;font-weight:900;line-height:1;}
+.dest-pp{font-size:11px;color:var(--txt2);}
+.dest-actions{display:flex;gap:6px;}
+.btn-dest{background:var(--acc);color:#fff;border:none;border-radius:var(--r8);padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;text-decoration:none;transition:background .15s;white-space:nowrap;}
+.btn-dest:hover{background:var(--acc2);}
+.btn-cal{background:var(--navy2);color:var(--txt2);border:1px solid var(--border);border-radius:var(--r8);padding:10px 12px;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;text-decoration:none;transition:all .15s;}
+.btn-cal:hover{background:var(--navy3);color:var(--txt);}
+
+/* No results */
+.no-results{text-align:center;padding:80px 20px;color:var(--txt2);grid-column:1/-1;}
+.no-results .icon{font-size:48px;margin-bottom:12px;}
+
+/* Skeleton */
+.skel-card{background:var(--navy1);border:1px solid var(--border);border-radius:var(--r24);overflow:hidden;}
+.skel{background:linear-gradient(90deg,var(--navy2) 25%,var(--navy3) 50%,var(--navy2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+@media(max-width:640px){.filters-inner{gap:6px;}.search-filter{width:100%;}}
+</style>
+<script src="/js/shared.js" defer></script>
+<script src="/js/analytics.js" defer></script>
+<script src="/js/deal-score.js" defer></script>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="/" class="nav-logo">✈ TripHunt</a>
+  <div class="nav-links">
+    <a href="/search.html" class="nav-link">Flights</a>
+    <a href="/trending.html" class="nav-link">Trending</a>
+    <a href="/destinations.html" class="nav-link active">Destinations</a>
+    <a href="/deal-of-the-day.html" class="nav-link">Deal of the Day</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">30+ destinations</div>
+    <h1>Where to Fly <em>Next</em></h1>
+    <p class="hero-sub">Filter by budget, continent or vibe. Every destination shows the cheapest month to fly.</p>
+  </div>
+</section>
+
+<!-- Filters -->
+<div class="filters">
+  <div class="container">
+    <div class="filters-inner">
+      <div class="filter-group" id="continentFilters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="europe">🇪🇺 Europe</button>
+        <button class="filter-btn" data-filter="asia">🌏 Asia</button>
+        <button class="filter-btn" data-filter="americas">🌎 Americas</button>
+        <button class="filter-btn" data-filter="africa">🌍 Africa</button>
+        <button class="filter-btn" data-filter="oceania">🦘 Oceania</button>
+      </div>
+      <div class="filter-sep"></div>
+      <div class="filter-group" id="budgetFilters">
+        <button class="filter-btn active" data-budget="all">Any budget</button>
+        <button class="filter-btn" data-budget="100">Under £100</button>
+        <button class="filter-btn" data-budget="200">Under £200</button>
+        <button class="filter-btn" data-budget="400">Under £400</button>
+      </div>
+      <input type="text" class="search-filter" id="destSearch" placeholder="Search destinations…" oninput="applyFilters()">
+      <span class="filter-count" id="filterCount"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Grid -->
+<div class="container">
+  <div class="dest-grid" id="destGrid">
+    ${Array(8).fill(`<div class="skel-card"><div class="skel" style="height:180px;border-radius:0;"></div><div style="padding:18px;"><div class="skel" style="height:24px;margin-bottom:8px;width:60%;"></div><div class="skel" style="height:16px;margin-bottom:16px;width:90%;"></div><div class="skel" style="height:32px;width:40%;"></div></div></div>`).join("")}
+  </div>
+</div>
+
+<script>
+const MARKER = "499405";
+
+const DESTINATIONS = [
+  { iata:"BCN", name:"Barcelona",      country:"Spain",        continent:"europe",   emoji:"🏖️", avg:120, badge:"hot",      desc:"Gothic Quarter, Gaudí architecture and world-class beaches. Best for culture + sun.", bestMonths:[5,6,9,10], tags:["beach","culture","nightlife"] },
+  { iata:"MAD", name:"Madrid",         country:"Spain",        continent:"europe",   emoji:"🎨", avg:110, badge:"value",    desc:"Prado Museum, vibrant tapas bars and the best nightlife in Europe.", bestMonths:[4,5,9,10], tags:["culture","food","art"] },
+  { iata:"LIS", name:"Lisbon",         country:"Portugal",     continent:"europe",   emoji:"🌞", avg:105, badge:"trending", desc:"Hilltop castles, pastel trams and cheap wine. Europe's sunniest capital.", bestMonths:[4,5,6,9,10], tags:["culture","food","budget"] },
+  { iata:"FCO", name:"Rome",           country:"Italy",        continent:"europe",   emoji:"🍕", avg:115, badge:"hot",      desc:"The Colosseum, Vatican City and the finest pasta you'll ever eat.", bestMonths:[3,4,5,9,10,11], tags:["culture","history","food"] },
+  { iata:"AMS", name:"Amsterdam",      country:"Netherlands",  continent:"europe",   emoji:"🚲", avg:95,  badge:"value",    desc:"Canal houses, world-class museums and the best cycling in the world.", bestMonths:[4,5,6,9], tags:["culture","cycling","museums"] },
+  { iata:"CDG", name:"Paris",          country:"France",       continent:"europe",   emoji:"🗼", avg:90,  badge:"hot",      desc:"The Eiffel Tower, Louvre and croissants. Always a classic.", bestMonths:[4,5,6,9,10], tags:["romance","culture","food"] },
+  { iata:"ATH", name:"Athens",         country:"Greece",       continent:"europe",   emoji:"🏛️", avg:145, badge:"value",    desc:"Ancient history meets rooftop bars with Acropolis views.", bestMonths:[4,5,9,10,11], tags:["history","culture","beach"] },
+  { iata:"PRG", name:"Prague",         country:"Czechia",      continent:"europe",   emoji:"🍺", avg:100, badge:"value",    desc:"Fairy-tale architecture, cheap beer and one of Europe's best old towns.", bestMonths:[4,5,9,10], tags:["culture","budget","nightlife"] },
+  { iata:"VIE", name:"Vienna",         country:"Austria",      continent:"europe",   emoji:"🎭", avg:105, badge:"",         desc:"Imperial palaces, Mozart and the world's best coffee houses.", bestMonths:[4,5,9,10], tags:["culture","music","food"] },
+  { iata:"DBV", name:"Dubrovnik",      country:"Croatia",      continent:"europe",   emoji:"⚓", avg:155, badge:"trending", desc:"Game of Thrones filming location with medieval walls and turquoise sea.", bestMonths:[5,6,9,10], tags:["beach","culture","scenic"] },
+  { iata:"PMI", name:"Mallorca",       country:"Spain",        continent:"europe",   emoji:"🌴", avg:130, badge:"hot",      desc:"Rocky coves, party resorts and hidden villages. Spain's favourite island.", bestMonths:[5,6,9,10], tags:["beach","party","family"] },
+  { iata:"TFS", name:"Tenerife",       country:"Spain",        continent:"europe",   emoji:"☀️", avg:170, badge:"",         desc:"Year-round sunshine, Mount Teide and volcanic beaches.", bestMonths:[0,1,2,10,11], tags:["beach","sun","family"] },
+  { iata:"AYT", name:"Antalya",        country:"Turkey",       continent:"europe",   emoji:"🏖️", avg:160, badge:"value",    desc:"All-inclusive resorts, Roman ruins and turquoise Mediterranean water.", bestMonths:[5,6,9,10], tags:["beach","resort","history"] },
+  { iata:"IST", name:"Istanbul",       country:"Turkey",       continent:"europe",   emoji:"🕌", avg:190, badge:"trending", desc:"Where East meets West. Hagia Sophia, Grand Bazaar and incredible food.", bestMonths:[3,4,5,9,10,11], tags:["culture","food","history"] },
+  { iata:"FAO", name:"Faro",           country:"Portugal",     continent:"europe",   emoji:"🐠", avg:140, badge:"value",    desc:"Gateway to the Algarve — golden cliffs, hidden sea caves and great seafood.", bestMonths:[4,5,6,9,10], tags:["beach","nature","food"] },
+  { iata:"BKK", name:"Bangkok",        country:"Thailand",     continent:"asia",     emoji:"🛺", avg:520, badge:"hot",      desc:"Floating markets, ornate temples, street food and chaotic brilliance.", bestMonths:[10,11,0,1,2,3], tags:["culture","food","adventure"] },
+  { iata:"DPS", name:"Bali",           country:"Indonesia",    continent:"asia",     emoji:"🌺", avg:590, badge:"trending", desc:"Rice terraces, surf breaks and spiritual retreats. The world's favourite island.", bestMonths:[6,7,8,9], tags:["beach","yoga","culture"] },
+  { iata:"NRT", name:"Tokyo",          country:"Japan",        continent:"asia",     emoji:"⛩️", avg:620, badge:"hot",      desc:"Neon lights, ancient temples, ramen bars and cherry blossom season.", bestMonths:[2,3,4,9,10,11], tags:["culture","food","tech"] },
+  { iata:"SIN", name:"Singapore",      country:"Singapore",    continent:"asia",     emoji:"🦁", avg:480, badge:"",         desc:"Futuristic skyline, hawker centres and Gardens by the Bay.", bestMonths:[0,1,6,7], tags:["food","luxury","family"] },
+  { iata:"HKT", name:"Phuket",         country:"Thailand",     continent:"asia",     emoji:"🤿", avg:540, badge:"value",    desc:"Tropical beaches, clear water and lively nightlife.", bestMonths:[11,0,1,2,3,4], tags:["beach","party","diving"] },
+  { iata:"KUL", name:"Kuala Lumpur",   country:"Malaysia",     continent:"asia",     emoji:"🏙️", avg:450, badge:"value",    desc:"Petronas Towers, night markets and the cheapest Michelin food on earth.", bestMonths:[4,5,6,7,8], tags:["food","culture","shopping"] },
+  { iata:"JFK", name:"New York",       country:"USA",          continent:"americas", emoji:"🗽", avg:380, badge:"hot",      desc:"The city that never sleeps. Broadway, Central Park and the best bagels.", bestMonths:[3,4,5,9,10,11], tags:["culture","shopping","food"] },
+  { iata:"LAX", name:"Los Angeles",    country:"USA",          continent:"americas", emoji:"🎬", avg:420, badge:"",         desc:"Hollywood, Venice Beach, In-N-Out burgers and year-round sunshine.", bestMonths:[2,3,4,5,9,10], tags:["beach","culture","sun"] },
+  { iata:"MIA", name:"Miami",          country:"USA",          continent:"americas", emoji:"🌊", avg:390, badge:"trending", desc:"Art Deco South Beach, Cuban food and the wildest nightlife in the US.", bestMonths:[11,0,1,2,3,4], tags:["beach","nightlife","food"] },
+  { iata:"CPT", name:"Cape Town",      country:"South Africa", continent:"africa",   emoji:"🦁", avg:520, badge:"trending", desc:"Table Mountain, Boulders Beach penguins and world-class wine routes.", bestMonths:[11,0,1,2,3], tags:["nature","adventure","wine"] },
+  { iata:"SYD", name:"Sydney",         country:"Australia",    continent:"oceania",  emoji:"🦘", avg:780, badge:"",         desc:"Harbour Bridge, Opera House and the most famous beaches in the world.", bestMonths:[2,3,4,10,11], tags:["beach","culture","adventure"] },
+  { iata:"DXB", name:"Dubai",          country:"UAE",          continent:"asia",     emoji:"🏙️", avg:280, badge:"hot",      desc:"Burj Khalifa, desert safaris and the world's most jaw-dropping malls.", bestMonths:[10,11,0,1,2,3], tags:["luxury","shopping","desert"] },
+  { iata:"ALC", name:"Alicante",       country:"Spain",        continent:"europe",   emoji:"🍊", avg:135, badge:"value",    desc:"Costa Blanca sunshine, castle views and authentic Spanish life.", bestMonths:[4,5,9,10], tags:["beach","sun","budget"] },
+];
+
+const ORIGIN_NAMES = { LHR:"London Heathrow",LGW:"London Gatwick",MAN:"Manchester",EDI:"Edinburgh",BHX:"Birmingham",BRS:"Bristol" };
+const MONTH_SHORT  = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+let currentOrigin    = "LHR";
+let currentContinent = "all";
+let currentBudget    = "all";
+let liveDeals        = {};
+
+// Fetch live prices
+async function fetchLivePrices() {
+  try {
+    const res  = await fetch("/.netlify/functions/getDeals?origin=" + currentOrigin + "&limit=30");
+    const json = await res.json();
+    if (json.success && json.data) {
+      liveDeals = {};
+      for (const d of json.data) {
+        if (d.destination) liveDeals[d.destination] = d;
+      }
+    }
+  } catch(e) {}
+  renderGrid();
+}
+
+// Filter logic
+document.getElementById("continentFilters").addEventListener("click", e => {
+  const btn = e.target.closest(".filter-btn");
+  if (!btn) return;
+  document.querySelectorAll("#continentFilters .filter-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  currentContinent = btn.dataset.filter;
+  applyFilters();
+});
+
+document.getElementById("budgetFilters").addEventListener("click", e => {
+  const btn = e.target.closest(".filter-btn");
+  if (!btn) return;
+  document.querySelectorAll("#budgetFilters .filter-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  currentBudget = btn.dataset.budget;
+  applyFilters();
+});
+
+function applyFilters() {
+  const search = document.getElementById("destSearch").value.toLowerCase();
+  const filtered = DESTINATIONS.filter(d => {
+    if (currentContinent !== "all" && d.continent !== currentContinent) return false;
+    const price = (liveDeals[d.iata]?.price || d.avg);
+    if (currentBudget !== "all" && price >= parseInt(currentBudget)) return false;
+    if (search && !d.name.toLowerCase().includes(search) && !d.country.toLowerCase().includes(search)) return false;
+    return true;
+  });
+  renderCards(filtered);
+  document.getElementById("filterCount").textContent = filtered.length + " destinations";
+}
+
+function renderGrid() { applyFilters(); }
+
+function renderCards(dests) {
+  const grid = document.getElementById("destGrid");
+  if (!dests.length) {
+    grid.innerHTML = `<div class="no-results"><div class="icon">🌐</div><p>No destinations match your filters.<br><button onclick="resetFilters()" style="background:none;border:none;color:var(--acc3);cursor:pointer;font-size:14px;font-weight:700;margin-top:8px;">Clear filters →</button></p></div>`;
+    return;
+  }
+  grid.innerHTML = dests.map(d => {
+    const live  = liveDeals[d.iata];
+    const price = live?.price || d.avg;
+    const url   = live?.booking_url || buildFallbackUrl(currentOrigin, d.iata);
+    const calUrl = "/price-calendar.html?origin=" + currentOrigin + "&dest=" + d.iata;
+
+    // Best month dots
+    const dots = MONTH_SHORT.map((m,i) => {
+      const isBest = d.bestMonths.slice(0,2).includes(i);
+      const isGood = d.bestMonths.includes(i);
+      return `<div class="month-dot ${isBest?"best":isGood?"good":"ok"}" title="${m}"></div>`;
+    }).join("");
+
+    return `
+    <div class="dest-card" onclick="window.location.href='${calUrl}'">
+      <div class="dest-card-img">
+        <div class="dest-card-bg" data-dest-iata="${d.iata}" data-photo-w="400" data-photo-h="180" style="background-size:cover;background-position:center;">${d.emoji}</div>
+        <div class="dest-card-overlay"></div>
+        <div class="dest-card-country">${d.country}</div>
+        ${d.badge ? `<div class="dest-card-badge badge-${d.badge}">${d.badge==="hot"?"🔥 Hot":d.badge==="trending"?"📈 Trending":"💚 Great Value"}</div>` : ""}
+      </div>
+      <div class="dest-card-body">
+        <div class="dest-name">${d.name}</div>
+        <div class="dest-iata">${d.iata}</div>
+        <div class="dest-desc">${d.desc}</div>
+
+        <div class="best-month">
+          <div class="best-month-label">Best months to fly</div>
+          <div class="month-dots">${dots}</div>
+          <div class="month-names"><span>J</span><span>F</span><span>M</span><span>A</span><span>M</span><span>J</span><span>J</span><span>A</span><span>S</span><span>O</span><span>N</span><span>D</span></div>
+        </div>
+
+        <div class="dest-card-footer">
+          <div class="dest-price">
+            <div class="dest-from">From</div>
+            <div class="dest-amount">£${price}</div>
+            <div class="dest-pp">${live ? "live price" : "typical"} · return</div>
+          </div>
+          <div class="dest-actions" onclick="event.stopPropagation()">
+            <a href="${calUrl}" class="btn-cal" title="Price calendar">📅</a>
+            <a href="${url}" target="_blank" rel="noopener" class="btn-dest">Book →</a>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function buildFallbackUrl(origin, dest) {
+  const d = new Date(); d.setDate(d.getDate()+21); while(d.getDay()!==2) d.setDate(d.getDate()+1);
+  const r = new Date(d); r.setDate(r.getDate()+7);
+  function dd(dt){ const p=dt.toISOString().slice(0,10).split("-"); return p[2]+p[1]; }
+  return "https://www.aviasales.com/search/"+origin+dd(d)+dest+dd(r)+"21?marker="+MARKER+"&currency=GBP&locale=en-GB";
+}
+
+function resetFilters() {
+  currentContinent = "all"; currentBudget = "all";
+  document.getElementById("destSearch").value = "";
+  document.querySelectorAll(".filter-btn[data-filter]").forEach(b=>b.classList.toggle("active",b.dataset.filter==="all"));
+  document.querySelectorAll(".filter-btn[data-budget]").forEach(b=>b.classList.toggle("active",b.dataset.budget==="all"));
+  applyFilters();
+}
+
+// Init
+fetchLivePrices();
+</script>
+
+<!-- TripHunt shared: photos · mobile nav · trust -->
+<script src="/js/photos.js"></script>
+<script src="/js/trust.js"></script>
+<script src="/js/mobile-nav.js" data-auto></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if (window.TH && TH.Photos) { TH.Photos.injectAll(); new MutationObserver(function(){ TH.Photos.injectAll(); }).observe(document.body,{childList:true,subtree:true}); }
+  if (window.TH && TH.MobileNav) TH.MobileNav.init({ onRefresh: function(){ window.location.reload(); } });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if (window.injectPressBar) window.injectPressBar();
+  if (window.initPullRefresh) window.initPullRefresh(function(){ window.location.reload(); });
+});
+</script>
+</body>
+</html>

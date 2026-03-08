@@ -1,4 +1,4 @@
-// TripHunt — getPackages.js
+// TripHunt -- getPackages.js
 // Package Deal Generator: combines cheap flights with hotel estimates
 // Flight links → Aviasales, Hotel links → Booking.com
 

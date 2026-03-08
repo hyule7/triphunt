@@ -1,4 +1,4 @@
-// TripHunt — getDealPage.js
+// TripHunt -- getDealPage.js
 // Netlify function that serves SEO-optimised deal pages.
 // Route: /deal/:slug → this function renders the HTML.
 // netlify.toml: [[redirects]] from="/deal/*" to="/.netlify/functions/getDealPage" status=200
@@ -32,9 +32,9 @@ function fmtDate(s) {
   return new Date(s).toLocaleDateString("en-GB", { weekday:"short", day:"numeric", month:"long", year:"numeric" });
 }
 function urgencyMsg(score) {
-  if (score >= 90) return { text:"🚨 Extreme deal — prices like this vanish within hours", cls:"urgency-extreme" };
-  if (score >= 80) return { text:"🔥 Exceptional deal — historically this route averages much higher", cls:"urgency-high" };
-  return { text:"⚡ Strong deal — below average for this route", cls:"urgency-medium" };
+  if (score >= 90) return { text:"🚨 Extreme deal -- prices like this vanish within hours", cls:"urgency-extreme" };
+  if (score >= 80) return { text:"🔥 Exceptional deal -- historically this route averages much higher", cls:"urgency-high" };
+  return { text:"⚡ Strong deal -- below average for this route", cls:"urgency-medium" };
 }
 
 // ── Fetch deal from Supabase by slug ─────────────────────────────
@@ -78,14 +78,14 @@ function renderPage(deal, slug) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>${deal.origin_city} to ${deal.dest_name} from £${deal.price} | TripHunt Deals</title>
-<meta name="description" content="${deal.saving_pct}% off flights from ${deal.origin_city} to ${deal.dest_name}. Was £${deal.typical_price} — now £${deal.price} return. ${deal.airline ? 'Flying ' + deal.airline + '. ' : ''}Book now before this deal sells out.">
+<meta name="description" content="${deal.saving_pct}% off flights from ${deal.origin_city} to ${deal.dest_name}. Was £${deal.typical_price} -- now £${deal.price} return. ${deal.airline ? 'Flying ' + deal.airline + '. ' : ''}Book now before this deal sells out.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="${SITE_URL}/deal/${slug}">
 
 <!-- Open Graph for viral sharing -->
 <meta property="og:type"        content="article">
-<meta property="og:title"       content="${deal.dest_emoji} ${deal.origin_city} → ${deal.dest_name} from £${deal.price} — ${deal.saving_pct}% off!">
-<meta property="og:description" content="Usually £${deal.typical_price}. Save £${deal.saving_amount}. ${deal.airline || 'Multiple airlines'}. ${deal.stops === 0 ? 'Direct flight.' : ''} Book through TripHunt — zero fees.">
+<meta property="og:title"       content="${deal.dest_emoji} ${deal.origin_city} → ${deal.dest_name} from £${deal.price} -- ${deal.saving_pct}% off!">
+<meta property="og:description" content="Usually £${deal.typical_price}. Save £${deal.saving_amount}. ${deal.airline || 'Multiple airlines'}. ${deal.stops === 0 ? 'Direct flight.' : ''} Book through TripHunt -- zero fees.">
 <meta property="og:url"         content="${SITE_URL}/deal/${slug}">
 <meta property="og:image"       content="${SITE_URL}/og/deal-${deal.dest_code?.toLowerCase()}.jpg">
 <meta name="twitter:card"       content="summary_large_image">
@@ -304,25 +304,25 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:16px;p
   <h2>About this deal: ${deal.origin_city} → ${deal.dest_name}</h2>
   <p>
     TripHunt detected this flight deal from ${deal.origin_city} (${deal.origin_code}) to ${deal.dest_name}, ${deal.dest_country}
-    at £${deal.price} per person return — ${deal.saving_pct}% below the historical average of £${deal.typical_price}.
+    at £${deal.price} per person return -- ${deal.saving_pct}% below the historical average of £${deal.typical_price}.
     ${deal.airline ? `The fare is operated by ${deal.airline}. ` : ""}
-    ${deal.stops === 0 ? "This is a direct flight — no layovers. " : `The route involves ${deal.stops} stop. `}
+    ${deal.stops === 0 ? "This is a direct flight -- no layovers. " : `The route involves ${deal.stops} stop. `}
   </p>
   <p>
     Deal scores are calculated using our proprietary algorithm that compares current prices against 12 months of historical data,
     weighted by route popularity, fare rarity, and departure airport demand.
-    This deal scored ${deal.deal_score}/100 — placing it in the <strong>${deal.deal_tier}</strong> tier.
+    This deal scored ${deal.deal_score}/100 -- placing it in the <strong>${deal.deal_tier}</strong> tier.
     We recommend booking quickly as fares at this level typically sell out within a few hours.
   </p>
 
   <h2 style="margin-top:24px">Frequently asked questions</h2>
   <div class="faq-item">
     <div class="faq-q">Is £${deal.price} really that cheap for ${deal.origin_city} to ${deal.dest_name}?</div>
-    <div class="faq-a">Yes. The historical average for this route is around £${deal.typical_price} return per person. At £${deal.price}, this fare is ${deal.saving_pct}% below average — making it one of the cheapest fares we've seen on this route.</div>
+    <div class="faq-a">Yes. The historical average for this route is around £${deal.typical_price} return per person. At £${deal.price}, this fare is ${deal.saving_pct}% below average -- making it one of the cheapest fares we've seen on this route.</div>
   </div>
   <div class="faq-item">
     <div class="faq-q">Will this price still be available when I click?</div>
-    <div class="faq-a">Cheap fares disappear quickly — sometimes within hours. We recommend clicking through immediately. If the exact fare has gone, the page will show the next best available price for the route.</div>
+    <div class="faq-a">Cheap fares disappear quickly -- sometimes within hours. We recommend clicking through immediately. If the exact fare has gone, the page will show the next best available price for the route.</div>
   </div>
   <div class="faq-item">
     <div class="faq-q">Are there any booking fees?</div>
@@ -330,7 +330,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:16px;p
   </div>
   <div class="faq-item">
     <div class="faq-q">What if I want to fly from a different UK airport?</div>
-    <div class="faq-a">Check prices from other UK airports below — similar deals are often available from multiple departure points.</div>
+    <div class="faq-a">Check prices from other UK airports below -- similar deals are often available from multiple departure points.</div>
   </div>
 </div>
 
@@ -359,7 +359,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:16px;p
 </div>
 
 <footer class="footer">
-  <p>TripHunt finds cheap flights and error fares from UK airports. We earn affiliate commission when you book — you always pay the same as booking direct.</p>
+  <p>TripHunt finds cheap flights and error fares from UK airports. We earn affiliate commission when you book -- you always pay the same as booking direct.</p>
   <p style="margin-top:6px"><a href="/">Home</a> · <a href="/error-fares">Error Fares</a> · <a href="/trending">Trending</a> · <a href="/share">Share & Earn</a></p>
 </footer>
 
@@ -386,7 +386,7 @@ async function subscribeEmail(e) {
   e.preventDefault();
   const email = e.target.querySelector('input').value;
   const btn   = e.target.querySelector('button');
-  btn.textContent = 'Subscribing…';
+  btn.textContent = 'Subscribing...';
   try {
     await fetch('/.netlify/functions/subscribe', {
       method:'POST', headers:{'Content-Type':'application/json'},

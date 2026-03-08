@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trending Flight Deals from UK Airports | TripHunt</title>
+<meta name="description" content="See which flight routes are trending right now from UK airports. Live price drops, deal scores and error fares updated every 15 minutes.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://triphunt.org/trending">
+<meta property="og:title" content="Trending Flight Deals | TripHunt">
+<meta property="og:description" content="Live trending flight deals from UK airports — ranked by deal score and price drop velocity.">
+<meta property="og:url" content="https://triphunt.org/trending">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,wght@0,700;0,900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a0f1e;--navy1:#0e1528;--navy2:#141d35;--navy3:#1a2442;--navy4:#243058;
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.12);
+  --acc:#2563eb;--acc2:#3b82f6;--acc3:#60a5fa;
+  --grn:#10b981;--amber:#f59e0b;--red:#ef4444;--purple:#8b5cf6;
+  --txt:#f0f4ff;--txt2:#8b9cbf;--txt3:#4a5878;
+  --r8:8px;--r12:12px;--r16:16px;--r99:9999px;--max:1240px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--txt);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+.container{max-width:var(--max);margin:0 auto;padding:0 20px;}
+
+/* Nav */
+.site-nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:8px;padding:0 24px;height:56px;background:rgba(10,15,30,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Fraunces',Georgia,serif;font-size:20px;font-weight:900;color:var(--txt);text-decoration:none;letter-spacing:-.5px;}
+.nav-links{display:flex;gap:4px;margin-left:8px;}
+.nav-link{font-size:13px;font-weight:500;color:var(--txt2);padding:6px 12px;border-radius:var(--r99);text-decoration:none;transition:all .2s;}
+.nav-link:hover,.nav-link.active{color:var(--txt);background:var(--navy3);}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.live-badge{display:flex;align-items:center;gap:5px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);color:var(--grn);font-size:11px;font-weight:700;padding:4px 10px;border-radius:var(--r99);}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--grn);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+/* Hero */
+.hero{padding:60px 20px 32px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(37,99,235,.12),transparent);pointer-events:none;}
+.hero-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--acc3);margin-bottom:10px;}
+.hero h1{font-family:'Fraunces',Georgia,serif;font-size:clamp(36px,6vw,58px);font-weight:900;line-height:1.05;margin-bottom:10px;}
+.hero h1 em{color:var(--acc3);font-style:italic;}
+.hero-sub{font-size:15px;color:var(--txt2);max-width:460px;margin:0 auto 8px;}
+.hero-refresh{font-size:12px;color:var(--txt3);}
+#refreshTimer{color:var(--acc3);font-weight:700;}
+
+/* Ticker bar */
+.ticker-wrap{background:var(--navy1);border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;height:40px;display:flex;align-items:center;}
+.ticker-label{background:var(--acc);color:#fff;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:0 14px;height:100%;display:flex;align-items:center;white-space:nowrap;flex-shrink:0;}
+.ticker-inner{display:flex;gap:0;animation:ticker 40s linear infinite;white-space:nowrap;}
+.ticker-inner:hover{animation-play-state:paused;}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.ticker-item{font-size:12px;color:var(--txt2);padding:0 28px;border-right:1px solid var(--border);height:40px;display:flex;align-items:center;gap:6px;}
+.ticker-item .price{color:var(--txt);font-weight:700;}
+.ticker-item .drop{color:var(--grn);font-size:11px;}
+
+/* Controls */
+.controls{padding:24px 0 0;}
+.controls-inner{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.origin-tabs{display:flex;gap:6px;flex-wrap:wrap;}
+.origin-tab{padding:7px 16px;border:1px solid var(--border2);border-radius:var(--r99);background:none;color:var(--txt2);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif;}
+.origin-tab:hover{color:var(--txt);border-color:var(--txt3);}
+.origin-tab.active{background:var(--acc);color:#fff;border-color:var(--acc);}
+.sort-label{font-size:12px;color:var(--txt3);margin-left:auto;}
+.sort-select{background:var(--navy2);border:1px solid var(--border);border-radius:var(--r8);padding:7px 12px;color:var(--txt);font-size:13px;font-family:'Outfit',sans-serif;cursor:pointer;}
+
+/* Error fares banner */
+.error-banner{margin:24px 0;background:linear-gradient(135deg,rgba(239,68,68,.12),rgba(220,38,38,.06));border:1px solid rgba(239,68,68,.25);border-radius:var(--r16);padding:20px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.error-banner-icon{font-size:32px;flex-shrink:0;}
+.error-banner-text h3{font-size:15px;font-weight:700;color:var(--txt);margin-bottom:3px;}
+.error-banner-text p{font-size:13px;color:var(--txt2);}
+.error-banner-deals{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto;}
+.error-chip{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:var(--r99);padding:6px 14px;font-size:12px;font-weight:700;color:#fca5a5;text-decoration:none;transition:all .15s;cursor:pointer;}
+.error-chip:hover{background:rgba(239,68,68,.25);}
+
+/* Main grid */
+.trending-section{padding:24px 0 64px;}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px;}
+.section-title{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:900;}
+.results-count{font-size:13px;color:var(--txt3);}
+
+/* Trending cards */
+.trending-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+
+.trend-card{background:var(--navy1);border:1px solid var(--border);border-radius:var(--r16);padding:20px;transition:all .2s;position:relative;overflow:hidden;cursor:pointer;}
+.trend-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.5);}
+.trend-card.error-fare{border-color:rgba(239,68,68,.3);background:linear-gradient(135deg,var(--navy1),rgba(239,68,68,.04));}
+.trend-card.mistake-fare{border-color:rgba(239,68,68,.5);background:linear-gradient(135deg,var(--navy1),rgba(239,68,68,.08));animation:borderPulse 2s ease-in-out infinite;}
+@keyframes borderPulse{0%,100%{border-color:rgba(239,68,68,.5);}50%{border-color:rgba(239,68,68,.9);}}
+
+/* Rank badge */
+.rank{position:absolute;top:16px;right:16px;width:28px;height:28px;border-radius:50%;background:var(--navy3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--txt2);}
+.rank.top3{background:var(--amber);color:#000;}
+.rank.top1{background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;width:32px;height:32px;font-size:13px;}
+
+.card-emoji{font-size:28px;margin-bottom:10px;display:block;}
+.card-route{font-size:18px;font-weight:800;margin-bottom:4px;}
+.card-country{font-size:12px;color:var(--txt2);margin-bottom:14px;}
+
+/* Trend score bar */
+.trend-score-wrap{margin-bottom:14px;}
+.trend-score-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.trend-score-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--txt3);}
+.trend-score-val{font-size:11px;font-weight:700;color:var(--acc3);}
+.trend-score-bar{height:4px;background:var(--navy3);border-radius:99px;overflow:hidden;}
+.trend-score-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--acc),var(--acc3));transition:width .8s cubic-bezier(.4,0,.2,1);}
+
+.card-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.meta-chip{background:var(--navy3);border-radius:var(--r99);padding:3px 9px;font-size:11px;color:var(--txt2);}
+.meta-chip.velocity{color:var(--grn);background:rgba(16,185,129,.1);}
+.meta-chip.error{color:#fca5a5;background:rgba(239,68,68,.12);}
+.meta-chip.drop{color:var(--grn);}
+
+.card-bottom{display:flex;align-items:center;justify-content:space-between;}
+.card-price{font-family:'Fraunces',Georgia,serif;font-size:32px;font-weight:900;line-height:1;}
+.card-price-sub{font-size:11px;color:var(--txt2);margin-top:2px;}
+.card-saving{font-size:12px;color:var(--grn);font-weight:600;margin-top:3px;}
+.btn-card{background:var(--acc);color:#fff;border:none;border-radius:var(--r8);padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;text-decoration:none;transition:background .15s;white-space:nowrap;}
+.btn-card:hover{background:var(--acc2);}
+.btn-card.error{background:var(--red);}
+.btn-card.error:hover{background:#dc2626;}
+
+/* Skeleton */
+.skeleton{background:linear-gradient(90deg,var(--navy2) 25%,var(--navy3) 50%,var(--navy2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.skel-card{height:240px;border-radius:var(--r16);}
+
+/* Empty */
+.empty-state{text-align:center;padding:80px 20px;color:var(--txt2);}
+.empty-state .icon{font-size:48px;margin-bottom:16px;}
+
+/* Subscribe strip */
+.sub-strip{background:linear-gradient(135deg,var(--navy2),var(--navy3));border:1px solid var(--border2);border-radius:var(--r16);padding:32px 40px;display:flex;align-items:center;gap:32px;flex-wrap:wrap;margin-bottom:48px;}
+.sub-strip-text h3{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:900;margin-bottom:4px;}
+.sub-strip-text p{font-size:14px;color:var(--txt2);}
+.sub-strip-form{display:flex;gap:8px;flex:1;min-width:280px;}
+.sub-input{flex:1;background:var(--navy1);border:1px solid var(--border2);border-radius:var(--r8);padding:11px 14px;color:var(--txt);font-size:14px;font-family:'Outfit',sans-serif;}
+.sub-input:focus{outline:none;border-color:var(--acc);}
+.sub-input::placeholder{color:var(--txt3);}
+.btn-sub{background:var(--acc);color:#fff;border:none;border-radius:var(--r8);padding:11px 20px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;}
+.sub-msg{font-size:12px;margin-top:6px;font-weight:600;}
+.sub-msg.ok{color:var(--grn);}
+.sub-msg.err{color:var(--red);}
+
+@media(max-width:640px){
+  .sub-strip{padding:24px 20px;flex-direction:column;gap:16px;}
+  .error-banner-deals{margin-left:0;}
+}
+</style>
+<script src="/js/shared.js" defer></script>
+<script src="/js/analytics.js" defer></script>
+<script src="/js/deal-score.js" defer></script>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="/" class="nav-logo">✈ TripHunt</a>
+  <div class="nav-links">
+    <a href="/search.html" class="nav-link">Flights</a>
+    <a href="/trending.html" class="nav-link active">Trending</a>
+    <a href="/deal-of-the-day.html" class="nav-link">Deal of the Day</a>
+    <a href="/error-fares.html" class="nav-link">🚨 Error Fares</a>
+    <a href="/packages.html" class="nav-link">Packages</a>
+  </div>
+  <div class="nav-right">
+    <span class="live-badge"><span class="live-dot"></span>Live</span>
+  </div>
+</nav>
+
+<!-- Ticker -->
+<div class="ticker-wrap">
+  <div class="ticker-label">🔥 Hot Now</div>
+  <div style="overflow:hidden;flex:1;">
+    <div class="ticker-inner" id="tickerInner">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">Updated every 15 minutes</div>
+    <h1>Trending <em>Right Now</em></h1>
+    <p class="hero-sub">Routes ranked by deal score, price drop velocity and search demand.</p>
+    <p class="hero-refresh">Next refresh in <span id="refreshTimer">15:00</span></p>
+  </div>
+</section>
+
+<div class="container">
+  <!-- Controls -->
+  <div class="controls">
+    <div class="controls-inner">
+      <div class="origin-tabs" id="originTabs">
+        <button class="origin-tab active" data-origin="LHR">🇬🇧 London</button>
+        <button class="origin-tab" data-origin="MAN">Manchester</button>
+        <button class="origin-tab" data-origin="EDI">Edinburgh</button>
+        <button class="origin-tab" data-origin="LGW">Gatwick</button>
+        <button class="origin-tab" data-origin="BHX">Birmingham</button>
+        <button class="origin-tab" data-origin="BRS">Bristol</button>
+      </div>
+      <span class="sort-label">Sort:</span>
+      <select class="sort-select" id="sortSelect" onchange="applySort()">
+        <option value="trend">🔥 Trend Score</option>
+        <option value="price">💰 Cheapest First</option>
+        <option value="saving">📉 Biggest Drop</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Error fares banner -->
+  <div class="error-banner" id="errorBanner" style="display:none;">
+    <div class="error-banner-icon">🚨</div>
+    <div class="error-banner-text">
+      <h3>Error Fares Detected!</h3>
+      <p>These prices look like airline mistakes — book fast before they're corrected.</p>
+    </div>
+    <div class="error-banner-deals" id="errorChips"></div>
+  </div>
+
+  <!-- Trending grid -->
+  <section class="trending-section">
+    <div class="section-head">
+      <h2 class="section-title" id="sectionTitle">Trending from London Heathrow</h2>
+      <span class="results-count" id="resultsCount"></span>
+    </div>
+    <div class="trending-grid" id="trendingGrid">
+      ${Array(8).fill('<div class="skeleton skel-card"></div>').join('')}
+    </div>
+  </section>
+
+  <!-- Subscribe strip -->
+  <div class="sub-strip">
+    <div class="sub-strip-text">
+      <h3>Get deals before everyone else</h3>
+      <p>Weekly digest of the best trending routes — straight to your inbox.</p>
+    </div>
+    <div>
+      <div class="sub-strip-form">
+        <input type="email" class="sub-input" id="subEmail" placeholder="your@email.com">
+        <button class="btn-sub" onclick="handleSubscribe()">Subscribe</button>
+      </div>
+      <div class="sub-msg" id="subMsg"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ORIGIN_NAMES = {
+  LHR:"London Heathrow",LGW:"London Gatwick",MAN:"Manchester",
+  EDI:"Edinburgh",BHX:"Birmingham",BRS:"Bristol",
+};
+
+let currentOrigin = "LHR";
+let allDeals      = [];
+let errorFares    = [];
+
+// Refresh timer
+let timerSecs = 15 * 60;
+setInterval(() => {
+  timerSecs--;
+  if (timerSecs <= 0) { timerSecs = 15 * 60; loadAll(currentOrigin); }
+  const m = String(Math.floor(timerSecs/60)).padStart(2,"0");
+  const s = String(timerSecs%60).padStart(2,"0");
+  const el = document.getElementById("refreshTimer");
+  if (el) el.textContent = m + ":" + s;
+}, 1000);
+
+// Origin tabs
+document.getElementById("originTabs").addEventListener("click", e => {
+  const tab = e.target.closest(".origin-tab");
+  if (!tab) return;
+  document.querySelectorAll(".origin-tab").forEach(t => t.classList.remove("active"));
+  tab.classList.add("active");
+  currentOrigin = tab.dataset.origin;
+  document.getElementById("sectionTitle").textContent = "Trending from " + (ORIGIN_NAMES[currentOrigin]||currentOrigin);
+  loadAll(currentOrigin);
+});
+
+async function loadAll(origin) {
+  showSkeleton();
+  await Promise.all([loadTrending(origin), loadErrorFares(origin)]);
+}
+
+async function loadTrending(origin) {
+  try {
+    const res  = await fetch("/.netlify/functions/getTrending?origin=" + origin + "&limit=12");
+    const json = await res.json();
+    if (json.success && json.data?.length) {
+      allDeals = json.data;
+      renderCards(allDeals);
+      updateTicker(allDeals);
+      document.getElementById("resultsCount").textContent = allDeals.length + " routes";
+    } else {
+      document.getElementById("trendingGrid").innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="icon">🌐</div><p>No deals found right now. Try another airport.</p></div>`;
+    }
+  } catch(e) {
+    document.getElementById("trendingGrid").innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="icon">😕</div><p>Couldn't load deals. <button onclick="loadAll('${origin}')" style="background:none;border:none;color:var(--acc3);cursor:pointer;font-size:inherit;font-weight:700;">Retry →</button></p></div>`;
+  }
+}
+
+async function loadErrorFares(origin) {
+  try {
+    const res  = await fetch("/.netlify/functions/getErrorFares?origin=" + origin);
+    const json = await res.json();
+    if (json.success && json.data?.length) {
+      errorFares = json.data;
+      showErrorBanner(errorFares);
+    } else {
+      document.getElementById("errorBanner").style.display = "none";
+    }
+  } catch(e) {
+    document.getElementById("errorBanner").style.display = "none";
+  }
+}
+
+function showErrorBanner(fares) {
+  const banner = document.getElementById("errorBanner");
+  const chips  = document.getElementById("errorChips");
+  if (!fares.length) { banner.style.display = "none"; return; }
+  chips.innerHTML = fares.slice(0,3).map(f =>
+    `<a href="${upsellUrl(f.booking_url, f.origin, f.destination, f.price, f.typical)}" class="error-chip">
+      ${f.origin}→${f.destination} £${f.price} ${f.is_mistake_fare?"🚨":"🔥"}
+    </a>`
+  ).join("");
+  banner.style.display = "flex";
+}
+
+function applySort() {
+  const sort = document.getElementById("sortSelect").value;
+  let sorted = [...allDeals];
+  if (sort === "price")  sorted.sort((a,b) => a.price - b.price);
+  if (sort === "saving") sorted.sort((a,b) => (b.price_drop?.pct||0) - (a.price_drop?.pct||0));
+  if (sort === "trend")  sorted.sort((a,b) => b.trend_score - a.trend_score);
+  renderCards(sorted);
+}
+
+function renderCards(deals) {
+  // Merge in error fares at top
+  const errorDestSet = new Set(errorFares.map(f => f.destination));
+  document.getElementById("trendingGrid").innerHTML = deals.map((d, i) => {
+    const rank    = i + 1;
+    const isError = errorDestSet.has(d.destination) || (d.trend_score >= 90);
+    const isMistake = errorFares.find(f => f.destination === d.destination)?.is_mistake_fare;
+    const cardClass = isMistake ? "trend-card mistake-fare" : isError ? "trend-card error-fare" : "trend-card";
+    const drop    = d.price_drop;
+    const scoreW  = Math.min(100, d.trend_score);
+    return `
+    <div class="${cardClass}" onclick="window.open(upsellUrl(d.booking_url, currentOrigin, d.destination, d.price, d.typical), '_blank')">
+      <div class="rank ${rank===1?'top1':rank<=3?'top3':''}">${rank}</div>
+      <span class="card-emoji">${d.emoji||"✈️"}</span>
+      <div class="card-route">${currentOrigin} → ${d.name||d.destination}</div>
+      <div class="card-country">${d.country||""}</div>
+
+      <div class="trend-score-wrap">
+        <div class="trend-score-label">
+          <span class="trend-score-name">Deal Score</span>
+          <span class="trend-score-val">${d.trend_score}/100</span>
+        </div>
+        <div class="trend-score-bar"><div class="trend-score-fill" style="width:${scoreW}%"></div></div>
+      </div>
+
+      <div class="card-meta">
+        <span class="meta-chip velocity">${d.velocity_label||"→ Steady"}</span>
+        ${drop ? `<span class="meta-chip drop">↓ £${drop.amount} (${drop.pct}%)</span>` : ""}
+        ${d.airline ? `<span class="meta-chip">${d.airline}</span>` : ""}
+        ${isMistake ? `<span class="meta-chip error">🚨 Possible Mistake</span>` : isError ? `<span class="meta-chip error">🔥 Error Fare</span>` : ""}
+      </div>
+
+      <div class="card-bottom">
+        <div>
+          <div class="card-price">£${d.price}</div>
+          <div class="card-price-sub">per person return</div>
+          ${drop ? `<div class="card-saving">Saving ~£${drop.amount} vs typical</div>` : ""}
+        </div>
+        <a href="${upsellUrl(d.booking_url, currentOrigin, d.destination, d.price, d.typical)}" class="btn-card ${isMistake||isError?'error':''}" onclick="event.stopPropagation()">
+          ${isMistake?"Book Now!":isError?"Grab It":"Book →"}
+        </a>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+
+  function upsellUrl(bookingUrl, orig, dest, price, typical) {
+    const p = new URLSearchParams({
+      origin:  orig || '',
+      dest:    dest || '',
+      price:   Math.round(price || 0),
+      typical: Math.round(typical || (price || 0) * 1.7),
+      book_url: bookingUrl || '',
+    });
+    return '/upsell.html?' + p.toString();
+  }
+
+  function updateTicker(deals) {
+  const items = deals.map(d => {
+    const drop = d.price_drop;
+    return `<div class="ticker-item">
+      <span>${d.emoji||"✈️"} ${currentOrigin} → ${d.name||d.destination}</span>
+      <span class="price">£${d.price}</span>
+      ${drop?`<span class="drop">↓${drop.pct}%</span>`:""}
+    </div>`;
+  }).join("");
+  // Duplicate for seamless loop
+  const el = document.getElementById("tickerInner");
+  el.innerHTML = items + items;
+}
+
+function showSkeleton() {
+  document.getElementById("trendingGrid").innerHTML = Array(8).fill('<div class="skeleton skel-card"></div>').join('');
+  document.getElementById("errorBanner").style.display = "none";
+}
+
+// Subscribe
+async function handleSubscribe() {
+  const emailEl = document.getElementById("subEmail");
+  const msgEl   = document.getElementById("subMsg");
+  const email   = emailEl.value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    msgEl.textContent = "Enter a valid email."; msgEl.className = "sub-msg err"; return;
+  }
+  msgEl.textContent = "Signing up..."; msgEl.className = "sub-msg";
+  try {
+    const res  = await fetch("/.netlify/functions/subscribe", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ email, origin:currentOrigin, source:"trending" }),
+    });
+    const json = await res.json();
+    if (json.success) { msgEl.textContent = "✅ You're in!"; msgEl.className = "sub-msg ok"; emailEl.value = ""; }
+    else { msgEl.textContent = json.error || "Error"; msgEl.className = "sub-msg err"; }
+  } catch(e) { msgEl.textContent = "Network error."; msgEl.className = "sub-msg err"; }
+}
+
+loadAll(currentOrigin);
+</script>
+
+<!-- TripHunt shared: photos · mobile nav · trust -->
+<script src="/js/photos.js"></script>
+<script src="/js/trust.js"></script>
+<script src="/js/mobile-nav.js" data-auto></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if (window.TH && TH.Photos) { TH.Photos.injectAll(); new MutationObserver(function(){ TH.Photos.injectAll(); }).observe(document.body,{childList:true,subtree:true}); }
+  if (window.TH && TH.MobileNav) TH.MobileNav.init({ onRefresh: function(){ window.location.reload(); } });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if (window.injectPressBar) window.injectPressBar();
+  if (window.initPullRefresh) window.initPullRefresh(function(){ window.location.reload(); });
+});
+</script>
+</body>
+</html>

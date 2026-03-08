@@ -1,4 +1,4 @@
-// TripHunt — getDeals.js  v2
+// TripHunt -- getDeals.js  v2
 // Source priority: Supabase (dealRadar) → Live API → Curated fallback
 "use strict";
 const https = require("https");

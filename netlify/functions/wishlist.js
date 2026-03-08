@@ -1,4 +1,4 @@
-// TripHunt — wishlist.js
+// TripHunt -- wishlist.js
 // Sync user wishlists to Supabase
 // GET  ?token=xxx         → { success, data: [...deals] }
 // POST { token, deal }    → save deal

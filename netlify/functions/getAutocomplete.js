@@ -1,4 +1,4 @@
-// TripHunt — getAutocomplete.js
+// TripHunt -- getAutocomplete.js
 // Proxies TravelPayouts autocomplete API to avoid browser CORS issues.
 // Falls back to a built-in airport list if the API is unreachable.
 const https = require("https");
@@ -186,7 +186,7 @@ exports.handler = async (event) => {
     return { statusCode: 200, headers: cors, body: JSON.stringify([]) };
   }
 
-  // Always try local first — instant response
+  // Always try local first -- instant response
   const local = searchLocal(term);
   if (local.length >= 3) {
     return { statusCode: 200, headers: cors, body: JSON.stringify(local) };

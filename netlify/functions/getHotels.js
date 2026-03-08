@@ -1,4 +1,4 @@
-// TripHunt — getHotels.js
+// TripHunt -- getHotels.js
 // Hotel search via TravelPayouts / Booking.com affiliate API
 // GET ?dest=BCN&checkin=2025-04-10&checkout=2025-04-17&pax=2
 // Returns hotels with Booking.com affiliate links (aid=304142)

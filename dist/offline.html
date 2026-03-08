@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You're Offline | TripHunt</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0d0d14;--ink1:#13131f;--ink2:#1a1a2e;--ink3:#242440;--sky:#3b82f6;--sky2:#60a5fa;--txt:#f5f5ff;--txt2:#9b9bc0;--txt3:#5a5a80;--grn:#22c55e;--r16:16px;--r99:9999px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--txt);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;-webkit-font-smoothing:antialiased;}
+.icon{font-size:64px;margin-bottom:24px;animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+h1{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(32px,6vw,52px);margin-bottom:12px;line-height:1.1;}
+h1 em{font-style:italic;color:var(--sky2);}
+p{color:var(--txt2);font-size:15px;max-width:400px;line-height:1.6;margin-bottom:32px;}
+.btn{display:inline-block;background:var(--sky);color:#fff;border:none;border-radius:var(--r99);padding:14px 32px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;transition:all .2s;}
+.btn:hover{background:var(--sky2);transform:translateY(-2px);}
+.cached-section{margin-top:48px;width:100%;max-width:600px;}
+.cached-title{font-size:14px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;}
+.cached-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;}
+.cached-card{background:var(--ink1);border:1px solid rgba(255,255,255,.07);border-radius:var(--r16);padding:16px;text-align:left;text-decoration:none;color:var(--txt);transition:all .2s;}
+.cached-card:hover{border-color:var(--sky);transform:translateY(-2px);}
+.cached-card-route{font-size:14px;font-weight:700;margin-bottom:4px;}
+.cached-card-price{font-family:'Instrument Serif',Georgia,serif;font-size:24px;color:var(--sky2);}
+.cached-card-meta{font-size:11px;color:var(--txt3);margin-top:3px;}
+.status-bar{display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:24px;font-size:13px;color:var(--txt3);}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--grn);opacity:.4;}
+.status-dot.offline{background:#ef4444;opacity:1;animation:none;}
+</style>
+<script src="/js/shared.js" defer></script>
+<script src="/js/analytics.js" defer></script>
+<script src="/js/deal-score.js" defer></script>
+</head>
+<body>
+<div class="status-bar">
+  <div class="status-dot offline"></div>
+  <span>You're offline</span>
+</div>
+<div class="icon">✈️</div>
+<h1>No internet,<br>but <em>great deals</em> await</h1>
+<p>Connect to see live prices. In the meantime, here are the deals we loaded last time you were online.</p>
+<a href="/" class="btn" onclick="window.location.reload()">Try again</a>
+
+<div class="cached-section" id="cachedDeals" style="display:none;">
+  <div class="cached-title">Last seen deals</div>
+  <div class="cached-grid" id="cachedGrid"></div>
+</div>
+
+<script>
+// Try to load cached deals from the service worker cache
+async function loadCachedDeals() {
+  if (!("caches" in window)) return;
+  try {
+    const cache = await caches.open("triphunt-v3");
+    const req   = new Request("/.netlify/functions/getDeals?origin=LHR&limit=6");
+    const resp  = await cache.match(req);
+    if (!resp) return;
+    const json  = await resp.json();
+    if (!json.data?.length) return;
+    const DEST = {BCN:"Barcelona",MAD:"Madrid",LIS:"Lisbon",FCO:"Rome",AMS:"Amsterdam",CDG:"Paris",DXB:"Dubai",ATH:"Athens",PRG:"Prague",PMI:"Mallorca",AYT:"Antalya",BKK:"Bangkok",JFK:"New York",NRT:"Tokyo"};
+    document.getElementById("cachedDeals").style.display = "block";
+    document.getElementById("cachedGrid").innerHTML = json.data.slice(0,6).map(d => `
+      <a href="${d.booking_url}" class="cached-card">
+        <div class="cached-card-route">LHR → ${DEST[d.destination]||d.destination}</div>
+        <div class="cached-card-price">£${d.price}</div>
+        <div class="cached-card-meta">${d.airline||""} · Return</div>
+      </a>`).join("");
+  } catch(e) {}
+}
+loadCachedDeals();
+
+// Auto-reload when back online
+window.addEventListener("online", () => window.location.reload());
+</script>
+
+<!-- TripHunt shared: photos · mobile nav · trust -->
+<script src="/js/photos.js"></script>
+<script src="/js/trust.js"></script>
+<script src="/js/mobile-nav.js" data-auto></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if (window.TH && TH.Photos) { TH.Photos.injectAll(); new MutationObserver(function(){ TH.Photos.injectAll(); }).observe(document.body,{childList:true,subtree:true}); }
+  if (window.TH && TH.MobileNav) TH.MobileNav.init({ onRefresh: function(){ window.location.reload(); } });
+});
+</script>
+</body>
+</html>

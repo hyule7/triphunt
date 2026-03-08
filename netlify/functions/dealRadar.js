@@ -1,4 +1,4 @@
-// TripHunt — dealRadar.js  v1
+// TripHunt -- dealRadar.js  v1
 // Scheduled: runs every 2h, scans 11 UK airports, scores deals, writes Supabase.
 // netlify.toml: [functions.dealRadar] schedule = "0 */2 * * *"
 // Manual test: GET /.netlify/functions/dealRadar
@@ -156,7 +156,7 @@ function buildDeals(fares,airports){
       deal_score:sc.score,deal_tier:sc.tier,deal_label:sc.label,deal_badge:sc.badge,is_error_fare:sc.is_error_fare,is_exceptional:sc.is_exceptional,longhaul:route.lh,
       airline:f.airline,stops:f.stops,depart_date:dep,return_date:ret,booking_url:bookUrl,deal_url:`${SITE}/deal/${s}`,
       seo_title:`${ap?.city||f.origin} to ${route.name} from £${f.price} | TripHunt`,
-      seo_description:`${sc.saving_pct}% off flights from ${ap?.city||f.origin} to ${route.name}. Usually £${sc.typical_price} — now £${f.price} return.`,
+      seo_description:`${sc.saving_pct}% off flights from ${ap?.city||f.origin} to ${route.name}. Usually £${sc.typical_price} -- now £${f.price} return.`,
       discovered_at:new Date().toISOString(),expires_at:addDays(new Date().toISOString().slice(0,10),3),active:true,
     });
   }
@@ -190,7 +190,7 @@ exports.handler = async(event)=>{
   if(event.httpMethod==="OPTIONS")return{statusCode:200,headers:CORS,body:""};
   const isHttp=!!event.httpMethod;
   if(!TP_TOKEN){
-    const msg="No TP_TOKEN — demo mode. Seed deals in Supabase are served.";
+    const msg="No TP_TOKEN -- demo mode. Seed deals in Supabase are served.";
     console.log("[dealRadar]",msg);
     if(isHttp)return{statusCode:200,headers:CORS,body:JSON.stringify({success:true,_mode:"demo",message:msg})};
     return{statusCode:200};

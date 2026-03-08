@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account | TripHunt</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d0d14;--ink1:#13131f;--ink2:#1a1a2e;--ink3:#242440;--ink4:#2e2e52;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --sky:#3b82f6;--sky2:#60a5fa;--grn:#22c55e;--rose:#f43f5e;--amber:#f59e0b;
+  --txt:#f5f5ff;--txt2:#9b9bc0;--txt3:#5a5a80;
+  --r8:8px;--r12:12px;--r16:16px;--r24:24px;--r99:9999px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--txt);min-height:100vh;-webkit-font-smoothing:antialiased;}
+
+/* Nav */
+.nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:8px;padding:0 24px;height:60px;background:rgba(13,13,20,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Instrument Serif',Georgia,serif;font-size:22px;color:var(--txt);text-decoration:none;}
+.nav-links{display:flex;gap:2px;margin-left:12px;}
+.nav-link{font-size:13px;font-weight:500;color:var(--txt2);padding:6px 12px;border-radius:var(--r99);text-decoration:none;transition:all .15s;}
+.nav-link:hover,.nav-link.active{color:var(--txt);background:var(--ink3);}
+.nav-right{margin-left:auto;}
+
+/* Page layout */
+.page{max-width:900px;margin:0 auto;padding:48px 24px;}
+
+/* Auth forms */
+.auth-wrap{max-width:420px;margin:0 auto;}
+.auth-tabs{display:flex;background:var(--ink2);border-radius:var(--r12);padding:4px;margin-bottom:32px;}
+.auth-tab{flex:1;padding:10px;border:none;background:none;color:var(--txt2);font-size:14px;font-weight:600;cursor:pointer;border-radius:var(--r8);font-family:'DM Sans',sans-serif;transition:all .2s;}
+.auth-tab.active{background:var(--ink4);color:var(--txt);}
+.auth-title{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(28px,5vw,40px);margin-bottom:6px;}
+.auth-title em{font-style:italic;color:var(--sky2);}
+.auth-sub{color:var(--txt2);font-size:14px;margin-bottom:32px;line-height:1.6;}
+.field-group{margin-bottom:18px;}
+.field-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--txt3);margin-bottom:6px;display:block;}
+.field-input{width:100%;background:var(--ink2);border:1px solid var(--border2);border-radius:var(--r12);padding:14px 16px;color:var(--txt);font-size:15px;font-family:'DM Sans',sans-serif;transition:border-color .15s;outline:none;}
+.field-input:focus{border-color:var(--sky);}
+.field-input::placeholder{color:var(--txt3);}
+.field-input.error{border-color:var(--rose);}
+.btn-auth{width:100%;background:linear-gradient(135deg,var(--sky),#2563eb);color:#fff;border:none;border-radius:var(--r12);padding:16px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;margin-top:8px;}
+.btn-auth:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(59,130,246,.35);}
+.btn-auth:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--txt3);font-size:12px;}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border2);}
+.btn-google{width:100%;background:var(--ink2);border:1px solid var(--border2);border-radius:var(--r12);padding:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--txt);display:flex;align-items:center;justify-content:center;gap:10px;transition:all .15s;}
+.btn-google:hover{border-color:var(--border2);background:var(--ink3);}
+.auth-msg{margin-top:14px;font-size:13px;font-weight:600;text-align:center;padding:10px;border-radius:var(--r8);}
+.auth-msg.error{background:rgba(244,63,94,.1);color:#fca5a5;}
+.auth-msg.success{background:rgba(34,197,94,.1);color:var(--grn);}
+.auth-footer-link{text-align:center;margin-top:16px;font-size:13px;color:var(--txt2);}
+.auth-footer-link a{color:var(--sky2);text-decoration:none;font-weight:600;}
+
+/* Dashboard */
+.dashboard{display:none;}
+.dashboard.visible{display:block;}
+.dash-header{display:flex;align-items:center;gap:20px;margin-bottom:40px;flex-wrap:wrap;}
+.dash-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--sky),#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#fff;flex-shrink:0;}
+.dash-name{font-family:'Instrument Serif',Georgia,serif;font-size:28px;margin-bottom:3px;}
+.dash-email{font-size:13px;color:var(--txt2);}
+.btn-logout{background:none;border:1px solid var(--border2);border-radius:var(--r99);padding:8px 16px;color:var(--txt2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:auto;transition:all .15s;}
+.btn-logout:hover{border-color:var(--rose);color:var(--rose);}
+
+/* Tabs */
+.dash-tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:32px;}
+.dash-tab{padding:10px 20px;border:none;background:none;color:var(--txt2);font-size:14px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;font-family:'DM Sans',sans-serif;}
+.dash-tab.active{color:var(--txt);border-bottom-color:var(--sky);}
+.dash-panel{display:none;}
+.dash-panel.active{display:block;}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:32px;}
+.stat-card{background:var(--ink1);border:1px solid var(--border);border-radius:var(--r16);padding:20px;}
+.stat-val{font-family:'Instrument Serif',Georgia,serif;font-size:32px;line-height:1;margin-bottom:4px;}
+.stat-label{font-size:12px;color:var(--txt2);}
+
+/* Wishlist */
+.wishlist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.wish-card{background:var(--ink1);border:1px solid var(--border);border-radius:var(--r16);padding:20px;position:relative;overflow:hidden;}
+.wish-card::before{content:'';position:absolute;top:0;left:0;right:0;height:160px;background-size:cover;background-position:center;opacity:.35;filter:blur(1px);}
+.wish-card-content{position:relative;z-index:1;}
+.wish-dest{font-family:'Instrument Serif',Georgia,serif;font-size:22px;margin-bottom:3px;}
+.wish-route{font-size:12px;color:var(--txt2);margin-bottom:12px;}
+.wish-price{font-family:'Instrument Serif',Georgia,serif;font-size:36px;color:var(--txt);margin-bottom:14px;}
+.wish-actions{display:flex;gap:8px;}
+.btn-wish-book{flex:1;background:var(--sky);color:#fff;border:none;border-radius:var(--r8);padding:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;text-align:center;}
+.btn-wish-rm{background:var(--ink3);color:var(--txt2);border:none;border-radius:var(--r8);padding:10px 12px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.wish-date{font-size:11px;color:var(--txt3);margin-top:10px;}
+.empty-state{text-align:center;padding:60px 20px;}
+.empty-icon{font-size:48px;margin-bottom:12px;}
+.empty-title{font-family:'Instrument Serif',Georgia,serif;font-size:22px;margin-bottom:8px;}
+.empty-sub{color:var(--txt2);font-size:14px;margin-bottom:20px;}
+.btn-empty{display:inline-block;background:var(--sky);color:#fff;border-radius:var(--r99);padding:12px 28px;font-size:14px;font-weight:700;text-decoration:none;transition:all .2s;}
+
+/* Price alerts */
+.alerts-list{display:flex;flex-direction:column;gap:10px;}
+.alert-item{background:var(--ink1);border:1px solid var(--border);border-radius:var(--r12);padding:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.alert-route{font-size:15px;font-weight:700;flex:1;}
+.alert-target{font-family:'Instrument Serif',Georgia,serif;font-size:22px;color:var(--sky2);}
+.alert-meta{font-size:12px;color:var(--txt2);}
+.alert-status{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:var(--r99);}
+.alert-status.active{background:rgba(34,197,94,.12);color:var(--grn);}
+.btn-alert-rm{background:none;border:none;color:var(--txt3);font-size:18px;cursor:pointer;padding:4px;line-height:1;}
+
+/* Settings */
+.settings-form{max-width:480px;}
+.settings-section{margin-bottom:32px;}
+.settings-section h3{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--txt3);margin-bottom:16px;}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);}
+.setting-label{font-size:14px;font-weight:500;}
+.setting-sub{font-size:12px;color:var(--txt2);margin-top:2px;}
+/* Toggle switch */
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:var(--ink4);border-radius:99px;transition:.3s;cursor:pointer;}
+.toggle-slider::before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;}
+.toggle input:checked + .toggle-slider{background:var(--sky);}
+.toggle input:checked + .toggle-slider::before{transform:translateX(20px);}
+.btn-save-settings{background:var(--sky);color:#fff;border:none;border-radius:var(--r8);padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:16px;}
+
+/* Loading */
+.loading{display:flex;align-items:center;justify-content:center;padding:60px;color:var(--txt2);}
+.spinner{width:32px;height:32px;border:3px solid var(--ink3);border-top-color:var(--sky);border-radius:50%;animation:spin 1s linear infinite;margin-right:12px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* Mobile bottom nav */
+@media(max-width:640px){
+  .page{padding:24px 16px 100px;}
+  .nav-links{display:none;}
+}
+</style>
+<script src="/js/shared.js" defer></script>
+<script src="/js/analytics.js" defer></script>
+<script src="/js/deal-score.js" defer></script>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">✈ TripHunt</a>
+  <div class="nav-links">
+    <a href="/inspire.html" class="nav-link">Inspire Me</a>
+    <a href="/trending.html" class="nav-link">Trending</a>
+    <a href="/search.html" class="nav-link">Search</a>
+    <a href="/account.html" class="nav-link active">Account</a>
+  </div>
+  <div class="nav-right"></div>
+</nav>
+
+<div class="page">
+
+  <!-- AUTH FORMS -->
+  <div class="auth-wrap" id="authWrap">
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login',this)">Sign in</button>
+      <button class="auth-tab" onclick="switchAuthTab('signup',this)">Create account</button>
+    </div>
+
+    <!-- Login -->
+    <div id="loginForm">
+      <h1 class="auth-title">Welcome <em>back</em></h1>
+      <p class="auth-sub">Sign in to access your saved deals and price alerts.</p>
+      <div class="field-group">
+        <label class="field-label">Email</label>
+        <input type="email" class="field-input" id="loginEmail" placeholder="you@email.com" autocomplete="email">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Password</label>
+        <input type="password" class="field-input" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn-auth" onclick="doLogin()" id="loginBtn">Sign in →</button>
+      <div class="auth-divider">or</div>
+      <button class="btn-google" onclick="alert('Google OAuth requires domain verification in Supabase. Add triphunt.org as a redirect URL.')">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>
+        Continue with Google
+      </button>
+      <div id="loginMsg" class="auth-msg" style="display:none;"></div>
+      <div class="auth-footer-link"><a href="#" onclick="showReset()">Forgot password?</a></div>
+    </div>
+
+    <!-- Signup -->
+    <div id="signupForm" style="display:none;">
+      <h1 class="auth-title">Join <em>TripHunt</em></h1>
+      <p class="auth-sub">Create a free account to save deals, set price alerts and get the weekly digest.</p>
+      <div class="field-group">
+        <label class="field-label">Your name</label>
+        <input type="text" class="field-input" id="signupName" placeholder="First name" autocomplete="given-name">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Email</label>
+        <input type="email" class="field-input" id="signupEmail" placeholder="you@email.com" autocomplete="email">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Password</label>
+        <input type="password" class="field-input" id="signupPassword" placeholder="Min 6 characters" autocomplete="new-password">
+      </div>
+      <button class="btn-auth" onclick="doSignup()" id="signupBtn">Create free account →</button>
+      <div id="signupMsg" class="auth-msg" style="display:none;"></div>
+    </div>
+
+    <!-- Reset password -->
+    <div id="resetForm" style="display:none;">
+      <h1 class="auth-title">Reset <em>password</em></h1>
+      <p class="auth-sub">Enter your email and we'll send you a reset link.</p>
+      <div class="field-group">
+        <label class="field-label">Email</label>
+        <input type="email" class="field-input" id="resetEmail" placeholder="you@email.com">
+      </div>
+      <button class="btn-auth" onclick="doReset()">Send reset link →</button>
+      <div id="resetMsg" class="auth-msg" style="display:none;"></div>
+      <div class="auth-footer-link"><a href="#" onclick="showLogin()">← Back to sign in</a></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard">
+    <div class="dash-header">
+      <div class="dash-avatar" id="dashAvatar">?</div>
+      <div>
+        <div class="dash-name" id="dashName">Loading…</div>
+        <div class="dash-email" id="dashEmail"></div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Sign out</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-val" id="statSaved">0</div><div class="stat-label">Saved deals</div></div>
+      <div class="stat-card"><div class="stat-val" id="statAlerts">0</div><div class="stat-label">Price alerts</div></div>
+      <div class="stat-card"><div class="stat-val">£<span id="statSaving">0</span></div><div class="stat-label">Potential saving</div></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="dash-tabs">
+      <button class="dash-tab active" onclick="switchDashTab('wishlist',this)">❤️ Saved Deals</button>
+      <button class="dash-tab" onclick="switchDashTab('alerts',this)">🔔 Price Alerts</button>
+      <button class="dash-tab" onclick="switchDashTab('settings',this)">⚙️ Settings</button>
+    </div>
+
+    <!-- Wishlist panel -->
+    <div class="dash-panel active" id="panel-wishlist">
+      <div class="loading" id="wishlistLoading"><div class="spinner"></div> Loading your saved deals…</div>
+      <div class="wishlist-grid" id="wishlistGrid" style="display:none;"></div>
+    </div>
+
+    <!-- Alerts panel -->
+    <div class="dash-panel" id="panel-alerts">
+      <div class="loading" id="alertsLoading"><div class="spinner"></div> Loading your alerts…</div>
+      <div class="alerts-list" id="alertsList" style="display:none;"></div>
+    </div>
+
+    <!-- Settings panel -->
+    <div class="dash-panel" id="panel-settings">
+      <div class="settings-form">
+        <div class="settings-section">
+          <h3>Email preferences</h3>
+          <div class="setting-row">
+            <div><div class="setting-label">Weekly deal digest</div><div class="setting-sub">Best deals from your airport every Monday</div></div>
+            <label class="toggle"><input type="checkbox" id="settDigest" checked><div class="toggle-slider"></div></label>
+          </div>
+          <div class="setting-row">
+            <div><div class="setting-label">Price alert emails</div><div class="setting-sub">Instant email when a deal hits your target</div></div>
+            <label class="toggle"><input type="checkbox" id="settAlerts" checked><div class="toggle-slider"></div></label>
+          </div>
+          <div class="setting-row">
+            <div><div class="setting-label">Error fare alerts</div><div class="setting-sub">Notify me of possible mistake fares</div></div>
+            <label class="toggle"><input type="checkbox" id="settError"><div class="toggle-slider"></div></label>
+          </div>
+        </div>
+        <div class="settings-section">
+          <h3>Home airport</h3>
+          <select class="field-input" id="settOrigin" style="max-width:280px;">
+            <option value="LHR">London Heathrow</option>
+            <option value="LGW">London Gatwick</option>
+            <option value="MAN">Manchester</option>
+            <option value="EDI">Edinburgh</option>
+            <option value="BHX">Birmingham</option>
+            <option value="BRS">Bristol</option>
+            <option value="LBA">Leeds Bradford</option>
+            <option value="NCL">Newcastle</option>
+            <option value="GLA">Glasgow</option>
+          </select>
+        </div>
+        <button class="btn-save-settings" onclick="saveSettings()">Save preferences</button>
+        <div id="settMsg" class="auth-msg" style="display:none;margin-top:12px;"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Mobile bottom nav -->
+<div id="mobileNav"></div>
+
+<script>
+const DEST_NAMES = {BCN:"Barcelona",MAD:"Madrid",LIS:"Lisbon",FCO:"Rome",AMS:"Amsterdam",CDG:"Paris",DXB:"Dubai",AYT:"Antalya",PMI:"Mallorca",TFS:"Tenerife",LPA:"Gran Canaria",FAO:"Faro",ATH:"Athens",PRG:"Prague",VIE:"Vienna",DBV:"Dubrovnik",IST:"Istanbul",ALC:"Alicante",BKK:"Bangkok",DPS:"Bali",NRT:"Tokyo",SIN:"Singapore",KUL:"Kuala Lumpur",HKT:"Phuket",JFK:"New York",LAX:"Los Angeles",MIA:"Miami",SFO:"San Francisco",CPT:"Cape Town",SYD:"Sydney"};
+const DEST_PHOTOS = {BCN:"barcelona-spain",MAD:"madrid-spain",LIS:"lisbon-portugal",FCO:"rome-italy",AMS:"amsterdam-netherlands",CDG:"paris-france",DXB:"dubai-uae",ATH:"athens-greece",PRG:"prague-czech",BKK:"bangkok-thailand",DPS:"bali-indonesia",NRT:"tokyo-japan",JFK:"new-york-city",SYD:"sydney-australia",PMI:"mallorca-spain",TFS:"tenerife-spain",IST:"istanbul-turkey",CPT:"cape-town-south-africa"};
+
+let currentUser  = null;
+let authToken    = null;
+let userWishlist = [];
+
+// ── INIT ──
+(async function() {
+  authToken = localStorage.getItem("th_token");
+  if (authToken) await loadDashboard();
+})();
+
+// ── AUTH TAB ──
+function switchAuthTab(tab, btn) {
+  document.querySelectorAll(".auth-tab").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("loginForm").style.display  = tab==="login"  ? "" : "none";
+  document.getElementById("signupForm").style.display = tab==="signup" ? "" : "none";
+  document.getElementById("resetForm").style.display  = "none";
+}
+function showReset() { document.getElementById("loginForm").style.display="none"; document.getElementById("resetForm").style.display=""; }
+function showLogin() { document.getElementById("resetForm").style.display="none"; document.getElementById("loginForm").style.display=""; }
+
+// ── LOGIN ──
+async function doLogin() {
+  const email    = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  const btn      = document.getElementById("loginBtn");
+  const msg      = document.getElementById("loginMsg");
+  if (!email || !password) { showMsg(msg,"error","Please enter your email and password."); return; }
+  btn.disabled = true; btn.textContent = "Signing in…";
+  try {
+    const res = await authCall({ action:"login", email, password });
+    if (res.success) {
+      authToken = res.token;
+      localStorage.setItem("th_token", authToken);
+      currentUser = res.user;
+      showDashboard();
+    } else {
+      showMsg(msg,"error", res.error || "Login failed. Check your email and password.");
+    }
+  } catch(e) { showMsg(msg,"error","Network error. Please try again."); }
+  finally { btn.disabled=false; btn.textContent="Sign in →"; }
+}
+
+// ── SIGNUP ──
+async function doSignup() {
+  const name     = document.getElementById("signupName").value.trim();
+  const email    = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value;
+  const btn      = document.getElementById("signupBtn");
+  const msg      = document.getElementById("signupMsg");
+  if (!email || !password) { showMsg(msg,"error","Please fill in all fields."); return; }
+  btn.disabled=true; btn.textContent="Creating account…";
+  try {
+    const res = await authCall({ action:"signup", email, password, name });
+    if (res.success) {
+      if (res.token) {
+        authToken = res.token; localStorage.setItem("th_token",authToken);
+        currentUser = res.user; showDashboard();
+      } else {
+        showMsg(msg,"success","✅ " + (res.message || "Account created! Check your email to confirm."));
+      }
+      // Also subscribe to digest
+      fetch("/.netlify/functions/subscribe",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,source:"signup"})}).catch(()=>{});
+    } else {
+      showMsg(msg,"error", res.error || "Signup failed.");
+    }
+  } catch(e) { showMsg(msg,"error","Network error."); }
+  finally { btn.disabled=false; btn.textContent="Create free account →"; }
+}
+
+// ── RESET ──
+async function doReset() {
+  const email = document.getElementById("resetEmail").value.trim();
+  const msg   = document.getElementById("resetMsg");
+  if (!email) { showMsg(msg,"error","Enter your email."); return; }
+  try {
+    const res = await authCall({ action:"reset", email });
+    showMsg(msg, res.success?"success":"error", res.message || res.error || "Check your email.");
+  } catch(e) { showMsg(msg,"error","Network error."); }
+}
+
+// ── LOGOUT ──
+async function doLogout() {
+  try { await authCall({ action:"logout", token:authToken }); } catch(e) {}
+  localStorage.removeItem("th_token"); authToken=null; currentUser=null; userWishlist=[];
+  document.getElementById("authWrap").style.display="";
+  document.getElementById("dashboard").classList.remove("visible");
+}
+
+// ── DASHBOARD ──
+async function loadDashboard() {
+  try {
+    const res = await authCall({ action:"me", token:authToken });
+    if (res.success) {
+      currentUser = res.user;
+      showDashboard();
+    } else {
+      localStorage.removeItem("th_token"); authToken=null;
+    }
+  } catch(e) {}
+}
+
+function showDashboard() {
+  document.getElementById("authWrap").style.display="none";
+  document.getElementById("dashboard").classList.add("visible");
+  const user   = currentUser;
+  const initials = (user.name||"U").slice(0,1).toUpperCase();
+  document.getElementById("dashAvatar").textContent = initials;
+  document.getElementById("dashName").textContent   = user.name || user.email;
+  document.getElementById("dashEmail").textContent  = user.email;
+  loadWishlist(); loadAlerts();
+}
+
+// ── WISHLIST ──
+async function loadWishlist() {
+  try {
+    const res = await fetch("/.netlify/functions/wishlist", { headers:{ "Authorization":"Bearer "+authToken } });
+    const json = await res.json();
+    userWishlist = json.data || [];
+    // Merge with localStorage wishlist
+    const local = JSON.parse(localStorage.getItem("th_wishlist")||"[]");
+    for (const d of local) {
+      if (!userWishlist.find(w=>w.destination===d.destination)) {
+        userWishlist.push(d);
+        // Sync to DB
+        fetch("/.netlify/functions/wishlist",{method:"POST",headers:{"Authorization":"Bearer "+authToken,"Content-Type":"application/json"},body:JSON.stringify({deal:d})}).catch(()=>{});
+      }
+    }
+    renderWishlist();
+  } catch(e) {
+    userWishlist = JSON.parse(localStorage.getItem("th_wishlist")||"[]");
+    renderWishlist();
+  }
+}
+
+function renderWishlist() {
+  const grid    = document.getElementById("wishlistGrid");
+  const loading = document.getElementById("wishlistLoading");
+  loading.style.display = "none"; grid.style.display = "";
+  document.getElementById("statSaved").textContent = userWishlist.length;
+
+  const totalSaving = userWishlist.reduce((a,d)=> a + (d.typical_price ? Math.max(0,d.typical_price-d.price) : 0), 0);
+  document.getElementById("statSaving").textContent = totalSaving || "—";
+
+  if (!userWishlist.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🤍</div><h3 class="empty-title">No saved deals yet</h3><p class="empty-sub">Heart any deal on the site to save it here.</p><a href="/inspire.html" class="btn-empty">Find deals →</a></div>`;
+    return;
+  }
+
+  grid.innerHTML = userWishlist.map((d,i) => {
+    const dest  = DEST_NAMES[d.destination] || d.destination;
+    const photo = DEST_PHOTOS[d.destination] || "travel-destination";
+    const dep   = d.depart_date ? new Date(d.depart_date).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}) : "";
+    const imgUrl= `https://source.unsplash.com/400x200/?${encodeURIComponent(photo)}`;
+    return `
+    <div class="wish-card">
+      <div class="wish-card::before" style="background-image:url('${imgUrl}')"></div>
+      <div style="height:140px;border-radius:12px;overflow:hidden;margin:-20px -20px 16px;position:relative;">
+        <img src="${imgUrl}" style="width:100%;height:100%;object-fit:cover;display:block;" alt="${dest}" loading="lazy" onerror="this.parentElement.style.background='var(--ink3)'">
+        <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--ink1) 100%);"></div>
+        <div style="position:absolute;bottom:12px;left:16px;font-family:'Instrument Serif',Georgia,serif;font-size:22px;font-weight:700;">${dest}</div>
+      </div>
+      <div class="wish-card-content">
+        <div class="wish-route">${d.origin||"LHR"} → ${d.destination} · ${d.airline||"Return flight"}</div>
+        <div class="wish-price">£${d.price}</div>
+        <div class="wish-actions">
+          <a href="${d.booking_url}" target="_blank" rel="noopener" class="btn-wish-book">Book Now →</a>
+          <button class="btn-wish-rm" onclick="removeWish(${i},'${d.destination}')">✕</button>
+        </div>
+        ${dep?`<div class="wish-date">Departs ${dep}</div>`:""}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+async function removeWish(i, dest) {
+  userWishlist.splice(i,1);
+  localStorage.setItem("th_wishlist",JSON.stringify(userWishlist));
+  renderWishlist();
+  try { await fetch("/.netlify/functions/wishlist",{method:"DELETE",headers:{"Authorization":"Bearer "+authToken,"Content-Type":"application/json"},body:JSON.stringify({destination:dest})}); } catch(e){}
+}
+
+// ── ALERTS ──
+async function loadAlerts() {
+  const loading = document.getElementById("alertsLoading");
+  const list    = document.getElementById("alertsList");
+  try {
+    const res  = await fetch("/.netlify/functions/priceAlert?email=" + encodeURIComponent(currentUser.email));
+    const json = await res.json();
+    const alerts = json.data || [];
+    document.getElementById("statAlerts").textContent = alerts.length;
+    loading.style.display="none"; list.style.display="";
+    if (!alerts.length) {
+      list.innerHTML=`<div class="empty-state"><div class="empty-icon">🔔</div><h3 class="empty-title">No price alerts set</h3><p class="empty-sub">Search for a route and click "Set Alert" to be notified when prices drop.</p><a href="/search.html" class="btn-empty">Search flights →</a></div>`;
+      return;
+    }
+    list.innerHTML = alerts.map((a,i) => `
+    <div class="alert-item">
+      <div style="flex:1">
+        <div class="alert-route">${a.origin_code} → ${a.dest_name||a.dest_code}</div>
+        <div class="alert-meta">Alert when price drops below</div>
+      </div>
+      <div class="alert-target">£${a.target_price}</div>
+      <span class="alert-status active"><span style="width:5px;height:5px;background:var(--grn);border-radius:50%;display:inline-block;"></span> Active</span>
+      <button class="btn-alert-rm" onclick="removeAlert('${a.id}')" title="Remove">✕</button>
+    </div>`).join("");
+  } catch(e) { loading.style.display="none"; list.style.display=""; list.innerHTML=`<div class="empty-state"><div class="empty-icon">🔔</div><p style="color:var(--txt2)">Set alerts from the search results page.</p><a href="/search.html" class="btn-empty">Search flights →</a></div>`; }
+}
+
+async function removeAlert(id) {
+  try { await fetch("/.netlify/functions/priceAlert?id="+id,{method:"DELETE"}); loadAlerts(); } catch(e){}
+}
+
+// ── SETTINGS ──
+function saveSettings() {
+  const msg = document.getElementById("settMsg");
+  const prefs = {
+    digest: document.getElementById("settDigest").checked,
+    alerts: document.getElementById("settAlerts").checked,
+    errors: document.getElementById("settError").checked,
+    origin: document.getElementById("settOrigin").value,
+  };
+  localStorage.setItem("th_prefs",JSON.stringify(prefs));
+  showMsg(msg,"success","✅ Preferences saved.");
+  setTimeout(()=>{ msg.style.display="none"; },3000);
+}
+
+// ── DASH TABS ──
+function switchDashTab(tab, btn) {
+  document.querySelectorAll(".dash-tab").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".dash-panel").forEach(p=>p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("panel-"+tab).classList.add("active");
+}
+
+// ── HELPERS ──
+async function authCall(body) {
+  const res = await fetch("/.netlify/functions/auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  return res.json();
+}
+
+function showMsg(el,type,text) {
+  el.style.display="block"; el.className="auth-msg "+type; el.textContent=text;
+}
+
+// Enter key support
+document.addEventListener("keydown", e => {
+  if (e.key==="Enter") {
+    if (document.getElementById("loginForm").style.display!=="none") doLogin();
+    else if (document.getElementById("signupForm").style.display!=="none") doSignup();
+  }
+});
+
+// Load saved prefs
+const savedPrefs = JSON.parse(localStorage.getItem("th_prefs")||"{}");
+if (savedPrefs.origin) document.getElementById("settOrigin").value=savedPrefs.origin;
+if (typeof savedPrefs.digest!=="undefined") document.getElementById("settDigest").checked=savedPrefs.digest;
+</script>
+
+<!-- TripHunt shared: photos · mobile nav · trust -->
+<script src="/js/photos.js"></script>
+<script src="/js/trust.js"></script>
+<script src="/js/mobile-nav.js" data-auto></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if (window.TH && TH.Photos) { TH.Photos.injectAll(); new MutationObserver(function(){ TH.Photos.injectAll(); }).observe(document.body,{childList:true,subtree:true}); }
+  if (window.TH && TH.MobileNav) TH.MobileNav.init({ onRefresh: function(){ window.location.reload(); } });
+});
+</script>
+</body>
+</html>

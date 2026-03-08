@@ -1,4 +1,4 @@
-// TripHunt — getCarRentals.js
+// TripHunt -- getCarRentals.js
 // Car rental via RentalCars.com affiliate (via TravelPayouts)
 // GET ?dest=BCN&pickup=2025-04-10&dropoff=2025-04-17&airport=true
 

@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://triphunt.org/sitemap-index.xml
+Sitemap: https://triphunt.org/sitemap-flights.xml
+Sitemap: https://triphunt.org/sitemap-destinations.xml
+Sitemap: https://triphunt.org/sitemap-airports.xml
+
+# Block Netlify internals
+Disallow: /.netlify/
+Disallow: /node_modules/
+
+# Crawl-delay for aggressive bots
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10

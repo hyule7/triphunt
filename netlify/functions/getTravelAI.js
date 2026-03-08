@@ -1,7 +1,7 @@
 // TripHunt - getTravelAI.js
 // FIX v2:
 //   - Reads body.prompt (frontend key) not body.message
-//   - Returns { reply } not { response } — matches frontend data.reply read
+//   - Returns { reply } not { response } -- matches frontend data.reply read
 //   - Passes full conversation history to Claude for multi-turn context
 const https = require("https");
 
@@ -22,11 +22,11 @@ exports.handler = async function(event) {
   let body;
   try { body = JSON.parse(event.body); } catch(e) { return { statusCode:400, headers:cors, body:JSON.stringify({ error:"Invalid JSON" }) }; }
 
-  // FIX: frontend sends body.prompt — was reading body.message so every AI call returned 400
+  // FIX: frontend sends body.prompt -- was reading body.message so every AI call returned 400
   const userMessage = body.prompt || body.message || body.query || "";
   const destination = body.destination || (body.context && body.context.destination) || "";
   const origin      = body.origin      || (body.context && body.context.origin)      || "London";
-  // FIX: frontend sends full conversation history — was being ignored, causing AI to forget context
+  // FIX: frontend sends full conversation history -- was being ignored, causing AI to forget context
   const history     = Array.isArray(body.history) ? body.history : [];
 
   if (!userMessage) return { statusCode:400, headers:cors, body:JSON.stringify({ error:"No message provided" }) };
@@ -34,7 +34,7 @@ exports.handler = async function(event) {
   const systemPrompt = [
     "You are TripHunt's AI travel advisor. Help users find cheap flights, plan trips, and discover deals from UK airports.",
     "Be concise, friendly and practical. Focus on UK travellers. Use GBP prices.",
-    "Format responses with short paragraphs or bullet points — no markdown headers.",
+    "Format responses with short paragraphs or bullet points -- no markdown headers.",
     origin      ? `User is travelling from: ${origin}.`      : "",
     destination ? `Destination context: ${destination}.`     : "",
   ].filter(Boolean).join(" ");
@@ -49,7 +49,7 @@ exports.handler = async function(event) {
     ];
 
     const reply = await callClaude(apiKey, systemPrompt, messages);
-    // FIX: was returning { response } but frontend reads data.reply — caused silent "No response received"
+    // FIX: was returning { response } but frontend reads data.reply -- caused silent "No response received"
     return { statusCode:200, headers:cors, body:JSON.stringify({ success:true, reply }) };
   } catch(err) {
     return { statusCode:500, headers:cors, body:JSON.stringify({ error:err.message }) };

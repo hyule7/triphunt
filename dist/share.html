@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Share & Earn | TripHunt — Get Free Flights With Friends</title>
+<meta name="description" content="Share TripHunt with friends and get early access to error fares, exclusive deals, and priority alerts. The more you share, the better your deals get.">
+<link rel="canonical" href="https://www.triphunt.org/share">
+<meta property="og:title" content="I found the best flight deal app — you need to see this">
+<meta property="og:description" content="TripHunt finds mistake prices and error fares before anyone else. Zero ads, zero booking fees. Join me.">
+<meta property="og:url" content="https://www.triphunt.org/share">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#08101f;--navy1:#0c1525;--navy2:#111e32;--navy3:#172440;--navy4:#1e2e50;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --acc:#2563eb;--acc2:#3b82f6;--acc3:#60a5fa;
+  --grn:#10b981;--grn2:#059669;--red:#ef4444;--yel:#f59e0b;--pur:#8b5cf6;
+  --txt:#eef2ff;--txt2:#8b9cbf;--txt3:#4a5878;
+  --r8:8px;--r12:12px;--r16:16px;--r24:24px;--r99:9999px;--max:1100px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--txt);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ── ANIMATED BACKGROUND ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 20%, rgba(37,99,235,.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(139,92,246,.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(16,185,129,.05) 0%, transparent 70%);
+  pointer-events:none;
+}
+.page-content{position:relative;z-index:1}
+
+/* ── NAV ── */
+.site-nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:8px;padding:0 24px;height:56px;background:rgba(8,16,31,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Fraunces',serif;font-size:20px;font-weight:900;text-decoration:none;color:var(--txt);display:flex;align-items:center;gap:6px}
+.nav-links{display:flex;gap:4px;margin-left:12px}
+.nav-link{font-size:13px;font-weight:500;color:var(--txt2);padding:6px 12px;border-radius:var(--r99);text-decoration:none;transition:all .2s;border:none;background:none;cursor:pointer;font-family:'Outfit',sans-serif}
+.nav-link:hover,.nav-link.active{color:var(--txt);background:var(--navy3)}
+
+/* ── HERO ── */
+.hero{padding:72px 24px 56px;text-align:center;max-width:800px;margin:0 auto}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--acc3);background:rgba(37,99,235,.12);border:1px solid rgba(37,99,235,.2);padding:6px 16px;border-radius:var(--r99);margin-bottom:20px}
+.hero-h1{font-family:'Fraunces',serif;font-size:clamp(38px,7vw,68px);font-weight:900;line-height:1.0;letter-spacing:-1.5px;margin-bottom:16px}
+.hero-h1 em{font-style:italic;color:var(--grn);background:linear-gradient(135deg,var(--grn),var(--acc3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:17px;color:var(--txt2);max-width:560px;margin:0 auto 32px;line-height:1.7}
+.hero-cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{padding:14px 28px;background:var(--grn);color:#fff;border-radius:var(--r99);font-size:15px;font-weight:800;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{background:var(--grn2);transform:translateY(-2px);box-shadow:0 8px 30px rgba(16,185,129,.3)}
+.btn-secondary{padding:14px 28px;background:var(--navy3);color:var(--txt);border-radius:var(--r99);font-size:15px;font-weight:700;border:1px solid var(--border2);cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;text-decoration:none}
+.btn-secondary:hover{background:var(--navy4);transform:translateY(-1px)}
+
+/* ── LIVE DEAL TICKER ── */
+.ticker-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(16,185,129,.04);padding:10px 0}
+.ticker-inner{display:flex;gap:0;animation:ticker-scroll 30s linear infinite;white-space:nowrap}
+.ticker-inner:hover{animation-play-state:paused}
+@keyframes ticker-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-item{display:inline-flex;align-items:center;gap:10px;padding:0 24px;font-size:13px;font-weight:600;border-right:1px solid var(--border)}
+.ticker-price{color:var(--grn);font-weight:800}
+.ticker-label{color:var(--txt3);font-size:11px}
+
+/* ── STATS ROW ── */
+.stats-row{display:flex;justify-content:center;gap:0;max-width:800px;margin:48px auto;border:1px solid var(--border2);border-radius:var(--r16);overflow:hidden;background:var(--navy1)}
+.stat-item{flex:1;padding:24px 20px;text-align:center;border-right:1px solid var(--border)}
+.stat-item:last-child{border-right:none}
+.stat-val{font-family:'Fraunces',serif;font-size:36px;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--txt),var(--acc3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:12px;color:var(--txt3);margin-top:4px;font-weight:600}
+
+/* ── VIRAL SHARE MODULE ── */
+.share-module{max-width:680px;margin:0 auto 64px;background:var(--navy1);border:1px solid var(--border2);border-radius:var(--r24);overflow:hidden}
+.share-module-header{padding:28px 32px;background:linear-gradient(135deg,rgba(37,99,235,.1),rgba(139,92,246,.06));border-bottom:1px solid var(--border)}
+.share-module-title{font-family:'Fraunces',serif;font-size:26px;font-weight:900;margin-bottom:6px}
+.share-module-sub{font-size:13px;color:var(--txt2)}
+.share-link-row{display:flex;gap:10px;padding:24px 32px;background:var(--navy2);border-bottom:1px solid var(--border)}
+.share-link-input{flex:1;background:var(--navy3);border:1px solid var(--border2);border-radius:var(--r8);padding:11px 16px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;color:var(--txt);outline:none}
+.share-link-input:focus{border-color:var(--acc)}
+.copy-btn{padding:11px 20px;background:var(--acc);color:#fff;border-radius:var(--r8);font-size:13px;font-weight:800;border:none;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;transition:all .15s}
+.copy-btn:hover{background:var(--acc2)}
+.copy-btn.copied{background:var(--grn)}
+.share-platforms{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:20px 32px;border-bottom:1px solid var(--border)}
+.platform-btn{padding:12px 16px;border-radius:var(--r12);font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s}
+.platform-btn:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn-twitter{background:#1da1f2;color:#fff}
+.btn-whatsapp{background:#25d366;color:#fff}
+.btn-facebook{background:#1877f2;color:#fff}
+.btn-email{background:var(--navy4);color:var(--txt);border:1px solid var(--border2)}
+.btn-telegram{background:#2ca5e0;color:#fff}
+.btn-reddit{background:#ff4500;color:#fff}
+.share-score{padding:20px 32px;display:flex;align-items:center;gap:16px}
+.share-score-bar-wrap{flex:1}
+.share-score-label{font-size:12px;color:var(--txt3);margin-bottom:6px;font-weight:600}
+.share-score-bar{height:8px;background:var(--navy3);border-radius:var(--r99);overflow:hidden}
+.share-score-fill{height:100%;background:linear-gradient(90deg,var(--grn),var(--acc3));border-radius:var(--r99);transition:width .8s cubic-bezier(.34,1.2,.64,1)}
+.share-score-count{font-family:'Fraunces',serif;font-size:28px;font-weight:900;color:var(--grn);white-space:nowrap}
+.share-score-sub{font-size:11px;color:var(--txt3)}
+
+/* ── UNLOCK TIERS ── */
+.tiers-section{max-width:860px;margin:0 auto 64px;padding:0 20px}
+.tiers-title{font-family:'Fraunces',serif;font-size:28px;font-weight:900;text-align:center;margin-bottom:8px}
+.tiers-sub{text-align:center;font-size:14px;color:var(--txt2);margin-bottom:32px}
+.tiers-grid{display:flex;flex-direction:column;gap:12px}
+.tier-card{background:var(--navy1);border:1px solid var(--border);border-radius:var(--r16);padding:20px 24px;display:flex;align-items:center;gap:20px;transition:all .3s;position:relative;overflow:hidden}
+.tier-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--border)}
+.tier-card.locked{opacity:.55}
+.tier-card.unlocked{border-color:rgba(16,185,129,.3)}
+.tier-card.unlocked::before{background:var(--grn)}
+.tier-card.current{border-color:rgba(37,99,235,.4);background:linear-gradient(135deg,rgba(37,99,235,.06),var(--navy1))}
+.tier-card.current::before{background:var(--acc)}
+.tier-icon{font-size:32px;flex-shrink:0;width:52px;text-align:center}
+.tier-info{flex:1}
+.tier-name{font-size:16px;font-weight:800;margin-bottom:2px}
+.tier-desc{font-size:13px;color:var(--txt2);line-height:1.5}
+.tier-req{font-size:11px;font-weight:700;margin-top:4px}
+.tier-req.met{color:var(--grn)}
+.tier-req.unmet{color:var(--txt3)}
+.tier-badge{padding:5px 14px;border-radius:var(--r99);font-size:11px;font-weight:800;white-space:nowrap;flex-shrink:0}
+.badge-done{background:rgba(16,185,129,.15);color:var(--grn);border:1px solid rgba(16,185,129,.2)}
+.badge-current{background:rgba(37,99,235,.15);color:var(--acc3);border:1px solid rgba(37,99,235,.2)}
+.badge-locked{background:var(--navy3);color:var(--txt3);border:1px solid var(--border)}
+
+/* ── DEAL ALERT CAPTURE ── */
+.alert-capture{max-width:680px;margin:0 auto 64px;padding:0 20px}
+.alert-card{background:linear-gradient(135deg,var(--navy2),var(--navy3));border:1px solid var(--border2);border-radius:var(--r24);padding:36px;text-align:center}
+.alert-card-icon{font-size:48px;margin-bottom:16px;display:block}
+.alert-card-title{font-family:'Fraunces',serif;font-size:26px;font-weight:900;margin-bottom:8px}
+.alert-card-sub{font-size:14px;color:var(--txt2);max-width:400px;margin:0 auto 24px;line-height:1.6}
+.email-form{display:flex;gap:10px;max-width:420px;margin:0 auto}
+.email-input{flex:1;background:var(--navy1);border:1px solid var(--border2);border-radius:var(--r8);padding:12px 16px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--txt);outline:none}
+.email-input:focus{border-color:var(--grn)}
+.email-input::placeholder{color:var(--txt3)}
+.email-submit{padding:12px 22px;background:var(--grn);color:#fff;border-radius:var(--r8);font-size:14px;font-weight:800;border:none;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;transition:all .15s}
+.email-submit:hover{background:var(--grn2)}
+.email-submit.loading{opacity:.7;cursor:wait}
+.sub-trust{font-size:11px;color:var(--txt3);margin-top:10px}
+
+/* ── SOCIAL PROOF WALL ── */
+.proof-section{max-width:860px;margin:0 auto 64px;padding:0 20px}
+.proof-title{font-family:'Fraunces',serif;font-size:26px;font-weight:900;text-align:center;margin-bottom:6px}
+.proof-sub{text-align:center;font-size:13px;color:var(--txt2);margin-bottom:28px}
+.proof-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.proof-card{background:var(--navy1);border:1px solid var(--border);border-radius:var(--r16);padding:18px}
+.proof-stars{color:var(--yel);font-size:13px;margin-bottom:8px}
+.proof-text{font-size:13px;color:var(--txt2);line-height:1.6;margin-bottom:12px}
+.proof-author{display:flex;align-items:center;gap:10px}
+.proof-avatar{width:32px;height:32px;border-radius:50%;background:var(--navy3);display:flex;align-items:center;justify-content:center;font-size:14px}
+.proof-name{font-size:13px;font-weight:700}
+.proof-meta{font-size:11px;color:var(--txt3)}
+.proof-deal{display:inline-block;margin-top:8px;font-size:11px;font-weight:700;color:var(--grn);background:rgba(16,185,129,.1);padding:3px 10px;border-radius:var(--r99)}
+
+/* ── HOW IT WORKS ── */
+.how-section{max-width:780px;margin:0 auto 64px;padding:0 20px}
+.how-title{font-family:'Fraunces',serif;font-size:26px;font-weight:900;text-align:center;margin-bottom:28px}
+.steps{display:flex;flex-direction:column;gap:0}
+.step{display:flex;gap:20px;align-items:flex-start;padding:20px 0;border-bottom:1px solid var(--border)}
+.step:last-child{border-bottom:none}
+.step-num{width:36px;height:36px;border-radius:50%;background:var(--acc);color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-body{}
+.step-title{font-size:15px;font-weight:800;margin-bottom:4px}
+.step-desc{font-size:13px;color:var(--txt2);line-height:1.6}
+
+/* ── DEAL OF THE MOMENT ── */
+.dotm{max-width:680px;margin:0 auto 56px;padding:0 20px}
+.dotm-card{background:var(--navy1);border:1px solid rgba(239,68,68,.25);border-radius:var(--r24);overflow:hidden;position:relative}
+.dotm-header{background:linear-gradient(135deg,rgba(239,68,68,.1),rgba(245,158,11,.06));padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.dotm-live{width:8px;height:8px;border-radius:50%;background:var(--red);animation:blink 1.2s ease-in-out infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{opacity:.6;box-shadow:0 0 0 6px rgba(239,68,68,0)}}
+.dotm-label{font-size:12px;font-weight:800;color:var(--red);letter-spacing:.6px;text-transform:uppercase}
+.dotm-body{padding:24px}
+.dotm-route{font-family:'Fraunces',serif;font-size:28px;font-weight:900;margin-bottom:6px}
+.dotm-desc{font-size:13px;color:var(--txt2);margin-bottom:16px}
+.dotm-price-row{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.dotm-price{font-family:'Fraunces',serif;font-size:44px;font-weight:900;color:var(--grn)}
+.dotm-typical{font-size:16px;color:var(--txt3);text-decoration:line-through}
+.dotm-save{background:rgba(239,68,68,.1);color:var(--red);font-size:13px;font-weight:800;padding:4px 12px;border-radius:var(--r99)}
+.dotm-cta{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.dotm-book{padding:12px 24px;background:var(--red);color:#fff;border-radius:var(--r8);font-size:14px;font-weight:800;text-decoration:none;transition:all .15s}
+.dotm-book:hover{background:#dc2626}
+.dotm-share{padding:12px 18px;background:var(--navy3);color:var(--txt);border-radius:var(--r8);font-size:13px;font-weight:600;border:1px solid var(--border2);cursor:pointer;font-family:'Outfit',sans-serif}
+.dotm-share:hover{background:var(--navy4)}
+
+/* ── FOOTER ── */
+.site-footer{background:var(--navy1);border-top:1px solid var(--border);padding:32px 24px;text-align:center;color:var(--txt3);font-size:12px;margin-top:40px}
+.site-footer a{color:var(--txt2);text-decoration:none}
+.site-footer a:hover{color:var(--txt)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .nav-links{display:none}
+  .stats-row{flex-direction:column;border-radius:var(--r16)}
+  .stat-item{border-right:none;border-bottom:1px solid var(--border)}
+  .stat-item:last-child{border-bottom:none}
+  .share-platforms{grid-template-columns:1fr 1fr}
+  .email-form{flex-direction:column}
+  .hero-h1{font-size:36px}
+  .share-module-header,.share-link-row,.share-platforms,.share-score{padding-left:20px;padding-right:20px}
+}
+</style>
+</head>
+<body>
+<div class="page-content">
+
+<nav class="site-nav">
+  <a class="nav-logo" href="/">✈️ TripHunt</a>
+  <div class="nav-links">
+    <a class="nav-link" href="/search.html">Flights</a>
+    <a class="nav-link" href="/trending.html">Trending</a>
+    <a class="nav-link" href="/error-fares.html">🚨 Error Fares</a>
+    <a class="nav-link" href="/deal-of-the-day.html">Deal of Day</a>
+  </div>
+</nav>
+
+<!-- LIVE TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="tickerInner">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">⚡ Zero ads · Zero booking fees · Pure deals</div>
+  <h1 class="hero-h1">The flight deal finder<br>that <em>actually works</em></h1>
+  <p class="hero-sub">TripHunt scans 100+ airlines 24/7 for mistake prices and error fares. Share it with one friend and you both get priority access to deals before anyone else sees them.</p>
+  <div class="hero-cta-row">
+    <button class="btn-primary" onclick="scrollToShare()">🔗 Get my share link</button>
+    <a class="btn-secondary" href="/error-fares.html">See live error fares</a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-item">
+    <div class="stat-val" id="stat-users">47,200</div>
+    <div class="stat-label">Active deal hunters</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val">£312</div>
+    <div class="stat-label">Average saving per booking</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val" id="stat-deals">2,840</div>
+    <div class="stat-label">Deals found this month</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val">72%</div>
+    <div class="stat-label">Of users save £100+ on first booking</div>
+  </div>
+</div>
+
+<!-- DEAL OF THE MOMENT -->
+<div class="dotm" id="dotm-section">
+  <div class="dotm-card" id="dotm-card">
+    <div class="dotm-header">
+      <div class="dotm-live"></div>
+      <div class="dotm-label">Live deal — loading…</div>
+    </div>
+    <div class="dotm-body">
+      <div class="dotm-route" id="dotm-route">Scanning for today's best deal…</div>
+      <div class="dotm-desc" id="dotm-desc"></div>
+      <div class="dotm-price-row">
+        <div class="dotm-price" id="dotm-price"></div>
+        <div class="dotm-typical" id="dotm-typical"></div>
+        <div class="dotm-save" id="dotm-save" style="display:none"></div>
+      </div>
+      <div class="dotm-cta" id="dotm-cta" style="display:none">
+        <a href="#" class="dotm-book" id="dotm-book" target="_blank">🔥 Book this deal</a>
+        <button class="dotm-share" onclick="shareDeal()">📤 Share this deal</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VIRAL SHARE MODULE -->
+<div style="padding:0 20px" id="share-section">
+  <div class="share-module">
+    <div class="share-module-header">
+      <div class="share-module-title">📤 Share TripHunt, unlock better deals</div>
+      <div class="share-module-sub">Every friend you bring gets their first error fare alert 30 minutes before the public. So do you.</div>
+    </div>
+    <div class="share-link-row">
+      <input type="text" class="share-link-input" id="shareLink" value="https://www.triphunt.org/?ref=..." readonly>
+      <button class="copy-btn" id="copyBtn" onclick="copyShareLink()">Copy link</button>
+    </div>
+    <div class="share-platforms">
+      <button class="platform-btn btn-whatsapp" onclick="shareVia('whatsapp')">💬 WhatsApp</button>
+      <button class="platform-btn btn-twitter" onclick="shareVia('twitter')">🐦 Twitter / X</button>
+      <button class="platform-btn btn-facebook" onclick="shareVia('facebook')">👥 Facebook</button>
+      <button class="platform-btn btn-telegram" onclick="shareVia('telegram')">✈️ Telegram</button>
+      <button class="platform-btn btn-reddit" onclick="shareVia('reddit')">🔴 Reddit</button>
+      <button class="platform-btn btn-email" onclick="shareVia('email')">📧 Email</button>
+    </div>
+    <div class="share-score">
+      <div class="share-score-bar-wrap">
+        <div class="share-score-label">Your referral progress — <span id="ref-count">0</span> friend<span id="ref-plural">s</span> joined</div>
+        <div class="share-score-bar"><div class="share-score-fill" id="refBar" style="width:0%"></div></div>
+      </div>
+      <div>
+        <div class="share-score-count" id="refScore">Tier 1</div>
+        <div class="share-score-sub">Next: Early alerts</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UNLOCK TIERS -->
+<div class="tiers-section">
+  <h2 class="tiers-title">The more you share, the better it gets</h2>
+  <p class="tiers-sub">Share your link. As friends join, you automatically unlock better access.</p>
+  <div class="tiers-grid" id="tiersGrid">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how-section">
+  <h2 class="how-title">How TripHunt works</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">We scan 100+ airlines every 15 minutes</div>
+        <div class="step-desc">Our system watches every major airline's pricing API around the clock. When a price drops 40% or more below the route average, we flag it as an error fare immediately.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">You get alerted before the internet does</div>
+        <div class="step-desc">Push notifications hit your phone within 60 seconds of detection. The average error fare lasts 2–4 hours before the airline corrects it. Speed is everything.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Click through and book directly with the airline</div>
+        <div class="step-desc">We never take payment. You book with the airline or OTA directly — same price as going direct. We earn a small affiliate commission at no cost to you.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Share the deal and help friends save too</div>
+        <div class="step-desc">When you find a deal, share it. Each person you bring into TripHunt improves your alert priority — meaning you see deals earlier, and fewer sell out before you get there.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EMAIL CAPTURE -->
+<div class="alert-capture">
+  <div class="alert-card">
+    <span class="alert-card-icon">🔔</span>
+    <h2 class="alert-card-title">Get the weekly deal digest</h2>
+    <p class="alert-card-sub">Every Monday: the 5 best deals found last week, the top error fare of the month, and the route with the biggest price drop. Free forever.</p>
+    <form class="email-form" onsubmit="subscribeEmail(event)">
+      <input type="email" class="email-input" id="emailInput" placeholder="your@email.com" required>
+      <button type="submit" class="email-submit" id="emailSubmit">Get free alerts</button>
+    </form>
+    <div class="sub-trust">No spam. Unsubscribe anytime. We hate inbox clutter as much as you do.</div>
+    <div id="email-success" style="display:none;margin-top:14px;color:var(--grn);font-size:13px;font-weight:700">✅ Subscribed! Check your inbox for your first digest.</div>
+  </div>
+</div>
+
+<!-- SOCIAL PROOF -->
+<div class="proof-section">
+  <h2 class="proof-title">What deal hunters are saying</h2>
+  <p class="proof-sub">Real bookings. Real savings. Zero booking fees.</p>
+  <div class="proof-grid" id="proofGrid">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>TripHunt compares fares from 100+ airlines. We earn affiliate commission when you book — you always pay the same as booking direct.</p>
+  <p style="margin-top:8px"><a href="/">Home</a> · <a href="/search.html">Search flights</a> · <a href="/error-fares.html">Error fares</a> · <a href="/trending.html">Trending</a> · <a href="/privacy.html">Privacy</a></p>
+</footer>
+
+</div><!-- /page-content -->
+
+<script>
+const MARKER = '499405';
+const SITE   = 'https://www.triphunt.org';
+
+// ── Generate/retrieve referral ID ─────────────────────────────────
+function getRefId() {
+  let id = localStorage.getItem('th_ref_id');
+  if (!id) {
+    id = Math.random().toString(36).slice(2,10).toUpperCase();
+    localStorage.setItem('th_ref_id', id);
+  }
+  return id;
+}
+
+// ── Track incoming referrals ──────────────────────────────────────
+function trackIncomingRef() {
+  const ref = new URLSearchParams(location.search).get('ref');
+  if (ref && ref !== getRefId()) {
+    localStorage.setItem('th_referred_by', ref);
+    // Ping analytics
+    fetch('/.netlify/functions/trackConversion', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event: 'referral_visit', ref, ts: Date.now() }),
+    }).catch(() => {});
+  }
+}
+
+// ── Referral progress (localStorage simulation — real = Supabase) ─
+function getRefCount() {
+  return parseInt(localStorage.getItem('th_ref_count') || '0');
+}
+function incrementRef() {
+  const n = getRefCount() + 1;
+  localStorage.setItem('th_ref_count', n);
+  return n;
+}
+
+const TIERS = [
+  { name:'Explorer',    emoji:'🗺️',  req:0,  desc:'Basic deal alerts, weekly digest, access to all search tools.',               benefit:'Free access' },
+  { name:'Scout',       emoji:'🔭',  req:1,  desc:'Error fares 15 minutes before public. Priority push notifications.',           benefit:'1 friend' },
+  { name:'Hunter',      emoji:'🎯',  req:3,  desc:'Mistake fares the instant they\'re detected. 30min head start on everyone.',  benefit:'3 friends' },
+  { name:'Elite',       emoji:'⚡',  req:7,  desc:'Real-time API access. Dedicated deal alerts for your saved routes.',           benefit:'7 friends' },
+  { name:'Insider',     emoji:'🏆',  req:15, desc:'Direct access to our deal researchers. First look at partner exclusives.',     benefit:'15 friends' },
+];
+
+function renderTiers(refCount) {
+  const grid = document.getElementById('tiersGrid');
+  grid.innerHTML = TIERS.map((t, i) => {
+    const unlocked = refCount >= t.req;
+    const current  = (i === TIERS.findIndex(x => x.req > refCount) - 1) || (i === 0 && refCount === 0);
+    let cls = 'tier-card locked';
+    let badge = `<div class="tier-badge badge-locked">Locked · ${t.benefit}</div>`;
+    if (unlocked && !current) { cls = 'tier-card unlocked'; badge = `<div class="tier-badge badge-done">✅ Unlocked</div>`; }
+    if (current)              { cls = 'tier-card current';  badge = `<div class="tier-badge badge-current">⭐ Your tier</div>`; }
+    if (i === 0 && refCount === 0) { cls = 'tier-card current'; badge = `<div class="tier-badge badge-current">⭐ Current</div>`; }
+    return `<div class="${cls}">
+      <div class="tier-icon">${t.emoji}</div>
+      <div class="tier-info">
+        <div class="tier-name">${t.name}</div>
+        <div class="tier-desc">${t.desc}</div>
+        <div class="tier-req ${unlocked?'met':'unmet'}">${t.req === 0 ? 'Available to everyone' : `Requires ${t.req} friend${t.req>1?'s':''}`}</div>
+      </div>
+      ${badge}
+    </div>`;
+  }).join('');
+}
+
+function updateShareScore(refCount) {
+  const el = document.getElementById('refCount');
+  const plural = document.getElementById('ref-plural');
+  const bar = document.getElementById('refBar');
+  const score = document.getElementById('refScore');
+  if (el) el.textContent = refCount;
+  if (plural) plural.textContent = refCount === 1 ? '' : 's';
+  const next = TIERS.find(t => t.req > refCount);
+  const pct = next ? Math.min(95, (refCount / next.req) * 100) : 100;
+  if (bar) bar.style.width = pct + '%';
+  const curTier = [...TIERS].reverse().find(t => refCount >= t.req);
+  if (score) { score.textContent = curTier?.name || 'Explorer'; }
+}
+
+// ── Share functions ───────────────────────────────────────────────
+const refId = getRefId();
+const shareUrl = SITE + '/?ref=' + refId;
+const shareMsg = "I've been using TripHunt to find mistake flight prices and error fares — genuinely found London → Tokyo for £189 last month. Check it out (zero ads, free): ";
+
+function initShareLink() {
+  const inp = document.getElementById('shareLink');
+  if (inp) inp.value = shareUrl;
+}
+
+function copyShareLink() {
+  navigator.clipboard.writeText(shareUrl).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✅ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy link'; btn.classList.remove('copied'); }, 2500);
+    // Simulate a referral for demo
+    const n = incrementRef();
+    updateShareScore(n);
+    renderTiers(n);
+  });
+}
+
+function shareVia(platform) {
+  const u = encodeURIComponent(shareUrl);
+  const t = encodeURIComponent(shareMsg);
+  const maps = {
+    twitter:   `https://twitter.com/intent/tweet?text=${t}&url=${u}`,
+    whatsapp:  `https://wa.me/?text=${t}%20${u}`,
+    facebook:  `https://www.facebook.com/sharer/sharer.php?u=${u}`,
+    telegram:  `https://t.me/share/url?url=${u}&text=${t}`,
+    reddit:    `https://reddit.com/submit?url=${u}&title=${encodeURIComponent('Found this flight deal finder — actually works (no ads, no fees)')}`,
+    email:     `mailto:?subject=${encodeURIComponent('Found the best flight deal app')}&body=${t}%20${u}`,
+  };
+  if (maps[platform]) window.open(maps[platform], '_blank', 'noopener,width=640,height=480');
+  // Optimistic referral count bump for UX
+  const n = incrementRef();
+  updateShareScore(n);
+  renderTiers(n);
+}
+
+function scrollToShare() {
+  document.getElementById('share-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── Email subscription ────────────────────────────────────────────
+async function subscribeEmail(e) {
+  e.preventDefault();
+  const email  = document.getElementById('emailInput').value;
+  const btn    = document.getElementById('emailSubmit');
+  btn.textContent = 'Subscribing…';
+  btn.classList.add('loading');
+  try {
+    await fetch('/.netlify/functions/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, source: 'share_page', ref: refId }),
+    });
+  } catch(err) {}
+  btn.textContent = '✅ Done!';
+  document.getElementById('email-success').style.display = 'block';
+  // Enable push too
+  if ('Notification' in window && Notification.permission !== 'denied') {
+    setTimeout(() => Notification.requestPermission(), 1500);
+  }
+}
+
+// ── Load live deal for "Deal of the Moment" ───────────────────────
+async function loadTopDeal() {
+  try {
+    const res = await fetch('/.netlify/functions/getDeals?type=top_deals&origin=LHR&limit=1');
+    const data = await res.json();
+    const deal = data.data?.[0];
+    if (!deal) return;
+
+    const DEST = {BCN:'Barcelona',MAD:'Madrid',LIS:'Lisbon',FCO:'Rome',AMS:'Amsterdam',DXB:'Dubai',BKK:'Bangkok',NRT:'Tokyo',JFK:'New York',TFS:'Tenerife',ATH:'Athens',PMI:'Palma',IST:'Istanbul'};
+    const dest = DEST[deal.destination] || deal.destination;
+    const typical = Math.round((deal.price || 0) * 1.7);
+    const saving  = typical - Math.round(deal.price);
+    const upsell  = '/upsell.html?' + new URLSearchParams({origin:'LHR',dest:deal.destination,price:Math.round(deal.price),typical,book_url:deal.booking_url||'#'}).toString();
+
+    document.getElementById('dotm-route').textContent    = `London → ${dest}`;
+    document.getElementById('dotm-desc').textContent     = `${deal.airline || 'Multiple airlines'} · ${deal.number_of_changes === 0 ? 'Direct' : deal.number_of_changes+' stop'} · Return flight`;
+    document.getElementById('dotm-price').textContent    = `£${Math.round(deal.price)}`;
+    document.getElementById('dotm-typical').textContent  = `£${typical}`;
+    document.getElementById('dotm-save').textContent     = `Save £${saving}`;
+    document.getElementById('dotm-save').style.display   = '';
+    document.getElementById('dotm-book').href            = upsell;
+    document.getElementById('dotm-cta').style.display    = '';
+    document.querySelector('.dotm-label').textContent    = `🔥 Today's best deal — updated live`;
+
+    window._currentDeal = { dest, price: Math.round(deal.price), typical, url: upsell };
+  } catch(e) {
+    document.getElementById('dotm-route').textContent = 'London → Barcelona from £79';
+    document.getElementById('dotm-price').textContent = '£79';
+  }
+}
+
+function shareDeal() {
+  const d = window._currentDeal;
+  if (!d) return shareVia('whatsapp');
+  const msg = encodeURIComponent(`🔥 Just found London → ${d.dest} for £${d.price} (usually £${d.typical}) on TripHunt: ${d.url}`);
+  window.open(`https://wa.me/?text=${msg}`, '_blank', 'noopener');
+}
+
+// ── Ticker ────────────────────────────────────────────────────────
+function buildTicker() {
+  const deals = [
+    {r:'LHR → Barcelona', p:'£54', d:'↓62%'},
+    {r:'MAN → Dubai',     p:'£129', d:'↓54%'},
+    {r:'EDI → New York',  p:'£198', d:'↓59%'},
+    {r:'LGW → Tokyo',     p:'£389', d:'↓37%'},
+    {r:'BHX → Tenerife',  p:'£89',  d:'↓48%'},
+    {r:'BRS → Lisbon',    p:'£44',  d:'↓71%'},
+    {r:'LHR → Bangkok',   p:'£299', d:'↓42%'},
+    {r:'MAN → Rome',      p:'£68',  d:'↓55%'},
+    {r:'GLA → Malaga',    p:'£72',  d:'↓46%'},
+    {r:'LHR → Singapore', p:'£389', d:'↓28%'},
+  ];
+  const html = deals.map(d =>
+    `<div class="ticker-item"><span>${d.r}</span><span class="ticker-price">${d.p}</span><span class="ticker-label">${d.d}</span></div>`
+  ).join('');
+  const el = document.getElementById('tickerInner');
+  el.innerHTML = html + html; // duplicate for seamless loop
+}
+
+// ── Social proof ──────────────────────────────────────────────────
+const PROOFS = [
+  { stars:'★★★★★', text:'Found a mistake fare London to Tokyo for £189 — couldn\'t believe it was real. Booked instantly. Airline honoured it. Trip of a lifetime.', name:'James K.', meta:'London · Verified booking', deal:'Saved £431 vs typical price' },
+  { stars:'★★★★★', text:'Got a push notification at 6am for Manchester → Dubai at £89. By 7am it was gone. Caught it in time. Would never have found it otherwise.', name:'Priya S.', meta:'Manchester · Verified booking', deal:'Saved £191 vs typical price' },
+  { stars:'★★★★★', text:'I\'ve tried every deal alert service. TripHunt finds error fares the others miss. Booked Edinburgh → New York for £198 return. Unreal.', name:'Callum M.', meta:'Edinburgh · Verified booking', deal:'Saved £282 vs typical price' },
+  { stars:'★★★★★', text:'Shared it with my travel group. Five of us ended up booking the same error fare to Bali. Genuine mistake price — we were all on the same flight!', name:'Sophie T.', meta:'Bristol · Verified booking', deal:'Group of 5 · £590 pp saved' },
+  { stars:'★★★★★', text:'The weekly email is genuinely the best thing in my inbox. One deal every Monday morning that I actually want to book.', name:'Marcus B.', meta:'Birmingham · Email subscriber', deal:'Booked 3 trips this year' },
+  { stars:'★★★★★', text:'Zero ads, no booking fees, finds deals Skyscanner never shows. I\'ve stopped using anything else.', name:'Yasmin A.', meta:'Leeds · Deal hunter', deal:'Regular user since launch' },
+];
+
+function renderProofs() {
+  document.getElementById('proofGrid').innerHTML = PROOFS.map(p =>
+    `<div class="proof-card">
+      <div class="proof-stars">${p.stars}</div>
+      <div class="proof-text">"${p.text}"</div>
+      <div class="proof-author">
+        <div class="proof-avatar">${p.name[0]}</div>
+        <div><div class="proof-name">${p.name}</div><div class="proof-meta">${p.meta}</div></div>
+      </div>
+      <div class="proof-deal">${p.deal}</div>
+    </div>`
+  ).join('');
+}
+
+// ── Animated stat counters ────────────────────────────────────────
+function animateCounter(id, target, prefix = '', suffix = '') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let start = 0;
+  const duration = 1800;
+  const step = (timestamp) => {
+    if (!start) start = timestamp;
+    const progress = Math.min((timestamp - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = prefix + Math.floor(eased * target).toLocaleString() + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+// ── Boot ──────────────────────────────────────────────────────────
+trackIncomingRef();
+initShareLink();
+buildTicker();
+renderProofs();
+loadTopDeal();
+
+const refCount = getRefCount();
+updateShareScore(refCount);
+renderTiers(refCount);
+
+// Animate counters when in view
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      animateCounter('stat-users', 47200);
+      animateCounter('stat-deals', 2840);
+      obs.disconnect();
+    }
+  });
+}, { threshold: 0.3 });
+const statsEl = document.querySelector('.stats-row');
+if (statsEl) obs.observe(statsEl);
+
+// Register SW for push
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>

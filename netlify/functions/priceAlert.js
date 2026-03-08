@@ -113,7 +113,7 @@ async function getLowestPrice(origin, dest, token) {
 
 async function sendAlertEmail(alert, price) {
   if (!RESEND) return;
-  // FIX: was origin+dest only — no dates so JetRadar opened blank and commission never fired
+  // FIX: was origin+dest only -- no dates so JetRadar opened blank and commission never fired
   // Now uses DDMM format with depart date closest to alert trigger + 7-night return
   function ddmm(s) {
     if (!s) return "";

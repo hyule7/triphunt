@@ -1,4 +1,4 @@
-// TripHunt — getDestinationDeals.js
+// TripHunt -- getDestinationDeals.js
 // Fetches deals to a specific destination from multiple UK origins.
 // Used by destination SEO pages to show live prices without changing page structure.
 

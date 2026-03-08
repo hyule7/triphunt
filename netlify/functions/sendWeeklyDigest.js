@@ -1,5 +1,5 @@
-// TripHunt — sendWeeklyDigest.js
-// Netlify Scheduled Function — runs every Monday at 8:00 UTC
+// TripHunt -- sendWeeklyDigest.js
+// Netlify Scheduled Function -- runs every Monday at 8:00 UTC
 // netlify.toml: [functions.sendWeeklyDigest] schedule = "0 8 * * 1"
 //
 // Fetches top deals for each subscriber's preferred origin,
@@ -36,7 +36,7 @@ exports.handler = async function() {
   console.log("Weekly digest starting:", new Date().toISOString());
 
   if (!SUPABASE || !SUPA_KEY || !RESEND) {
-    console.log("Missing env vars — skipping digest");
+    console.log("Missing env vars -- skipping digest");
     return { statusCode: 200 };
   }
 
@@ -79,7 +79,7 @@ exports.handler = async function() {
       deals = getFallbackDeals(origin);
     }
 
-    // Send to each subscriber for this origin (in batches of 50 via BCC isn't ideal — send individually for personalisation)
+    // Send to each subscriber for this origin (in batches of 50 via BCC isn't ideal -- send individually for personalisation)
     for (const email of emails) {
       try {
         await sendDigestEmail(email, origin, deals);

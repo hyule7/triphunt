@@ -1,4 +1,4 @@
-// TripHunt — getLiveDeals.js
+// TripHunt -- getLiveDeals.js
 // Serves the deal radar output to the homepage and deal feed.
 // Reads from Supabase `deals` table (populated by dealRadar scheduled fn).
 // Falls back to live API fetch + scoring if Supabase is empty.

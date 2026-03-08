@@ -1,4 +1,4 @@
-// TripHunt — getFlights.js  v10
+// TripHunt -- getFlights.js  v10
 // Works with OR without TRAVELPAYOUTS_TOKEN.
 // Without token → returns curated static fallback data (not a 500).
 const https = require("https");
@@ -68,7 +68,7 @@ function defaultRet(dep) {
   return d.toISOString().slice(0, 10);
 }
 function bookingUrl(orig, dest, dep, ret, adults) {
-  // Always include dates — Aviasales shows "Oops" error without them
+  // Always include dates -- Aviasales shows "Oops" error without them
   const p  = parseInt(adults) || 2;
   const sd = dep || defaultDep();
   const sr = ret || defaultRet(sd);
@@ -281,7 +281,7 @@ async function fetchFlights(params, token) {
   const q = new URLSearchParams({ origin:params.origin, destination:params.destination, currency:"GBP", locale:"en", token });
   if (params.depart_date) q.set("depart_date", params.depart_date);
   if (params.return_date) q.set("return_date", params.return_date);
-  // FIX: adults was missing — API returned 1-pax price even when user picked 2+
+  // FIX: adults was missing -- API returned 1-pax price even when user picked 2+
   q.set("adults", String(parseInt(params.adults) || 2));
   return fetchJson("https://api.travelpayouts.com/aviasales/v3/prices_for_dates?" + q);
 }

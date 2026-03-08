@@ -1,4 +1,4 @@
-// TripHunt — getInsurance.js
+// TripHunt -- getInsurance.js
 // Travel insurance quotes via affiliate partners
 // GET ?dest=BCN&dep=2025-04-10&ret=2025-04-17&pax=2&age=35
 

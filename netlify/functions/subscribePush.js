@@ -1,4 +1,4 @@
-// TripHunt — subscribePush.js
+// TripHunt -- subscribePush.js
 // Handles Web Push API subscription storage
 // POST: save a new push subscription with route preferences
 // DELETE: remove a subscription
@@ -48,7 +48,7 @@ exports.handler = async (event) => {
   if (event.httpMethod === "OPTIONS") return { statusCode: 200, headers: CORS, body: "" };
 
   if (!SUPABASE || !SUPA_KEY) {
-    // Graceful degradation — log and acknowledge without storing
+    // Graceful degradation -- log and acknowledge without storing
     console.log("Push sub received but Supabase not configured:", event.body?.slice(0, 100));
     return { statusCode: 200, headers: CORS, body: JSON.stringify({ success: true, _mode: "demo" }) };
   }

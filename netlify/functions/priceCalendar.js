@@ -22,7 +22,7 @@ const cors = {
 const MARKER = process.env.TRAVELPAYOUTS_MARKER || "499405";
 
 function bookingUrl(origin, dest, dep, ret) {
-  // Always include dates — Aviasales shows "Oops" error without them
+  // Always include dates -- Aviasales shows "Oops" error without them
   const dd = ddmm(dep);
   const rd = ddmm(ret);
   const path = origin + dd + dest + rd + "21";

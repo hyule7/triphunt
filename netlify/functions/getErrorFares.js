@@ -1,4 +1,4 @@
-// TripHunt — getErrorFares.js
+// TripHunt -- getErrorFares.js
 // Detects suspiciously cheap fares (potential airline error fares)
 // A fare is flagged as error fare if price < 40% of route average
 

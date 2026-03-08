@@ -1,6 +1,6 @@
-// TripHunt — getTrending.js
+// TripHunt -- getTrending.js
 // Returns trending routes: deals sorted by composite score of price drop + deal grade
-// Also returns "price velocity" — how much the price has moved
+// Also returns "price velocity" -- how much the price has moved
 
 const https = require("https");
 

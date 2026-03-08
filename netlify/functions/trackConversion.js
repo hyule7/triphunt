@@ -19,7 +19,7 @@ exports.handler = async function(event) {
   try { body = JSON.parse(event.body); } catch(e) { return { statusCode:400, headers:cors, body:JSON.stringify({ error:"Invalid JSON" }) }; }
 
   // FIX: frontend spreads trackClick data object which uses snake_case keys
-  //      (deal_score, session_id) — was reading camelCase dealScore/sessionId so these were always null
+  //      (deal_score, session_id) -- was reading camelCase dealScore/sessionId so these were always null
   const record = {
     origin_code: body.origin      || null,
     dest_code:   body.destination || null,

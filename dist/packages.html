@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Package Holidays | TripHunt</title>
+<meta name="description" content="Find cheap package holidays from the UK. Flights + hotels combined, sorted cheapest first. Prices in GBP.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,wght@0,700;0,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0a0f1e; --navy1:#0e1528; --navy2:#141d35; --navy3:#1a2442; --navy4:#243058;
+  --border:rgba(255,255,255,.08); --border2:rgba(255,255,255,.12);
+  --acc:#2563eb; --acc2:#3b82f6; --acc3:#60a5fa;
+  --grn:#10b981; --txt:#f0f4ff; --txt2:#8b9cbf; --txt3:#4a5878;
+  --r8:8px; --r12:12px; --r16:16px; --r99:9999px; --max:1240px;
+}
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Outfit',sans-serif; background:var(--navy); color:var(--txt); font-size:15px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+.container { max-width:var(--max); margin:0 auto; padding:0 20px; }
+
+/* Nav */
+.site-nav { position:sticky; top:0; z-index:200; display:flex; align-items:center; gap:8px; padding:0 24px; height:56px; background:rgba(10,15,30,.92); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+.nav-logo { font-family:'Fraunces',Georgia,serif; font-size:20px; font-weight:900; color:var(--txt); text-decoration:none; letter-spacing:-.5px; display:flex; align-items:center; gap:8px; }
+.nav-links { display:flex; gap:4px; margin-left:8px; }
+.nav-link { font-family:'Outfit',sans-serif; font-size:13px; font-weight:500; color:var(--txt2); padding:6px 12px; border-radius:var(--r99); text-decoration:none; transition:all .2s; }
+.nav-link:hover, .nav-link.active { color:var(--txt); background:var(--navy3); }
+
+/* Hero */
+.hero { min-height:260px; display:flex; align-items:center; justify-content:center; padding:50px 20px 30px; text-align:center; background:linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%); }
+.hero h1 { font-family:'Fraunces',Georgia,serif; font-size:clamp(28px,5vw,48px); font-weight:900; line-height:1.1; margin-bottom:10px; }
+.hero h1 span { color:var(--acc3); font-style:italic; }
+.hero-sub { font-size:15px; color:var(--txt2); max-width:500px; margin:0 auto; }
+
+/* Package filters */
+.pkg-filters { background:var(--navy1); border-bottom:1px solid var(--border); padding:16px 24px; }
+.pkg-filter-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; max-width:var(--max); margin:0 auto; }
+.pkg-filter-label { font-size:12px; font-weight:700; color:var(--txt2); white-space:nowrap; }
+.pkg-select { background:var(--navy2); border:1px solid var(--border); border-radius:var(--r8); padding:8px 12px; color:var(--txt); font-size:13px; font-family:'Outfit',sans-serif; cursor:pointer; }
+.pkg-select:focus { outline:none; border-color:var(--acc); }
+.pkg-filter-btn { padding:9px 20px; background:var(--acc); color:#fff; border:none; border-radius:var(--r8); font-size:13px; font-weight:700; cursor:pointer; font-family:'Outfit',sans-serif; transition:background .15s; }
+.pkg-filter-btn:hover { background:var(--acc2); }
+
+/* Sort bar */
+.sort-bar { display:flex; align-items:center; gap:8px; padding:12px 24px; background:var(--navy2); border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.sort-bar-count { font-size:13px; color:var(--txt2); font-weight:600; margin-right:auto; }
+.sort-btn { padding:6px 14px; border:1px solid var(--border); border-radius:var(--r99); background:none; color:var(--txt2); font-size:12px; font-weight:600; cursor:pointer; font-family:'Outfit',sans-serif; transition:all .15s; }
+.sort-btn.active { background:var(--acc); color:#fff; border-color:var(--acc); }
+.sort-btn:hover:not(.active) { background:var(--navy3); color:var(--txt); }
+
+/* Info strip */
+.info-strip { display:flex; gap:20px; padding:12px 24px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.info-item { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--txt2); }
+.info-icon { font-size:14px; }
+
+/* Packages grid */
+.packages-section { padding:24px; }
+#packagesGrid .th-packages-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
+@media(max-width:640px) { #packagesGrid .th-packages-grid { grid-template-columns:1fr; } }
+
+/* Footer */
+.site-footer { background:var(--navy1); border-top:1px solid var(--border); padding:30px 24px; text-align:center; color:var(--txt3); font-size:12px; margin-top:20px; }
+.footer-links { display:flex; gap:16px; justify-content:center; margin-bottom:10px; flex-wrap:wrap; }
+.footer-link { color:var(--txt2); text-decoration:none; font-size:12px; }
+.footer-link:hover { color:var(--txt); }
+</style>
+<script src="/js/shared.js" defer></script>
+<script src="/js/analytics.js" defer></script>
+<script src="/js/deal-score.js" defer></script>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="site-nav">
+  <a class="nav-logo" href="/">✈️ TripHunt</a>
+  <div class="nav-links">
+    <a class="nav-link" href="/search.html">Flights</a>
+    <a class="nav-link active" href="/packages.html">Packages</a>
+    <a class="nav-link" href="/destinations/">Destinations</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div>
+    <h1>✈️🏨 <span>Package Holidays</span> from the UK</h1>
+    <p class="hero-sub">Flights + hotels bundled together, sorted cheapest first. All prices in GBP.</p>
+  </div>
+</section>
+
+<!-- ── FILTERS ── -->
+<div class="pkg-filters">
+  <div class="pkg-filter-row">
+    <span class="pkg-filter-label">From:</span>
+    <select class="pkg-select" id="pkg-origin">
+      <option value="LHR">London Heathrow</option>
+      <option value="LGW">London Gatwick</option>
+      <option value="MAN">Manchester</option>
+      <option value="EDI">Edinburgh</option>
+      <option value="BHX">Birmingham</option>
+      <option value="BRS">Bristol</option>
+    </select>
+
+    <span class="pkg-filter-label">Duration:</span>
+    <select class="pkg-select" id="pkg-nights">
+      <option value="3">3 nights</option>
+      <option value="5">5 nights</option>
+      <option value="7" selected>7 nights</option>
+      <option value="10">10 nights</option>
+      <option value="14">14 nights</option>
+    </select>
+
+    <span class="pkg-filter-label">Adults:</span>
+    <select class="pkg-select" id="pkg-adults">
+      <option value="1">1 Adult</option>
+      <option value="2" selected>2 Adults</option>
+      <option value="3">3 Adults</option>
+      <option value="4">4 Adults</option>
+    </select>
+
+    <button class="pkg-filter-btn" onclick="searchPackages()">🔍 Find Packages</button>
+  </div>
+</div>
+
+<!-- ── SORT BAR ── -->
+<div class="sort-bar">
+  <span class="sort-bar-count" id="pkg-count">Loading packages…</span>
+  <button class="sort-btn active" onclick="sortPackages('cheap',this)">💸 Cheapest first</button>
+  <button class="sort-btn" onclick="sortPackages('hotel',this)">🏨 Best hotel</button>
+</div>
+
+<!-- ── INFO STRIP ── -->
+<div class="info-strip">
+  <div class="info-item"><span class="info-icon">🔒</span> Zero booking fees</div>
+  <div class="info-item"><span class="info-icon">💳</span> You pay the same as booking direct</div>
+  <div class="info-item"><span class="info-icon">✈️</span> Flights via Aviasales</div>
+  <div class="info-item"><span class="info-icon">🏨</span> Hotels via Booking.com</div>
+  <div class="info-item"><span class="info-icon">⚡</span> Live prices</div>
+</div>
+
+<!-- ── PACKAGES GRID ── -->
+<div class="packages-section">
+  <div id="packagesGrid" data-origin="LHR" data-nights="7" data-adults="2" data-limit="8"></div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer class="site-footer">
+  <div class="footer-links">
+    <a class="footer-link" href="/">Home</a>
+    <a class="footer-link" href="/search.html">Search Flights</a>
+    <a class="footer-link" href="/packages.html">Packages</a>
+    <a class="footer-link" href="/destinations/">Destinations</a>
+  </div>
+  <p>TripHunt earns affiliate commission from Aviasales and Booking.com. You always pay the same as booking direct. Prices in GBP.</p>
+</footer>
+
+<script>
+let _pkgData = [];
+
+function searchPackages() {
+  const origin = document.getElementById("pkg-origin").value;
+  const nights = document.getElementById("pkg-nights").value;
+  const adults = document.getElementById("pkg-adults").value;
+  const grid   = document.getElementById("packagesGrid");
+  grid.dataset.origin = origin;
+  grid.dataset.nights = nights;
+  grid.dataset.adults = adults;
+  TH_PACKAGES.loadPackages("packagesGrid", { origin, nights, adults, limit:8 });
+}
+
+function sortPackages(mode, btn) {
+  document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
+  if(btn) btn.classList.add("active");
+  // Re-request with same params
+  searchPackages();
+}
+</script>
+
+<!-- Shared JS -->
+<script src="/js/ui.js"></script>
+<script src="/js/packages.js"></script>
+
+
+<!-- TripHunt shared: photos · mobile nav · trust -->
+<script src="/js/photos.js"></script>
+<script src="/js/trust.js"></script>
+<script src="/js/mobile-nav.js" data-auto></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if (window.TH && TH.Photos) { TH.Photos.injectAll(); new MutationObserver(function(){ TH.Photos.injectAll(); }).observe(document.body,{childList:true,subtree:true}); }
+  if (window.TH && TH.MobileNav) TH.MobileNav.init({ onRefresh: function(){ window.location.reload(); } });
+});
+</script>
+</body>
+</html>

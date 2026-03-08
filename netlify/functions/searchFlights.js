@@ -1,4 +1,4 @@
-// TripHunt — searchFlights.js
+// TripHunt -- searchFlights.js
 // Called by results.html when user submits a flight search.
 // Hits prices_for_dates first, falls back to v1/prices/cheap, then static.
 
@@ -78,7 +78,7 @@ function enrich(items, origin, dep, ret, adults) {
     const d     = item.depart_date || item.departure_at || dep || "";
     const r     = item.return_date || item.return_at    || ret || (d ? addDays(d, 7) : "");
     const g     = gradePrice(price, dest);
-    // Prefer API's own link field — https://www.aviasales.com + deal.link
+    // Prefer API's own link field -- https://www.aviasales.com + deal.link
     const link  = item.link || ("/" + origin + ddmm(d) + dest + ddmm(r) + (parseInt(adults)||2) + "1");
     return {
       ...item,

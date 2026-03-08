@@ -1,4 +1,4 @@
-// TripHunt — subscribe.js
+// TripHunt -- subscribe.js
 // Email signup: stores subscriber in Supabase, sends welcome email via Resend
 // POST { email, origin? } → 200 { success, message }
 
@@ -48,7 +48,7 @@ exports.handler = async function(event) {
       }, "email");
     } catch(e) {
       console.error("Supabase subscribe error:", e.message);
-      // Don't fail — still send welcome email
+      // Don't fail -- still send welcome email
     }
   }
 
@@ -57,7 +57,7 @@ exports.handler = async function(event) {
     try {
       await sendResendEmail({
         to: [email],
-        subject: "Welcome to TripHunt — Your first deal is waiting ✈️",
+        subject: "Welcome to TripHunt -- Your first deal is waiting ✈️",
         html: welcomeEmailHtml(email, origin),
       });
     } catch(e) {
@@ -98,12 +98,12 @@ function welcomeEmailHtml(email, origin) {
   <div style="padding:40px;">
     <h1 style="font-size:24px;font-weight:800;color:#0a0f1e;margin:0 0 12px;">You're on the list 🎉</h1>
     <p style="color:#4a5878;font-size:15px;line-height:1.6;margin:0 0 20px;">
-      Every week we'll send you the best flight deals departing from <strong style="color:#0a0f1e;">${originName}</strong> — hand-picked from thousands of routes.
+      Every week we'll send you the best flight deals departing from <strong style="color:#0a0f1e;">${originName}</strong> -- hand-picked from thousands of routes.
     </p>
     <div style="background:#f0f4ff;border-radius:12px;padding:20px;margin:0 0 28px;">
       <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#8b9cbf;margin-bottom:12px;">What to expect</div>
       <div style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">🔥</span><span style="color:#0a0f1e;font-size:14px;"><strong>Deal of the Week</strong> — our best find</span></div>
+        <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">🔥</span><span style="color:#0a0f1e;font-size:14px;"><strong>Deal of the Week</strong> -- our best find</span></div>
         <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">📉</span><span style="color:#0a0f1e;font-size:14px;"><strong>Price drops</strong> on popular routes</span></div>
         <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">⚡</span><span style="color:#0a0f1e;font-size:14px;"><strong>Error fares</strong> when we spot them</span></div>
       </div>

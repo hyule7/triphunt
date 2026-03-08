@@ -1,4 +1,4 @@
-// TripHunt — getCheapFlights.js
+// TripHunt -- getCheapFlights.js
 // Cheap Flight Discovery Engine
 // Scans cheap_routes, compares vs average price, flags price drops.
 

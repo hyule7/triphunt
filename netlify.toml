@@ -3,9 +3,9 @@
 # ════════════════════════════════════════════════════════════════
 
 [build]
-  publish   = "."
+  publish   = "dist"
   functions = "netlify/functions"
-  command   = "node build-seo.js"
+  command   = "echo TripHunt deploy ready"
 
 [build.processing]
   skip_processing = true
@@ -24,7 +24,7 @@
 [functions.dealRadar]
   schedule = "0 */2 * * *"
 
-# ── Edge Functions (dynamic flight pages) ──────────────────────
+# ── Edge Functions ──────────────────────────────────────────────
 [[edge_functions]]
   path     = "/flights/*"
   function = "flightPage"
@@ -104,7 +104,7 @@
   to     = "/seo-pages/compare/:comparison/index.html"
   status = 200
 
-# ── Deal page (serverless rendered) ────────────────────────────
+# ── Deal page ───────────────────────────────────────────────────
 [[redirects]]
   from   = "/deal/:slug"
   to     = "/.netlify/functions/getDealPage"

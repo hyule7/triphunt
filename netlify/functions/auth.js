@@ -1,4 +1,4 @@
-// TripHunt — auth.js
+// TripHunt -- auth.js
 // User authentication via Supabase Auth
 // POST { action, email, password, name? } → { success, user?, token?, error? }
 

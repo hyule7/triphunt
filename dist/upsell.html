@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete Your Trip | TripHunt</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,wght@0,700;0,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0a0f1e;--navy1:#0e1528;--navy2:#141d35;--navy3:#1a2442;--navy4:#243058;
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.12);
+  --acc:#2563eb;--acc2:#3b82f6;--grn:#10b981;--yel:#f59e0b;--red:#ef4444;
+  --txt:#f0f4ff;--txt2:#8b9cbf;--txt3:#4a5878;
+  --r8:8px;--r12:12px;--r16:16px;--r24:24px;--r99:9999px;--max:900px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--txt);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* ── HERO CONFIRMATION BAR ── */
+.confirm-bar {
+  background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(16,185,129,.05));
+  border-bottom:1px solid rgba(16,185,129,.3);
+  padding:20px 24px;
+  display:flex;align-items:center;gap:16px;
+}
+.confirm-icon{font-size:36px;animation:pop .4s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pop{from{transform:scale(0) rotate(-10deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.confirm-text-main{font-family:'Fraunces',serif;font-size:20px;font-weight:900;color:var(--grn)}
+.confirm-text-sub{font-size:13px;color:var(--txt2);margin-top:2px}
+.confirm-bar-right{margin-left:auto;font-size:12px;color:var(--txt3);text-align:right;line-height:1.6}
+
+/* ── COUNTDOWN ── */
+.countdown-wrap{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:var(--r8);padding:10px 16px;display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--yel);font-weight:700;margin:0 0 24px}
+#countdown-num{font-size:18px;font-weight:900;min-width:22px;text-align:center;transition:transform .3s}
+
+/* ── MAIN LAYOUT ── */
+.page-wrap{max-width:var(--max);margin:0 auto;padding:32px 20px 60px}
+
+/* ── UPSELL CARDS ── */
+.upsell-section{margin-bottom:36px}
+.upsell-heading{font-family:'Fraunces',serif;font-size:22px;font-weight:900;margin-bottom:6px}
+.upsell-sub{font-size:13px;color:var(--txt2);margin-bottom:20px}
+
+.upsell-card{
+  background:var(--navy1);border:1px solid var(--border);border-radius:var(--r16);
+  overflow:hidden;transition:all .25s;cursor:pointer;display:block;text-decoration:none;
+  position:relative;margin-bottom:14px;
+}
+.upsell-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.upsell-card.featured{border-color:rgba(37,99,235,.4);background:linear-gradient(135deg,var(--navy2),var(--navy1))}
+.upsell-card-badge{position:absolute;top:14px;right:14px;background:var(--acc);color:#fff;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:3px 9px;border-radius:var(--r99)}
+.upsell-card-badge.hot{background:var(--red)}
+.upsell-card-inner{display:flex;gap:0;align-items:stretch}
+.upsell-card-img{width:140px;min-height:120px;background:var(--navy3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:48px;border-right:1px solid var(--border)}
+.upsell-card-body{padding:18px 20px;flex:1;min-width:0}
+.upsell-card-title{font-size:16px;font-weight:800;margin-bottom:4px}
+.upsell-card-desc{font-size:12px;color:var(--txt2);margin-bottom:12px;line-height:1.5}
+.upsell-card-price-row{display:flex;align-items:baseline;gap:10px}
+.upsell-card-price{font-family:'Fraunces',serif;font-size:26px;font-weight:900;color:var(--grn)}
+.upsell-card-price-note{font-size:11px;color:var(--txt3)}
+.upsell-card-cta{margin-left:auto;padding:8px 18px;background:var(--acc);color:#fff;border-radius:var(--r8);font-size:13px;font-weight:700;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:6px}
+.upsell-card-cta.grn{background:var(--grn)}
+
+/* Savings pill */
+.saving-pill{display:inline-block;background:rgba(16,185,129,.15);color:var(--grn);font-size:11px;font-weight:700;padding:2px 9px;border-radius:var(--r99);margin-bottom:8px}
+
+/* ── COMPARISON GRID ── */
+.hotel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:16px}
+.hotel-card{background:var(--navy2);border:1px solid var(--border);border-radius:var(--r12);overflow:hidden;transition:all .2s;text-decoration:none;display:block}
+.hotel-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.hotel-card-img{height:110px;background:var(--navy3);display:flex;align-items:center;justify-content:center;font-size:36px;border-bottom:1px solid var(--border)}
+.hotel-card-body{padding:12px}
+.hotel-card-name{font-size:13px;font-weight:700;margin-bottom:3px}
+.hotel-card-stars{color:var(--yel);font-size:11px;margin-bottom:6px}
+.hotel-card-price{font-family:'Fraunces',serif;font-size:20px;font-weight:900;color:var(--grn)}
+.hotel-card-pn{font-size:10px;color:var(--txt3)}
+
+/* ── PUSH CAPTURE ── */
+.push-capture{background:linear-gradient(135deg,var(--navy3),var(--navy4));border:1px solid var(--border2);border-radius:var(--r16);padding:28px;text-align:center;margin:32px 0}
+.push-capture-icon{font-size:40px;margin-bottom:12px}
+.push-capture-title{font-family:'Fraunces',serif;font-size:20px;font-weight:900;margin-bottom:8px}
+.push-capture-sub{font-size:13px;color:var(--txt2);max-width:400px;margin:0 auto 20px}
+.push-capture-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-push{padding:11px 24px;background:var(--grn);color:#fff;border-radius:var(--r99);font-weight:700;font-size:14px;border:none;cursor:pointer;font-family:'Outfit',sans-serif}
+.btn-skip{padding:11px 24px;background:none;color:var(--txt3);border-radius:var(--r99);font-weight:600;font-size:13px;border:1px solid var(--border);cursor:pointer;font-family:'Outfit',sans-serif}
+.btn-push:hover{opacity:.9}
+
+/* ── DEAL SCORE ROW ── */
+.deal-score-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.stat-chip{background:var(--navy2);border:1px solid var(--border);border-radius:var(--r12);padding:14px 18px;text-align:center;flex:1;min-width:120px}
+.stat-chip-val{font-family:'Fraunces',serif;font-size:26px;font-weight:900;color:var(--acc3)}
+.stat-chip-label{font-size:11px;color:var(--txt3);margin-top:2px}
+
+/* ── SHARE STRIP ── */
+.share-strip{background:var(--navy2);border:1px solid var(--border);border-radius:var(--r12);padding:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.share-text{font-size:14px;font-weight:700;flex:1}
+.share-btns{display:flex;gap:8px}
+.share-btn{padding:8px 16px;border-radius:var(--r8);font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:6px}
+.share-btn-tw{background:#1da1f2;color:#fff}
+.share-btn-wa{background:#25d366;color:#fff}
+.share-btn-cp{background:var(--navy4);color:var(--txt);border:1px solid var(--border2)}
+.share-btn:hover{opacity:.85}
+
+/* ── TRUST STRIP ── */
+.trust-strip{display:flex;gap:20px;justify-content:center;padding:24px 0;color:var(--txt3);font-size:12px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:6px}
+
+@media(max-width:600px){
+  .upsell-card-img{width:80px;font-size:32px}
+  .upsell-card-body{padding:14px}
+  .hotel-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ── CONFIRMATION BAR ── -->
+<div class="confirm-bar" id="confirm-bar">
+  <div class="confirm-icon">✅</div>
+  <div>
+    <div class="confirm-text-main" id="confirm-headline">Flight booking started!</div>
+    <div class="confirm-text-sub" id="confirm-sub">Opening your airline in a new tab…</div>
+  </div>
+  <div class="confirm-bar-right" id="confirm-detail">
+    <span id="confirm-route">–</span><br>
+    <span style="color:var(--grn);font-weight:700" id="confirm-price">–</span>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="page-wrap">
+
+  <!-- Countdown + scarcity -->
+  <div class="countdown-wrap">
+    ⏳ Prices locked for <span id="countdown-num">15</span> minutes — complete extras below
+  </div>
+
+  <!-- DEAL STATS -->
+  <div class="deal-score-row" id="deal-stats">
+    <div class="stat-chip"><div class="stat-chip-val" id="stat-saving">–</div><div class="stat-chip-label">You're saving</div></div>
+    <div class="stat-chip"><div class="stat-chip-val" id="stat-deal">–</div><div class="stat-chip-label">Deal score</div></div>
+    <div class="stat-chip"><div class="stat-chip-val" id="stat-views">–</div><div class="stat-chip-label">Viewing this route</div></div>
+  </div>
+
+  <!-- SECTION 1: HOTELS -->
+  <div class="upsell-section">
+    <h2 class="upsell-heading">🏨 Add a hotel — save up to 20%</h2>
+    <p class="upsell-sub">Bundling your hotel with your flight is almost always cheaper. Here are top-rated options in <span id="dest-name">your destination</span>.</p>
+
+    <!-- Hero hotel upsell card -->
+    <a href="#" class="upsell-card featured" id="hotel-hero-card" target="_blank" rel="noopener">
+      <div class="upsell-card-badge">Most popular</div>
+      <div class="upsell-card-inner">
+        <div class="upsell-card-img">🏨</div>
+        <div class="upsell-card-body">
+          <div class="saving-pill" id="hotel-saving-pill">Save £47 vs booking separate</div>
+          <div class="upsell-card-title" id="hotel-hero-name">4★ City Centre Hotel</div>
+          <div class="upsell-card-desc" id="hotel-hero-desc">Free cancellation · Breakfast included · Great location</div>
+          <div class="upsell-card-price-row">
+            <div class="upsell-card-price" id="hotel-hero-price">£89</div>
+            <div class="upsell-card-price-note">/night · 7 nights</div>
+            <div class="upsell-card-cta grn">Book hotel →</div>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Hotel mini grid -->
+    <div class="hotel-grid" id="hotel-grid">
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+  <!-- SECTION 2: CAR HIRE -->
+  <div class="upsell-section">
+    <h2 class="upsell-heading">🚗 Car hire — from £18/day</h2>
+    <p class="upsell-sub">Explore <span class="dest-name-inline" id="dest-name2">your destination</span> at your own pace. Free cancellation on most bookings.</p>
+
+    <a href="#" class="upsell-card" id="car-card" target="_blank" rel="noopener">
+      <div class="upsell-card-badge hot">Free cancellation</div>
+      <div class="upsell-card-inner">
+        <div class="upsell-card-img">🚗</div>
+        <div class="upsell-card-body">
+          <div class="saving-pill">Best available rate</div>
+          <div class="upsell-card-title">Economy to Full-size — all categories</div>
+          <div class="upsell-card-desc">Compare 500+ rental companies. Full insurance options. No hidden fees.</div>
+          <div class="upsell-card-price-row">
+            <div class="upsell-card-price" id="car-price">from £18</div>
+            <div class="upsell-card-price-note">/day</div>
+            <div class="upsell-card-cta">Compare cars →</div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <!-- SECTION 3: ACTIVITIES -->
+  <div class="upsell-section">
+    <h2 class="upsell-heading">🎟 Activities & experiences</h2>
+    <p class="upsell-sub">The best things to do in <span class="dest-name-inline" id="dest-name3">your destination</span>, bookable right now.</p>
+
+    <a href="#" class="upsell-card" id="activity-card" target="_blank" rel="noopener">
+      <div class="upsell-card-inner">
+        <div class="upsell-card-img">🎟</div>
+        <div class="upsell-card-body">
+          <div class="saving-pill">Skip-the-line tickets</div>
+          <div class="upsell-card-title">Top experiences in <span class="dest-name-inline" id="dest-name4">your destination</span></div>
+          <div class="upsell-card-desc">Day trips, tours, skip-the-line tickets and more. Book now, cancel up to 24h before.</div>
+          <div class="upsell-card-price-row">
+            <div class="upsell-card-price">from £12</div>
+            <div class="upsell-card-price-note">/person</div>
+            <div class="upsell-card-cta">Browse experiences →</div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <!-- SHARE DEAL -->
+  <div class="share-strip" id="share-strip">
+    <div class="share-text">🔥 Know someone who'd want this deal?</div>
+    <div class="share-btns">
+      <button class="share-btn share-btn-tw" onclick="shareTo('twitter')">🐦 Twitter</button>
+      <button class="share-btn share-btn-wa" onclick="shareTo('whatsapp')">💬 WhatsApp</button>
+      <button class="share-btn share-btn-cp" onclick="copyLink()">🔗 Copy link</button>
+    </div>
+  </div>
+
+  <!-- PUSH NOTIFICATION CAPTURE -->
+  <div class="push-capture" id="push-section">
+    <div class="push-capture-icon">🔔</div>
+    <h3 class="push-capture-title">Get the next deal before anyone else</h3>
+    <p class="push-capture-sub">Enable free price drop alerts and we'll ping you the instant another deal like this appears.</p>
+    <div class="push-capture-btns">
+      <button class="btn-push" id="push-btn" onclick="enablePush()">Yes — alert me to deals</button>
+      <button class="btn-skip" onclick="skipPush()">Maybe later</button>
+    </div>
+    <p style="font-size:11px;color:var(--txt3);margin-top:12px">No spam. One alert per deal. Unsubscribe anytime.</p>
+  </div>
+
+  <!-- TRUST STRIP -->
+  <div class="trust-strip">
+    <div class="trust-item">🔒 Secure booking</div>
+    <div class="trust-item">✅ No booking fees</div>
+    <div class="trust-item">💰 Price match guarantee</div>
+    <div class="trust-item">📞 24/7 support</div>
+  </div>
+
+</div><!-- /page-wrap -->
+
+<script>
+(function() {
+
+// ── Parse params ──────────────────────────────────────────────────
+const p = new URLSearchParams(location.search);
+const orig    = p.get('origin')      || 'LHR';
+const dest    = p.get('dest')        || p.get('destination') || 'BCN';
+const price   = parseFloat(p.get('price') || '0');
+const typical = parseFloat(p.get('typical') || (price * 1.6));
+const airline = p.get('airline')     || '';
+const dep     = p.get('depart')      || '';
+const ret     = p.get('return')      || '';
+const bookUrl = p.get('book_url')    || '#';
+
+const DEST_NAMES = {
+  BCN:"Barcelona",MAD:"Madrid",LIS:"Lisbon",FCO:"Rome",AMS:"Amsterdam",
+  ATH:"Athens",PRG:"Prague",VIE:"Vienna",DXB:"Dubai",AYT:"Antalya",
+  PMI:"Palma",TFS:"Tenerife",LPA:"Gran Canaria",FAO:"Faro",
+  JFK:"New York",LAX:"Los Angeles",BKK:"Bangkok",NRT:"Tokyo",
+  SIN:"Singapore",DBV:"Dubrovnik",IST:"Istanbul",AGP:"Malaga",ALC:"Alicante",
+  MIA:"Miami",GRU:"São Paulo",YYZ:"Toronto",CDG:"Paris",FRA:"Frankfurt",
+};
+const destName = DEST_NAMES[dest] || dest;
+
+// ── Affiliate link builders ───────────────────────────────────────
+const MARKER = '499405';
+
+function ddmm(s) {
+  if (!s) return '';
+  const parts = String(s).slice(0,10).split('-');
+  return parts.length === 3 ? parts[2]+parts[1] : '';
+}
+
+function hotelUrl(dest, checkIn, checkOut) {
+  // Booking.com affiliate deep link
+  return `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(destName)}&checkin=${checkIn||dep||''}&checkout=${checkOut||ret||''}&aid=2271232`;
+}
+
+function carUrl(dest, pickupDate) {
+  // RentalCars / TravelPayouts car affiliate
+  return `https://cars.aviasales.com/?origin=${dest}&pickup_date=${dep||''}&dropoff_date=${ret||''}&marker=${MARKER}`;
+}
+
+function activityUrl(dest) {
+  // Klook affiliate
+  return `https://www.klook.com/en-GB/search/?query=${encodeURIComponent(destName)}`;
+}
+
+// ── Populate UI ───────────────────────────────────────────────────
+const saving = price && typical ? Math.round(typical - price) : 0;
+const savingPct = typical ? Math.round((typical - price) / typical * 100) : 0;
+const dealScore = Math.min(99, 50 + savingPct);
+
+setText('confirm-route', orig + ' → ' + dest + (dep ? ' · ' + fmtDate(dep) : ''));
+setText('confirm-price', price ? '£' + Math.round(price) + (saving > 0 ? ' (£' + saving + ' off typical)' : '') : '');
+setText('confirm-headline', 'Flight booking started!');
+setText('confirm-sub', 'The airline tab opened — complete your booking there. Your upsells are below.');
+
+setText('stat-saving',   saving > 0 ? '£'+saving  : '–');
+setText('stat-deal',     dealScore + '/99');
+setText('stat-views',    (12 + Math.floor(Math.random()*31)) + ' now');
+
+// Destination names throughout
+['dest-name','dest-name2','dest-name3','dest-name4'].forEach(id => setText(id, destName));
+
+// Hotel cards
+const hotelPriceNight = 69 + Math.floor((dest.charCodeAt(0) % 60));
+setText('hotel-hero-name', '4★ ' + destName + ' City Hotel');
+setText('hotel-hero-desc', 'Free cancellation · Breakfast available · Central location');
+setText('hotel-hero-price', '£' + hotelPriceNight);
+setText('hotel-saving-pill', 'Save £' + (saving > 0 ? Math.round(saving * 0.3) : 42) + ' vs booking separate');
+
+const hotelLink = hotelUrl(dest);
+setHref('hotel-hero-card', hotelLink);
+setHref('car-card', carUrl(dest));
+setHref('activity-card', activityUrl(dest));
+
+setText('car-price', 'from £' + (18 + Math.floor(dest.charCodeAt(0) % 25)) );
+
+// Hotel mini grid
+const HOTEL_TYPES = [
+  {name:'Budget Pick', stars:'⭐⭐', emoji:'🛏', mod:-20},
+  {name:'Mid-range', stars:'⭐⭐⭐', emoji:'🏨', mod:0},
+  {name:'Boutique', stars:'⭐⭐⭐⭐', emoji:'✨', mod:40},
+  {name:'Luxury', stars:'⭐⭐⭐⭐⭐', emoji:'💎', mod:120},
+];
+document.getElementById('hotel-grid').innerHTML = HOTEL_TYPES.map(h => `
+  <a href="${hotelLink}&label=${h.name.replace(/ /g,'_')}" class="hotel-card" target="_blank" rel="noopener">
+    <div class="hotel-card-img">${h.emoji}</div>
+    <div class="hotel-card-body">
+      <div class="hotel-card-name">${h.name}</div>
+      <div class="hotel-card-stars">${h.stars}</div>
+      <div class="hotel-card-price">£${hotelPriceNight + h.mod}</div>
+      <div class="hotel-card-pn">/night</div>
+    </div>
+  </a>
+`).join('');
+
+// Share strip
+document.getElementById('share-strip').querySelector('.share-text').textContent =
+  saving > 30
+    ? `🔥 £${saving} off flights to ${destName} — share this deal!`
+    : `✈️ Found flights to ${destName}${price ? ' from £'+Math.round(price) : ''} — share with friends`;
+
+// ── Countdown ─────────────────────────────────────────────────────
+let secs = 15 * 60;
+const numEl = document.getElementById('countdown-num');
+const tick = setInterval(() => {
+  secs--;
+  if (secs <= 0) { clearInterval(tick); numEl.textContent = '0'; return; }
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  numEl.textContent = m + ':' + String(s).padStart(2,'0');
+  if (secs <= 120) numEl.style.color = 'var(--red)';
+}, 1000);
+
+// Open booking link after 1 second delay (feels deliberate, not like a pop-up)
+if (bookUrl && bookUrl !== '#') {
+  setTimeout(() => { window.open(bookUrl, '_blank', 'noopener'); }, 1000);
+}
+
+// ── Push notifications ────────────────────────────────────────────
+function enablePush() {
+  if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+    showPushSuccess('email');
+    return;
+  }
+  Notification.requestPermission().then(perm => {
+    if (perm === 'granted') {
+      // Register route-specific push subscription
+      navigator.serviceWorker.ready.then(reg => {
+        // In production: send subscription to your backend
+        // fetch('/.netlify/functions/subscribe-push', { method:'POST', body: JSON.stringify({ orig, dest, sub }) })
+        showPushSuccess('push');
+      });
+    } else {
+      showPushSuccess('email');
+    }
+  });
+}
+function showPushSuccess(type) {
+  const sec = document.getElementById('push-section');
+  sec.innerHTML = `
+    <div class="push-capture-icon">${type==='push'?'🔔':'✉️'}</div>
+    <h3 class="push-capture-title">${type==='push'?'Price alerts enabled!':'We\'ll email you deals'}</h3>
+    <p class="push-capture-sub">You'll be the first to know when ${orig} → ${destName} drops to a deal price.</p>
+  `;
+}
+function skipPush() {
+  document.getElementById('push-section').style.display = 'none';
+}
+
+// ── Share functions ───────────────────────────────────────────────
+function shareText() {
+  return saving > 30
+    ? `🔥 Found flights to ${destName} for £${Math.round(price)} (usually £${Math.round(typical)})! Found via TripHunt 👇`
+    : `✈️ Flights to ${destName}${price?` from £${Math.round(price)}`:''}! Found via TripHunt 👇`;
+}
+function shareUrl() {
+  return 'https://www.triphunt.org/flights/' + encodeURIComponent(orig.toLowerCase()) + '-to-' + encodeURIComponent(destName.toLowerCase().replace(/ /g,'-'));
+}
+
+window.shareTo = function(platform) {
+  const txt = encodeURIComponent(shareText());
+  const url = encodeURIComponent(shareUrl());
+  const platforms = {
+    twitter:  `https://twitter.com/intent/tweet?text=${txt}&url=${url}`,
+    whatsapp: `https://wa.me/?text=${txt}%20${url}`,
+  };
+  if (platforms[platform]) window.open(platforms[platform], '_blank', 'noopener,width=600,height=400');
+};
+
+window.copyLink = function() {
+  navigator.clipboard.writeText(shareText() + ' ' + shareUrl()).then(() => {
+    const btn = document.querySelector('.share-btn-cp');
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = '🔗 Copy link', 2000);
+  });
+};
+
+// ── Utils ─────────────────────────────────────────────────────────
+function setText(id, val) { const el = document.getElementById(id); if(el) el.textContent = val; }
+function setHref(id, href) { const el = document.getElementById(id); if(el) el.href = href; }
+function fmtDate(s) {
+  try { return new Date(s).toLocaleDateString('en-GB',{day:'numeric',month:'short'}); } catch(e) { return s; }
+}
+
+// ── Analytics ping ────────────────────────────────────────────────
+try {
+  fetch('/.netlify/functions/trackConversion', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ event: 'upsell_view', orig, dest, price, saving, ts: Date.now() }),
+  }).catch(() => {});
+} catch(e) {}
+
+})();
+</script>
+</body>
+</html>
