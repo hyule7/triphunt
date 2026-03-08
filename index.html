@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="TripHunt – Compare cheap flights from the UK. Real-time prices, AI advisor, zero fees.">
-<title>TripHunt – Find Cheaper Flights</title>
+<meta name="description" content="Find insanely cheap flights from UK airports. TripHunt scans 100+ airlines for error fares, mistake prices and extreme deals. London, Manchester, Edinburgh and more.">
+<title>TripHunt – Cheap Flight Deals & Error Fares from UK Airports</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
@@ -376,6 +376,108 @@ select.search-input { cursor: pointer; appearance: none; }
 /* Section spacing */
 .homepage-section { margin-top: 72px; }
 .homepage-section:first-child { margin-top: 80px; } /* after search offset */
+
+/* ═══ RADAR SECTIONS v3 ═══════════════════════════════════════════ */
+.radar-section { padding: 64px 0; border-top: 1px solid var(--border); }
+.sec-hdr-v2 { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; margin-bottom: 28px; flex-wrap: wrap; }
+.sec-hdr-left {}
+.sec-hdr-right { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+.sec-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; color: var(--txt3); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.error-eyebrow { color: #a78bfa; }
+.live-dot { width: 7px; height: 7px; background: var(--grn); border-radius: 50%; display: inline-block; animation: live-pulse 2s ease-in-out infinite; }
+.error-dot { width: 7px; height: 7px; background: #a78bfa; border-radius: 50%; display: inline-block; animation: live-pulse 1.4s ease-in-out infinite; }
+@keyframes live-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.5)} 50%{box-shadow:0 0 0 5px rgba(16,185,129,0)} }
+.sec-title-v2 { font-family: 'Fraunces', Georgia, serif; font-size: clamp(22px,3.5vw,30px); font-weight: 900; letter-spacing: -.5px; margin-bottom: 6px; }
+.sec-sub-v2 { font-size: 14px; color: var(--txt2); max-width: 520px; line-height: 1.6; }
+.see-all-btn { font-size: 13px; font-weight: 700; color: var(--acc3); text-decoration: none; padding: 8px 18px; background: rgba(37,99,235,.08); border: 1px solid rgba(37,99,235,.15); border-radius: var(--r99); transition: all .2s; white-space: nowrap; }
+.see-all-btn:hover { background: rgba(37,99,235,.15); }
+.tool-select-v2 { background: var(--navy2); border: 1px solid var(--border2); color: var(--txt); border-radius: var(--r8); padding: 8px 14px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; outline: none; }
+.region-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.rfil { padding: 5px 12px; background: var(--navy2); border: 1px solid var(--border); border-radius: var(--r99); font-size: 12px; font-weight: 600; color: var(--txt2); cursor: pointer; font-family: inherit; transition: all .15s; }
+.rfil.active, .rfil:hover { background: var(--acc); color: #fff; border-color: var(--acc); }
+
+/* ── Deal card v3 ── */
+.radar-grid, .error-grid, .drops-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.deal-card-v3 {
+  background: var(--navy1); border: 1px solid var(--border); border-radius: var(--r16);
+  padding: 20px; transition: all .2s; cursor: pointer; position: relative; overflow: hidden;
+}
+.deal-card-v3:hover { border-color: var(--border2); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,.4); }
+.deal-card-v3.exceptional-card { border-color: rgba(239,68,68,.2); background: linear-gradient(135deg,rgba(239,68,68,.04),var(--navy1)); }
+.deal-card-v3.great-card { border-color: rgba(245,158,11,.2); }
+.skeleton-v3 { min-height: 180px; background: linear-gradient(90deg,var(--navy2) 25%,var(--navy3) 50%,var(--navy2) 75%); background-size: 200% 100%; animation: skeleton-sweep 1.5s ease-in-out infinite; border: none; }
+@keyframes skeleton-sweep { 0%{background-position:200%} 100%{background-position:-200%} }
+.dc3-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+.dc3-emoji { font-size: 28px; line-height: 1; }
+.dc3-badge { font-size: 10px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; padding: 3px 10px; border-radius: var(--r99); }
+.dc3-badge.exceptional { background: rgba(239,68,68,.1); color: #f87171; border: 1px solid rgba(239,68,68,.2); }
+.dc3-badge.great       { background: rgba(245,158,11,.1); color: #fbbf24; border: 1px solid rgba(245,158,11,.2); }
+.dc3-badge.good        { background: rgba(16,185,129,.1); color: var(--grn); border: 1px solid rgba(16,185,129,.2); }
+.dc3-badge.error       { background: rgba(139,92,246,.1); color: #a78bfa; border: 1px solid rgba(139,92,246,.2); }
+.dc3-route { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+.dc3-meta  { font-size: 12px; color: var(--txt3); margin-bottom: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+.dc3-meta span { display: flex; align-items: center; gap: 3px; }
+.dc3-bottom { display: flex; align-items: flex-end; justify-content: space-between; }
+.dc3-price-group {}
+.dc3-price { font-family: 'Fraunces', Georgia, serif; font-size: 32px; font-weight: 900; color: var(--grn); line-height: 1; }
+.dc3-typical { font-size: 12px; color: var(--txt3); text-decoration: line-through; margin-top: 2px; }
+.dc3-saving { font-size: 12px; font-weight: 700; color: #f87171; margin-top: 2px; }
+.dc3-btn { padding: 9px 16px; background: var(--acc); color: #fff; border-radius: var(--r8); font-size: 13px; font-weight: 700; text-decoration: none; transition: all .15s; white-space: nowrap; border: none; cursor: pointer; font-family: inherit; }
+.dc3-btn:hover { background: var(--acc2); }
+.dc3-score-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--navy3); }
+.dc3-score-fill { height: 100%; background: linear-gradient(90deg,var(--grn),var(--acc3)); border-radius: 0 0 var(--r16) var(--r16); transition: width 1s ease; }
+
+/* ── Airport tabs ── */
+.airport-tabs-v2 { display: flex; gap: 6px; flex-wrap: wrap; }
+.atab { padding: 6px 14px; background: var(--navy2); border: 1px solid var(--border); border-radius: var(--r99); font-size: 12px; font-weight: 700; color: var(--txt2); cursor: pointer; font-family: inherit; transition: all .15s; }
+.atab.active, .atab:hover { background: var(--acc); color: #fff; border-color: var(--acc); }
+
+/* ── Trending scroll ── */
+.trending-scroll { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none; -ms-overflow-style: none; }
+.trending-scroll::-webkit-scrollbar { display: none; }
+.trend-card-v2 { flex-shrink: 0; width: 200px; background: var(--navy1); border: 1px solid var(--border); border-radius: var(--r16); padding: 18px; transition: all .2s; text-decoration: none; color: inherit; display: block; cursor: pointer; }
+.trend-card-v2:hover { border-color: var(--border2); transform: translateY(-2px); }
+.tc2-emoji { font-size: 28px; margin-bottom: 10px; }
+.tc2-dest { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
+.tc2-country { font-size: 11px; color: var(--txt3); margin-bottom: 10px; }
+.tc2-price { font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 900; color: var(--grn); }
+.tc2-from { font-size: 10px; color: var(--txt3); }
+
+/* ── Email radar section ── */
+.email-radar-section { background: var(--navy1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 72px 0; }
+.email-radar-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.email-radar-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; color: var(--grn); margin-bottom: 10px; }
+.email-radar-title { font-family: 'Fraunces', Georgia, serif; font-size: clamp(26px,4vw,38px); font-weight: 900; letter-spacing: -.5px; margin-bottom: 12px; line-height: 1.1; }
+.email-radar-sub { font-size: 15px; color: var(--txt2); line-height: 1.7; margin-bottom: 18px; }
+.email-radar-list { list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--txt2); }
+.email-radar-form-wrap { background: var(--navy2); border: 1px solid var(--border2); border-radius: var(--r24); padding: 32px; }
+.email-radar-label { font-size: 12px; font-weight: 700; color: var(--txt3); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+.email-radar-input, .email-radar-select { width: 100%; background: var(--navy3); border: 1px solid var(--border2); border-radius: var(--r8); padding: 12px 16px; font-family: inherit; font-size: 14px; color: var(--txt); outline: none; margin-bottom: 4px; }
+.email-radar-input:focus { border-color: var(--grn); }
+.email-radar-input::placeholder { color: var(--txt3); }
+.email-radar-btn { width: 100%; margin-top: 16px; padding: 14px; background: var(--grn); color: #fff; border-radius: var(--r8); font-size: 15px; font-weight: 800; border: none; cursor: pointer; font-family: inherit; transition: all .2s; }
+.email-radar-btn:hover { background: var(--grn2); transform: translateY(-1px); }
+.email-radar-trust { font-size: 11px; color: var(--txt3); text-align: center; margin-top: 10px; }
+
+/* ── Push CTA ── */
+.push-cta-section { padding: 40px 0; background: linear-gradient(135deg,rgba(37,99,235,.05),rgba(16,185,129,.04)); border-top: 1px solid var(--border); }
+.push-cta-inner { display: flex; align-items: center; gap: 20px; background: var(--navy1); border: 1px solid var(--border2); border-radius: var(--r24); padding: 24px 28px; flex-wrap: wrap; }
+.push-cta-icon { font-size: 36px; flex-shrink: 0; }
+.push-cta-text { flex: 1; min-width: 200px; }
+.push-cta-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+.push-cta-sub { font-size: 13px; color: var(--txt2); }
+.push-cta-btn { padding: 12px 24px; background: var(--acc); color: #fff; border-radius: var(--r99); font-size: 14px; font-weight: 800; border: none; cursor: pointer; font-family: inherit; transition: all .2s; white-space: nowrap; }
+.push-cta-btn:hover { background: var(--acc2); }
+.push-cta-btn.granted { background: var(--grn); }
+
+@media(max-width:768px){
+  .radar-grid, .error-grid, .drops-grid { grid-template-columns: 1fr; }
+  .sec-hdr-v2 { flex-direction: column; }
+  .sec-hdr-right { align-items: flex-start; }
+  .email-radar-inner { grid-template-columns: 1fr; gap: 32px; }
+  .trending-scroll { gap: 10px; }
+  .trend-card-v2 { width: 170px; }
+}
 
 /* ── Airport deals tabs section ── */
 .airport-tabs {
@@ -1572,7 +1674,94 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
   .deals-grid, .top-deals-grid { grid-template-columns: repeat(2, 1fr); }
   .homepage-section { margin-top: 48px; }
 }
+
+/* ═══ DEAL RADAR STYLES ════════════════════════════════════════ */
+.live-dot-wrap { display:inline-flex;align-items:center }
+.live-dot { width:8px;height:8px;border-radius:50%;background:var(--grn);animation:live-pulse 1.8s ease-in-out infinite }
+@keyframes live-pulse { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(16,185,129,.4)} 50%{opacity:.7;box-shadow:0 0 0 5px rgba(16,185,129,0)} }
+
+.sec-link { font-size:13px;font-weight:700;color:var(--acc3);text-decoration:none;white-space:nowrap }
+.sec-link:hover { color:var(--txt) }
+
+/* Radar deal card */
+.radar-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px }
+.radar-grid--error .radar-card { border-color:rgba(239,68,68,.25);background:linear-gradient(135deg,rgba(239,68,68,.04),var(--navy1)) }
+
+.radar-card {
+  background:var(--navy1);border:1px solid var(--border2);border-radius:var(--r16);
+  padding:18px;display:flex;flex-direction:column;gap:10px;
+  transition:all .2s;cursor:pointer;text-decoration:none;color:inherit;
+  position:relative;overflow:hidden;
+}
+.radar-card:hover { border-color:rgba(37,99,235,.35);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3) }
+.radar-card::before { content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(37,99,235,.03),transparent);pointer-events:none }
+
+.rc-badge-row { display:flex;gap:6px;align-items:center }
+.rc-badge { padding:3px 10px;border-radius:var(--r99);font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase }
+.rc-badge-exc  { background:rgba(245,158,11,.12);color:#fcd34d;border:1px solid rgba(245,158,11,.2) }
+.rc-badge-great{ background:rgba(37,99,235,.12); color:var(--acc3);border:1px solid rgba(37,99,235,.2) }
+.rc-badge-err  { background:rgba(239,68,68,.12); color:#fca5a5;border:1px solid rgba(239,68,68,.2) }
+.rc-badge-dir  { background:rgba(16,185,129,.1); color:var(--grn2);border:1px solid rgba(16,185,129,.15) }
+.rc-score { margin-left:auto;font-size:11px;font-weight:800;color:var(--txt3) }
+
+.rc-route { font-family:'Fraunces',serif;font-size:20px;font-weight:900;line-height:1.1 }
+.rc-route-sub { font-size:12px;color:var(--txt2) }
+
+.rc-price-row { display:flex;align-items:baseline;gap:10px }
+.rc-price { font-family:'Fraunces',serif;font-size:32px;font-weight:900;color:var(--grn) }
+.rc-typical { font-size:13px;color:var(--txt3);text-decoration:line-through }
+.rc-save { font-size:12px;font-weight:700;color:var(--grn2) }
+
+.rc-footer { display:flex;align-items:center;justify-content:space-between }
+.rc-airline { font-size:12px;color:var(--txt3) }
+.rc-book { padding:8px 18px;background:var(--acc);color:#fff;border-radius:var(--r8);font-size:12px;font-weight:800;border:none;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s }
+.rc-book:hover { background:var(--acc2) }
+.rc-book-error { background:var(--red) }
+.rc-book-error:hover { background:#dc2626 }
+
+/* Skeleton loader */
+.radar-skeleton { background:var(--navy2);border:1px solid var(--border);border-radius:var(--r16);height:176px;animation:shimmer 1.5s infinite }
+@keyframes shimmer { 0%,100%{opacity:.4}50%{opacity:.7} }
+
+/* Price drop list */
+.price-drop-list { display:flex;flex-direction:column;gap:8px }
+.pd-item { display:flex;align-items:center;gap:14px;background:var(--navy1);border:1px solid var(--border);border-radius:var(--r12);padding:14px 18px;transition:all .2s;cursor:pointer }
+.pd-item:hover { border-color:var(--border2);transform:translateX(4px) }
+.pd-rank { font-family:'Fraunces',serif;font-size:22px;font-weight:900;color:var(--txt3);width:28px;flex-shrink:0;text-align:right }
+.pd-emoji { font-size:24px;flex-shrink:0 }
+.pd-route { flex:1 }
+.pd-route-name { font-size:15px;font-weight:700 }
+.pd-route-sub  { font-size:12px;color:var(--txt2) }
+.pd-saving { text-align:right;flex-shrink:0 }
+.pd-pct { font-family:'Fraunces',serif;font-size:24px;font-weight:900;color:var(--red) }
+.pd-amount { font-size:11px;color:var(--txt3) }
+.pd-price { font-size:14px;font-weight:800;color:var(--grn);margin-right:12px }
+.pd-book { padding:7px 14px;background:var(--navy3);color:var(--txt2);border:1px solid var(--border2);border-radius:var(--r8);font-size:12px;font-weight:700;font-family:'Outfit',sans-serif;cursor:pointer;white-space:nowrap;transition:all .15s }
+.pd-book:hover { background:var(--acc);color:#fff;border-color:var(--acc) }
+
+/* Airport pills */
+.airport-pill-row { display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px }
+.airport-pill { padding:6px 14px;background:var(--navy2);border:1px solid var(--border);border-radius:var(--r99);font-size:12px;font-weight:700;color:var(--txt2);cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s }
+.airport-pill:hover { color:var(--txt);border-color:var(--border2) }
+.airport-pill.active { background:var(--acc);color:#fff;border-color:var(--acc) }
+
+/* Email signup banner */
+.radar-email-banner { background:linear-gradient(135deg,rgba(37,99,235,.08),rgba(16,185,129,.06));border:1px solid rgba(37,99,235,.15);border-radius:var(--r20);padding:32px;text-align:center;margin-top:56px }
+.reb-icon { font-size:40px;margin-bottom:12px }
+.reb-title { font-family:'Fraunces',serif;font-size:26px;font-weight:900;margin-bottom:8px }
+.reb-sub { font-size:14px;color:var(--txt2);margin-bottom:22px;max-width:440px;margin-left:auto;margin-right:auto }
+.reb-form { display:flex;gap:8px;max-width:420px;margin:0 auto;flex-wrap:wrap;justify-content:center }
+.reb-input { flex:1;min-width:200px;background:var(--navy1);border:1px solid var(--border2);border-radius:var(--r8);padding:12px 16px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--txt);outline:none }
+.reb-input:focus { border-color:var(--grn) }
+.reb-submit { padding:12px 22px;background:var(--grn);color:#fff;border-radius:var(--r8);font-size:14px;font-weight:800;border:none;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap }
+.reb-submit:hover { background:#059669 }
+.reb-trust { font-size:11px;color:var(--txt3);margin-top:10px }
+
 </style>
+<script>window.TH_SKIP_NAV=true;window.TH_SKIP_TRUST=true;</script>
+<script src="/js/shared.js" defer></script>
+<script src="/js/analytics.js" defer></script>
+<script src="/js/deal-score.js" defer></script>
 </head>
 <body>
 
@@ -1588,17 +1777,21 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
     <span class="nav-logo-icon">✈️</span>TripHunt
   </a>
   <div class="nav-links">
-    <button class="nav-link active" onclick="scrollToSection('hero-section')">Flights</button>
-    <button class="nav-link" onclick="scrollToSection('packages-section')">Packages</button>
-    <button class="nav-link" onclick="scrollToSection('deal-discovery-section')">Deals</button>
-    <button class="nav-link" onclick="scrollToSection('ai-section-wrap')">AI Advisor</button>
-    <button class="nav-link" onclick="scrollToSection('tools-section')">Tools</button>
+    <button class="nav-link active" onclick="scrollToSection('hero-section')">✈️ Flights</button>
+    <a class="nav-link" href="/inspire.html">✨ Inspire Me</a>
+    <a class="nav-link" href="/trending.html">🔥 Trending</a>
+    <a class="nav-link" href="/error-fares.html">🚨 Error Fares</a>
+    <a class="nav-link" href="/trending.html">📉 Trending</a>
+    <a class="nav-link" href="/share.html">📤 Share</a>
+    <button class="nav-link" onclick="scrollToSection('deal-discovery-section')">⚡ Deals</button>
+    <button class="nav-link" onclick="scrollToSection('ai-section-wrap')">🤖 AI Advisor</button>
   </div>
   <div class="nav-right">
     <div class="visitor-pill">
       <div class="visitor-dot"></div>
       <span><span id="visitor-count">247</span> searching now</span>
     </div>
+    <a href="/account.html" style="font-size:12px;font-weight:700;color:var(--txt2);text-decoration:none;padding:7px 12px;border-radius:99px;transition:all .15s;" onmouseover="this.style.color='var(--txt)'" onmouseout="this.style.color='var(--txt2)'">Sign in</a>
     <button class="nav-btn-cta" onclick="document.getElementById('origin-input').focus();document.getElementById('hero-section').scrollIntoView({behavior:'smooth'})">Search Flights</button>
   </div>
 </nav>
@@ -2207,13 +2400,19 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
   </section>
 
   <!-- ════ SECTION: TOP DEALS ══════════════════════════════════ -->
-  <section class="homepage-section" id="top-deals-section">
+
+  <!-- ════ LIVE DEAL RADAR: BEST TODAY ══════════════════════════ -->
+  <section class="homepage-section" id="radar-best-section" style="margin-top:56px">
     <div class="sec-hdr">
       <div>
-        <h2 class="sec-title">✈️ Top Flight Deals</h2>
-        <div class="sec-sub" id="top-deals-sub">Live cheapest fares right now · updated hourly</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span class="live-dot-wrap"><span class="live-dot"></span></span>
+          <span style="font-size:11px;font-weight:800;color:var(--grn2);text-transform:uppercase;letter-spacing:.7px">Live Radar</span>
+        </div>
+        <h2 class="sec-title">🔥 Best Flight Deals Today</h2>
+        <div class="sec-sub" id="radar-best-sub">Scanning UK airports for the cheapest fares right now</div>
       </div>
-      <select id="top-deals-origin" class="tool-select" onchange="loadTopDeals()">
+      <select class="tool-select" id="radar-origin" onchange="loadRadarDeals()">
         <option value="LHR">London Heathrow</option>
         <option value="LGW">London Gatwick</option>
         <option value="MAN">Manchester</option>
@@ -2225,270 +2424,269 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
         <option value="NCL">Newcastle</option>
       </select>
     </div>
-    <div class="airport-tabs" id="airport-tabs"></div>
-    <div class="deals-grid" id="deals-grid">
+    <div class="radar-grid" id="radar-best-grid">
+      <div class="radar-skeleton"></div><div class="radar-skeleton"></div>
+      <div class="radar-skeleton"></div><div class="radar-skeleton"></div>
+      <div class="radar-skeleton"></div><div class="radar-skeleton"></div>
+    </div>
+  </section>
+
+  <!-- ════ ERROR FARES ════════════════════════════════════════════ -->
+  <section class="homepage-section" id="radar-error-section">
+    <div class="sec-hdr">
+      <div>
+        <h2 class="sec-title">⚡ Error Fares & Mistake Prices</h2>
+        <div class="sec-sub">Prices the airline got wrong — usually 40–70% below normal</div>
+      </div>
+      <a href="/error-fares.html" class="sec-link">See all error fares →</a>
+    </div>
+    <div class="radar-grid radar-grid--error" id="radar-error-grid">
+      <div class="radar-skeleton"></div><div class="radar-skeleton"></div>
+      <div class="radar-skeleton"></div>
+    </div>
+  </section>
+
+  <!-- ════ BIGGEST PRICE DROPS ════════════════════════════════════ -->
+  <section class="homepage-section" id="radar-drops-section">
+    <div class="sec-hdr">
+      <div>
+        <h2 class="sec-title">📉 Biggest Price Drops Right Now</h2>
+        <div class="sec-sub">Routes with the highest % saving vs. historical average</div>
+      </div>
+    </div>
+    <div class="price-drop-list" id="radar-drops-list">
       <!-- populated by JS -->
     </div>
-    <div class="deals-grid" id="top-deals-grid" style="margin-top:16px">
-      <!-- populated by loadTopDeals() -->
-    </div>
   </section>
 
-  <!-- ════ SECTION: DEAL DISCOVERY ENGINE ════════════════════= -->
-  <section class="homepage-section deal-discovery-section" id="deal-discovery-section">
+  <!-- ════ LONG-HAUL BARGAINS ══════════════════════════════════════ -->
+  <section class="homepage-section" id="radar-longhaul-section">
     <div class="sec-hdr">
       <div>
-        <h2 class="sec-title">🔍 Deal Discovery Engine</h2>
-        <div class="sec-sub">Curated deals by category — updated daily</div>
+        <h2 class="sec-title">🌏 Long-Haul Deals Under £500</h2>
+        <div class="sec-sub">Asia, Americas, Africa — cheaper than you'd expect</div>
       </div>
+      <a href="/trending.html" class="sec-link">See trending →</a>
     </div>
-    <div class="dd-tabs">
-      <button class="dd-tab active" onclick="switchDealDisc('cheapest',this)">💸 Cheapest right now</button>
-      <button class="dd-tab" onclick="switchDealDisc('under200',this)">💰 Under £200</button>
-      <button class="dd-tab" onclick="switchDealDisc('lastminute',this)">⚡ Last minute</button>
-      <button class="dd-tab" onclick="switchDealDisc('mistake',this)">🤫 Possible mistake fares</button>
-    </div>
-    <div class="dd-grid" id="deal-discovery-grid">
-      <!-- populated by renderDealDiscovery() -->
+    <div class="radar-grid" id="radar-longhaul-grid">
+      <div class="radar-skeleton"></div><div class="radar-skeleton"></div>
+      <div class="radar-skeleton"></div><div class="radar-skeleton"></div>
     </div>
   </section>
 
-  <!-- ════ SECTION: WHERE CAN I FLY ══════════════════════════= -->
-  <section class="homepage-section viral-tool-section" id="viral-tool-section">
+  <!-- ════ DEALS FROM YOUR AIRPORT ════════════════════════════════ -->
+  <section class="homepage-section" id="radar-regional-section">
     <div class="sec-hdr">
       <div>
-        <h2 class="sec-title">🗺️ Where Can I Fly for £___?</h2>
-        <div class="sec-sub">Enter your budget and we'll show everywhere you can fly for less</div>
+        <h2 class="sec-title" id="radar-regional-title">📍 Deals From Your Airport</h2>
+        <div class="sec-sub" id="radar-regional-sub">Top deals based on your selected departure airport</div>
       </div>
     </div>
-    <div class="viral-tool-form">
-      <div>
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--txt3);margin-bottom:5px">From</div>
-        <select class="viral-input" id="viral-origin">
-          <option value="LHR">London Heathrow</option>
-          <option value="LGW">London Gatwick</option>
-          <option value="MAN">Manchester</option>
-          <option value="BHX">Birmingham</option>
-          <option value="EDI">Edinburgh</option>
-          <option value="BRS">Bristol</option>
-          <option value="GLA">Glasgow</option>
-        </select>
-      </div>
-      <div>
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--txt3);margin-bottom:5px">Budget (£ per person)</div>
-        <input type="number" class="viral-input" id="viral-budget" placeholder="e.g. 200" min="50" step="25" value="200" style="width:120px">
-      </div>
-      <div>
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--txt3);margin-bottom:5px">When</div>
-        <select class="viral-input" id="viral-dates">
-          <option value="anytime">Any time</option>
-          <option value="next30">Next 30 days</option>
-          <option value="summer">Summer 2025</option>
-          <option value="winter">Winter 2025</option>
-        </select>
-      </div>
-      <button class="btn-viral" onclick="runViralTool()">✈ Find Destinations</button>
+    <div class="airport-pill-row" id="radar-airport-pills">
+      <button class="airport-pill active" onclick="setRegionalAirport('LHR','London Heathrow',this)">LHR</button>
+      <button class="airport-pill" onclick="setRegionalAirport('LGW','London Gatwick',this)">LGW</button>
+      <button class="airport-pill" onclick="setRegionalAirport('MAN','Manchester',this)">MAN</button>
+      <button class="airport-pill" onclick="setRegionalAirport('BHX','Birmingham',this)">BHX</button>
+      <button class="airport-pill" onclick="setRegionalAirport('EDI','Edinburgh',this)">EDI</button>
+      <button class="airport-pill" onclick="setRegionalAirport('BRS','Bristol',this)">BRS</button>
+      <button class="airport-pill" onclick="setRegionalAirport('GLA','Glasgow',this)">GLA</button>
     </div>
-    <div class="viral-results" id="viral-results">
-      <div class="viral-results-title" id="viral-results-title"></div>
-      <div class="viral-dest-grid" id="viral-dest-grid"></div>
-      <button class="btn-share-viral" onclick="shareViralResults()" style="margin-top:12px">📱 Share this with friends</button>
+    <div class="radar-grid" id="radar-regional-grid">
+      <div class="radar-skeleton"></div><div class="radar-skeleton"></div>
+      <div class="radar-skeleton"></div><div class="radar-skeleton"></div>
     </div>
   </section>
 
-  <!-- ════ SECTION: AI ADVISOR ════════════════════════════════ -->
-  <section class="homepage-section" id="ai-section-wrap">
-    <div class="ai-section">
-      <div class="ai-section-header">
-        <div class="ai-badge">🤖 AI</div>
-        <div>
-          <div class="ai-section-title">TripHunt AI Travel Advisor</div>
-          <div class="ai-section-sub">Ask anything — visa rules, cheapest routes, packing lists, when to book</div>
+
+  <!-- ════ SECTION 1: BEST FLIGHT DEALS TODAY ════════════════════ -->
+  <section class="radar-section" id="top-deals-section">
+    <div class="container">
+      <div class="sec-hdr-v2">
+        <div class="sec-hdr-left">
+          <div class="sec-eyebrow"><span class="live-dot"></span>Live radar · updated every 2 hours</div>
+          <h2 class="sec-title-v2">🔥 Best Flight Deals Today</h2>
+          <p class="sec-sub-v2">Scored by our algorithm. Only the genuinely cheap stuff.</p>
         </div>
-      </div>
-
-      <div class="ai-proactive-strip" id="ai-proactive-strip">
-        <span class="ai-proactive-chip visa" id="pc-visa" onclick="sendProactiveVisa()">🛂 Check visa requirements</span>
-        <span class="ai-proactive-chip price" id="pc-price" onclick="sendProactivePrice()">💰 Is this price good?</span>
-        <span class="ai-proactive-chip visa" onclick="sendProactiveInsurance()" style="background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.2);color:#a78bfa">🛡️ Insurance advice</span>
-      </div>
-
-      <div class="ai-chips">
-        <span class="ai-chip" onclick="sendAI('What are the cheapest destinations from London Heathrow right now?')">🔥 Cheapest from LHR</span>
-        <span class="ai-chip" onclick="sendAI('Best value beach holidays in September from the UK?')">🏖️ Beach in September</span>
-        <span class="ai-chip" onclick="sendAI('What is the cheapest day of the week to fly?')">📅 Cheapest day to fly?</span>
-        <span class="ai-chip" onclick="sendAI('Do UK passport holders need a visa for Thailand?')">🛂 Thailand visa rules</span>
-        <span class="ai-chip" onclick="sendAI('How far ahead should I book flights for the best price?')">⏰ When to book?</span>
-        <span class="ai-chip" onclick="sendAI('What are the best budget airlines in the UK?')">✈️ Best budget airlines</span>
-      </div>
-
-      <div class="ai-chat" id="ai-chat" aria-live="polite"></div>
-
-      <div class="ai-input-row">
-        <input type="text" id="ai-input" placeholder="Ask your travel question…"
-          onkeydown="if(event.key==='Enter')sendAI()">
-        <button class="btn-ai-send" onclick="sendAI()">Send ✈</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════ SECTION: TOOLS ══════════════════════════════════════ -->
-  <section class="homepage-section tools-section" id="tools-section">
-    <div class="sec-hdr">
-      <div>
-        <h2 class="sec-title">🔧 Travel Tools</h2>
-        <div class="sec-sub">Free calculators for savvy travellers</div>
-      </div>
-    </div>
-    <div class="tools-grid">
-
-      <!-- Baggage Calculator -->
-      <div class="tool-card">
-        <div class="tool-icon">🧳</div>
-        <div class="tool-title">Baggage Cost Calculator</div>
-        <div class="tool-desc">Is checking a bag worth it vs buying at the gate?</div>
-        <div class="tool-row">
-          <select class="tool-input" id="bag-airline">
-            <option value="ryanair">Ryanair</option>
-            <option value="easyjet">easyJet</option>
-            <option value="jet2">Jet2</option>
-            <option value="ba">British Airways</option>
-            <option value="wz">Wizz Air</option>
+        <div class="sec-hdr-right">
+          <select id="radar-origin" class="tool-select-v2" onchange="loadRadarDeals()">
+            <option value="LHR">London Heathrow</option>
+            <option value="LGW">London Gatwick</option>
+            <option value="STN">London Stansted</option>
+            <option value="MAN">Manchester</option>
+            <option value="BHX">Birmingham</option>
+            <option value="EDI">Edinburgh</option>
+            <option value="BRS">Bristol</option>
+            <option value="GLA">Glasgow</option>
+            <option value="LBA">Leeds Bradford</option>
+            <option value="NCL">Newcastle</option>
           </select>
-          <input class="tool-input" type="number" id="bag-weight" placeholder="kg" min="1" max="32" value="20" style="width:70px">
+          <div class="region-filters" id="region-filters">
+            <button class="rfil active" onclick="filterRegion(this,'all')">All</button>
+            <button class="rfil" onclick="filterRegion(this,'Europe')">Europe</button>
+            <button class="rfil" onclick="filterRegion(this,'Asia')">Asia</button>
+            <button class="rfil" onclick="filterRegion(this,'Americas')">Americas</button>
+            <button class="rfil" onclick="filterRegion(this,'Middle East')">Middle East</button>
+          </div>
         </div>
-        <button class="btn-tool" onclick="calcBaggage()">Calculate</button>
-        <div class="tool-result" id="bag-result"></div>
       </div>
+      <div class="radar-grid" id="radar-grid">
+        <!-- Skeleton -->
+        <div class="deal-card-v3 skeleton-v3"></div>
+        <div class="deal-card-v3 skeleton-v3"></div>
+        <div class="deal-card-v3 skeleton-v3"></div>
+        <div class="deal-card-v3 skeleton-v3"></div>
+        <div class="deal-card-v3 skeleton-v3"></div>
+        <div class="deal-card-v3 skeleton-v3"></div>
+      </div>
+      <div style="text-align:center;margin-top:20px">
+        <a href="/deals.html" class="see-all-btn">See all deals →</a>
+      </div>
+    </div>
+  </section>
 
-      <!-- Visa Checker -->
-      <div class="tool-card">
-        <div class="tool-icon">🛂</div>
-        <div class="tool-title">Visa Checker</div>
-        <div class="tool-desc">UK passport holders — do you need a visa?</div>
-        <div class="tool-row">
-          <select class="tool-input" id="visa-dest">
-            <option value="US">USA</option>
-            <option value="AU">Australia</option>
-            <option value="TH">Thailand</option>
-            <option value="IN">India</option>
-            <option value="TR">Turkey</option>
-            <option value="MA">Morocco</option>
-            <option value="EG">Egypt</option>
-            <option value="JP">Japan</option>
-            <option value="EU">EU (Schengen)</option>
-            <option value="AE">UAE / Dubai</option>
-          </select>
+  <!-- ════ SECTION 2: ERROR FARES ════════════════════════════════ -->
+  <section class="radar-section" id="error-fares-section" style="background:linear-gradient(135deg,rgba(139,92,246,.04) 0%,var(--navy) 100%)">
+    <div class="container">
+      <div class="sec-hdr-v2">
+        <div class="sec-hdr-left">
+          <div class="sec-eyebrow error-eyebrow"><span class="error-dot"></span>Checking for mistake prices</div>
+          <h2 class="sec-title-v2">⚡ Error Fares Right Now</h2>
+          <p class="sec-sub-v2">Prices 40–70% below average. Airlines sometimes ticket at wrong prices — these usually last 2–4 hours.</p>
         </div>
-        <button class="btn-tool" onclick="checkVisa()">Check Visa</button>
-        <div class="tool-result" id="visa-result"></div>
+        <a href="/error-fares.html" class="see-all-btn">All error fares →</a>
       </div>
-
-      <!-- Currency Converter -->
-      <div class="tool-card">
-        <div class="tool-icon">💱</div>
-        <div class="tool-title">Quick Currency Converter</div>
-        <div class="tool-desc">Convert GBP to popular travel currencies</div>
-        <div class="tool-row">
-          <input class="tool-input" type="number" id="comp-amount" value="100" style="width:90px">
-          <select class="tool-input" id="comp-currency">
-            <option value="EUR">EUR €</option>
-            <option value="USD">USD $</option>
-            <option value="THB">THB ฿</option>
-            <option value="JPY">JPY ¥</option>
-            <option value="AED">AED د.إ</option>
-            <option value="TRY">TRY ₺</option>
-            <option value="MAD">MAD</option>
-            <option value="AUD">AUD $</option>
-          </select>
+      <div class="error-grid" id="error-grid">
+        <div class="deal-card-v3 skeleton-v3"></div>
+        <div class="deal-card-v3 skeleton-v3"></div>
+        <div class="deal-card-v3 skeleton-v3"></div>
+      </div>
+      <div class="error-empty" id="error-empty" style="display:none">
+        <div style="text-align:center;padding:32px;color:var(--txt3)">
+          <div style="font-size:32px;margin-bottom:10px">🔭</div>
+          <div style="font-weight:700;margin-bottom:6px">Scanning for mistake prices…</div>
+          <div style="font-size:13px">No confirmed error fares right now. Subscribe for instant alerts when one appears.</div>
         </div>
-        <input class="tool-input" type="date" id="comp-date" style="margin-bottom:8px;width:100%">
-        <button class="btn-tool" onclick="convertCurrency()">Convert</button>
-        <div class="tool-result" id="comp-result"></div>
       </div>
+    </div>
+  </section>
 
-      <!-- Flight Cost per Mile -->
-      <div class="tool-card">
-        <div class="tool-icon">📏</div>
-        <div class="tool-title">Flight Cost per Mile</div>
-        <div class="tool-desc">Compare value between different routes</div>
-        <div class="tool-row">
-          <input class="tool-input" type="text" id="cpm-from" placeholder="LHR" maxlength="3" style="width:70px;text-transform:uppercase">
-          <input class="tool-input" type="text" id="cpm-to" placeholder="BCN" maxlength="3" style="width:70px;text-transform:uppercase">
-          <input class="tool-input" type="number" id="cpm-price" placeholder="£ price" style="width:90px">
+  <!-- ════ SECTION 3: BIGGEST PRICE DROPS ════════════════════════ -->
+  <section class="radar-section" id="price-drops-section">
+    <div class="container">
+      <div class="sec-hdr-v2">
+        <div class="sec-hdr-left">
+          <div class="sec-eyebrow">📉 Price intelligence</div>
+          <h2 class="sec-title-v2">📉 Biggest Price Drops</h2>
+          <p class="sec-sub-v2">Routes where prices have fallen the most vs the 90-day average.</p>
         </div>
-        <button class="btn-tool" onclick="calcCostPerMile()">Calculate</button>
-        <div class="tool-result" id="cpm-result"></div>
       </div>
-
-    </div>
-  </section>
-
-  <!-- ════ SECTION: EMAIL CAPTURE ═════════════════════════════ -->
-  <section class="homepage-section email-capture-section" id="email-capture-sec">
-    <div class="email-capture-title">✈️ Get Weekly Flight Deal Alerts</div>
-    <div class="email-capture-sub">Free price drop alerts for your favourite routes. No spam, unsubscribe anytime.</div>
-    <div class="email-capture-form">
-      <input type="email" class="email-capture-input" id="newsletter-email" placeholder="your@email.com" autocomplete="email">
-      <select class="email-capture-input" id="newsletter-origin" style="min-width:160px;flex:0">
-        <option value="LHR">London Heathrow</option>
-        <option value="LGW">London Gatwick</option>
-        <option value="MAN">Manchester</option>
-        <option value="BHX">Birmingham</option>
-        <option value="EDI">Edinburgh</option>
-        <option value="BRS">Bristol</option>
-      </select>
-      <button class="btn-search" onclick="subscribeAlerts()" style="padding:12px 24px">Get Alerts →</button>
-    </div>
-    <div class="email-capture-trust" id="email-capture-feedback">🔒 No spam. Unsubscribe anytime. We never sell your data.</div>
-  </section>
-
-  <!-- ════ SECTION: TIPS ════════════════════════════════════════ -->
-  <section class="homepage-section tips-section" id="tips-section">
-    <div class="sec-hdr">
-      <div>
-        <h2 class="sec-title">💡 Flight Booking Tips</h2>
-        <div class="sec-sub">Insider knowledge to save you more</div>
+      <div class="drops-grid" id="drops-grid">
+        <div class="deal-card-v3 skeleton-v3"></div>
+        <div class="deal-card-v3 skeleton-v3"></div>
+        <div class="deal-card-v3 skeleton-v3"></div>
+        <div class="deal-card-v3 skeleton-v3"></div>
       </div>
     </div>
-    <div class="tips-grid">
-      <div class="tip-card"><div class="tip-icon">📅</div><div class="tip-title">Book Tuesday–Wednesday</div><div class="tip-body">Airlines typically release sale fares on Tuesdays. Searching on a Tuesday or Wednesday morning often finds the lowest prices before they get snatched up.</div></div>
-      <div class="tip-card"><div class="tip-icon">🗓️</div><div class="tip-title">6–8 Weeks is the Sweet Spot</div><div class="tip-body">For European short-haul flights, booking 6–8 weeks ahead usually hits the best balance between availability and price. Too early can mean paying peak-launch fares.</div></div>
-      <div class="tip-card"><div class="tip-icon">🔔</div><div class="tip-title">Set a Price Alert</div><div class="tip-body">Click 🔔 Alert on any flight result. We'll email you the moment prices drop below your target. Free, no account needed.</div></div>
-      <div class="tip-card"><div class="tip-icon">🏙️</div><div class="tip-title">Check Nearby Airports</div><div class="tip-body">Flying from Stansted instead of Heathrow can save £40+. Always check multiple UK departure airports for the same route — the price difference can be significant.</div></div>
-      <div class="tip-card"><div class="tip-icon">⚡</div><div class="tip-title">Direct vs 1-Stop</div><div class="tip-body">For long-haul, a 1-stop with a sensible connection can be 30–40% cheaper. Use TripHunt filters to compare direct vs 1-stop side-by-side.</div></div>
-      <div class="tip-card"><div class="tip-icon">🧳</div><div class="tip-title">Baggage Can Double the Price</div><div class="tip-body">Budget airlines advertise fares without bags. Use our Baggage Calculator to find the true total cost before comparing. Sometimes a "more expensive" airline is cheaper all-in.</div></div>
-    </div>
   </section>
 
-  <!-- ════ SECTION: FAQ ════════════════════════════════════════ -->
-  <section class="homepage-section faq-section" id="faq-section">
-    <div class="sec-hdr">
-      <div><h2 class="sec-title">❓ Frequently Asked Questions</h2></div>
-    </div>
-    <div class="faq-list">
-      <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does TripHunt make money?<span class="faq-icon">+</span></div><div class="faq-a">We earn a small affiliate commission from our booking partners (like Aviasales, Booking.com, Klook) when you click through and make a booking. This never adds to your cost — you always pay the same price as booking directly. TripHunt is completely free to use.</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Are the prices shown accurate and up to date?<span class="faq-icon">+</span></div><div class="faq-a">Yes — flight prices are fetched from the TravelPayouts API in real time. Prices shown are indicative and confirmed at checkout on the partner's site. Prices can change minute-to-minute, so always confirm before booking.</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Do I book through TripHunt or directly with the airline?<span class="faq-icon">+</span></div><div class="faq-a">You click through from TripHunt to the partner site (e.g. Aviasales/JetRadar) and book directly there. TripHunt never takes payment. Your booking confirmation comes from the partner, not TripHunt.</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What is the cheapest day to fly?<span class="faq-icon">+</span></div><div class="faq-a">Generally, Tuesday and Wednesday departures are cheapest for short-haul European routes. Friday and Sunday evenings are typically the most expensive. For long-haul, the day of the week matters less than the season.</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How far in advance should I book flights?<span class="faq-icon">+</span></div><div class="faq-a">For European short-haul: 6–10 weeks ahead is typically the sweet spot. For long-haul (USA, Asia, Australia): 3–5 months ahead. Last-minute deals do exist but are increasingly rare and unreliable.</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What currencies does TripHunt use?<span class="faq-icon">+</span></div><div class="faq-a">All prices on TripHunt are shown in GBP (£). We're built specifically for UK travellers.</div></div>
-    </div>
-  </section>
-
-  <!-- ════ WISHLIST (hidden until items saved) ══════════════════ -->
-  <section class="wishlist-sec homepage-section" id="wishlist-sec" style="display:none">
-    <div class="wl-header">
-      <div>
-        <h2 class="sec-title">❤️ Saved Packages</h2>
-        <div class="sec-sub"><span id="wishlist-count-line">0 saved</span></div>
+  <!-- ════ EMAIL CAPTURE ══════════════════════════════════════════ -->
+  <section class="email-radar-section" id="email-capture-sec">
+    <div class="container">
+      <div class="email-radar-inner">
+        <div class="email-radar-left">
+          <div class="email-radar-eyebrow">🔔 Free deal alerts</div>
+          <h2 class="email-radar-title">Get insanely cheap flights from the UK</h2>
+          <p class="email-radar-sub">3 deals per week, hand-picked from our radar. Under £100 European deals. Long-haul mistakes. Error fares the moment we find them.</p>
+          <ul class="email-radar-list">
+            <li>✅ Error fare alerts — within 60 seconds of detection</li>
+            <li>✅ Weekly top 3 deals by airport</li>
+            <li>✅ Zero spam — we hate it too</li>
+          </ul>
+        </div>
+        <div class="email-radar-right">
+          <div class="email-radar-form-wrap">
+            <div class="email-radar-label">Your email</div>
+            <input type="email" class="email-radar-input" id="email-capture-v2" placeholder="you@example.com" autocomplete="email">
+            <div class="email-radar-label" style="margin-top:12px">Your home airport</div>
+            <select class="email-radar-select" id="origin-capture-v2">
+              <option value="LHR">London Heathrow</option>
+              <option value="LGW">London Gatwick</option>
+              <option value="MAN">Manchester</option>
+              <option value="BHX">Birmingham</option>
+              <option value="EDI">Edinburgh</option>
+              <option value="BRS">Bristol</option>
+              <option value="GLA">Glasgow</option>
+              <option value="LBA">Leeds Bradford</option>
+              <option value="NCL">Newcastle</option>
+            </select>
+            <button class="email-radar-btn" id="email-radar-btn" onclick="subscribeRadar()">Get free deal alerts →</button>
+            <div class="email-radar-trust" id="email-radar-feedback">🔒 Zero spam. Unsubscribe instantly.</div>
+          </div>
+        </div>
       </div>
-      <button class="btn-sm" onclick="wlClear()">Clear all</button>
     </div>
-    <div class="pkg-grid" id="wishlist-grid"></div>
   </section>
 
-  <!-- ════ LEGACY ANCHORS ══════════════════════════════════════ -->
+  <!-- ════ SECTION 4: DEALS FROM YOUR AIRPORT ════════════════════ -->
+  <section class="radar-section" id="from-airport-section">
+    <div class="container">
+      <div class="sec-hdr-v2">
+        <div class="sec-hdr-left">
+          <div class="sec-eyebrow">📍 Personalised</div>
+          <h2 class="sec-title-v2">📍 Deals From Your Airport</h2>
+          <p class="sec-sub-v2" id="airport-section-sub">Showing deals from London Heathrow.</p>
+        </div>
+        <div class="airport-tabs-v2" id="airport-tabs-v2">
+          <button class="atab active" data-ap="LHR" onclick="switchAirport(this,'LHR')">LHR</button>
+          <button class="atab" data-ap="LGW" onclick="switchAirport(this,'LGW')">LGW</button>
+          <button class="atab" data-ap="MAN" onclick="switchAirport(this,'MAN')">MAN</button>
+          <button class="atab" data-ap="BHX" onclick="switchAirport(this,'BHX')">BHX</button>
+          <button class="atab" data-ap="EDI" onclick="switchAirport(this,'EDI')">EDI</button>
+          <button class="atab" data-ap="BRS" onclick="switchAirport(this,'BRS')">BRS</button>
+          <button class="atab" data-ap="GLA" onclick="switchAirport(this,'GLA')">GLA</button>
+        </div>
+      </div>
+      <div class="radar-grid" id="airport-deals-grid">
+        <div class="deal-card-v3 skeleton-v3"></div>
+        <div class="deal-card-v3 skeleton-v3"></div>
+        <div class="deal-card-v3 skeleton-v3"></div>
+        <div class="deal-card-v3 skeleton-v3"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ SECTION 5: TRENDING DESTINATIONS ══════════════════════ -->
+  <section class="radar-section" id="trending-dest-section">
+    <div class="container">
+      <div class="sec-hdr-v2">
+        <div class="sec-hdr-left">
+          <div class="sec-eyebrow">🔥 Popular right now</div>
+          <h2 class="sec-title-v2">🔥 Trending Destinations</h2>
+          <p class="sec-sub-v2">What the UK is booking this month.</p>
+        </div>
+        <a href="/trending.html" class="see-all-btn">See trending →</a>
+      </div>
+      <div class="trending-scroll" id="trending-scroll-v2">
+        <!-- Horizontal scroll cards -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ PUSH NOTIFICATIONS CTA ════════════════════════════════ -->
+  <section class="push-cta-section" id="push-cta">
+    <div class="container">
+      <div class="push-cta-inner">
+        <div class="push-cta-icon">🔔</div>
+        <div class="push-cta-text">
+          <div class="push-cta-title">Get error fare alerts in 60 seconds</div>
+          <div class="push-cta-sub">When we find a £149 Manchester→Dubai or a £189 London→Tokyo, you'll know before anyone else.</div>
+        </div>
+        <button class="push-cta-btn" id="push-cta-btn" onclick="requestPushFromRadar()">Enable deal alerts</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ WISHLIST + LEGACY ═══════════════════════════════════== -->
   <div id="wishlist-wrap" style="max-width:var(--max);margin:0 auto"></div>
 
 </main>
@@ -2712,10 +2910,10 @@ select.tool-input, select.tool-select-sm { appearance: none; cursor: pointer; }
 <nav class="mobile-nav" id="mobile-nav">
   <div class="mnav-items">
     <button class="mnav-item active" id="mn-flights" onclick="mnavClick('flights')"><span class="mnav-icon">✈️</span>Flights</button>
-    <button class="mnav-item" id="mn-packages" onclick="mnavClick('packages')"><span class="mnav-icon">📦</span>Packages</button>
-    <button class="mnav-item" id="mn-ai" onclick="mnavClick('ai')"><span class="mnav-icon">🤖</span>AI Advisor</button>
-    <button class="mnav-item" id="mn-tools" onclick="mnavClick('tools')"><span class="mnav-icon">🔧</span>Tools</button>
+    <a class="mnav-item" href="/inspire.html" style="text-decoration:none;"><span class="mnav-icon">✨</span>Inspire</a>
+    <button class="mnav-item" id="mn-ai" onclick="mnavClick('ai')"><span class="mnav-icon">🤖</span>AI</button>
     <button class="mnav-item" id="mn-saved" onclick="mnavClick('saved')"><span class="mnav-icon">❤️</span>Saved</button>
+    <a class="mnav-item" href="/account.html" style="text-decoration:none;"><span class="mnav-icon">👤</span>Account</a>
   </div>
 </nav>
 
@@ -3000,13 +3198,13 @@ function _ddmm(s){
 }
 function aviasalesUrl(o, d, date, adults, retDate) {
   // TravelPayouts confirmed deeplink: aviasales.com/search/{ORIG}{DDMM_dep}{DEST}{DDMM_ret}{pax}{cabin}
-  const p  = parseInt(adults) || 2;
-  const dd = _ddmm(date);
-  const rd = _ddmm(retDate);
-  let path;
-  if (dd && rd) path = o + dd + d + rd + p + "1";
-  else if (dd)  path = o + dd + d + p + "1";
-  else          path = o + d;
+  // ALWAYS include dates — Aviasales shows "Oops" error if path has no dates
+  const p   = parseInt(adults) || 2;
+  const dep = date    || _defaultDep();
+  const ret = retDate || _defaultRet(dep);
+  const dd  = _ddmm(dep);
+  const rd  = _ddmm(ret);
+  const path = o + dd + d + rd + p + "1";
   return "https://www.aviasales.com/search/" + path + "?marker=" + MARKER + "&currency=GBP&locale=en-GB";
 }
 
@@ -4212,14 +4410,196 @@ function buildTicker(){
   }).join("");
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// LIVE DEAL RADAR — powers all 5 homepage deal sections
+// ═══════════════════════════════════════════════════════════════════
+
+const AIRPORT_NAMES = {LHR:"London Heathrow",LGW:"London Gatwick",STN:"London Stansted",LTN:"London Luton",MAN:"Manchester",BHX:"Birmingham",EDI:"Edinburgh",GLA:"Glasgow",BRS:"Bristol",LBA:"Leeds Bradford",NCL:"Newcastle"};
+let _radarCache = {};
+let _currentRadarOrigin = localStorage.getItem('th_origin') || 'LHR';
+let _currentRegion = 'all';
+
+function buildDealCardV3(d, opts = {}) {
+  const tierClass = d.deal_tier === 'exceptional' || d.deal_tier === 'legendary' ? 'exceptional-card' : d.deal_tier === 'great' ? 'great-card' : '';
+  const badgeClass = d.is_error_fare ? 'error' : (d.deal_tier === 'exceptional' || d.deal_tier === 'legendary') ? 'exceptional' : d.deal_tier === 'great' ? 'great' : 'good';
+  const badgeText = d.is_error_fare ? '🚨 Error Fare' : d.deal_badge || d.deal_tier.toUpperCase();
+  const stops = d.stops === 0 ? '✈ Direct' : d.stops + ' stop';
+  const dep = d.depart_date ? new Date(d.depart_date).toLocaleDateString('en-GB', {day:'numeric',month:'short'}) : '';
+  const upsell = d.upsell_url || `/upsell.html?${new URLSearchParams({origin:d.origin_code||'LHR',dest:d.dest_code,price:d.price,typical:d.typical_price,book_url:d.booking_url})}`;
+  const dealPageUrl = d.deal_url || `/deal/${d.slug}`;
+  const scoreWidth = Math.round((d.deal_score / 99) * 100);
+
+  return `<div class="deal-card-v3 ${tierClass}" onclick="window.location.href='${dealPageUrl}'">
+    <div class="dc3-top">
+      <span class="dc3-emoji">${d.dest_emoji || '✈️'}</span>
+      <span class="dc3-badge ${badgeClass}">${badgeText}</span>
+    </div>
+    <div class="dc3-route">${d.origin_city||d.origin_code} → ${d.dest_name}</div>
+    <div class="dc3-meta">
+      <span>${d.dest_country||''}</span>
+      <span>${stops}</span>
+      ${d.airline ? `<span>${d.airline}</span>` : ''}
+      ${dep ? `<span>📅 ${dep}</span>` : ''}
+    </div>
+    <div class="dc3-bottom">
+      <div class="dc3-price-group">
+        <div class="dc3-price">£${d.price}</div>
+        <div class="dc3-typical">usually £${d.typical_price}</div>
+        <div class="dc3-saving">↓ ${d.saving_pct}% off (£${d.saving_amount} saved)</div>
+      </div>
+      <a href="${upsell}" class="dc3-btn" onclick="event.stopPropagation()">Book →</a>
+    </div>
+    <div class="dc3-score-bar"><div class="dc3-score-fill" style="width:${scoreWidth}%"></div></div>
+  </div>`;
+}
+
+async function fetchRadarDeals(type, origin, region, limit) {
+  const key = `${type}:${origin}:${region||'all'}:${limit}`;
+  if (_radarCache[key] && Date.now() - _radarCache[key].ts < 600000) return _radarCache[key].data;
+  try {
+    let url = `/.netlify/functions/getDeals?type=${type}&origin=${origin}&limit=${limit}`;
+    if (region && region !== 'all') url += `&region=${encodeURIComponent(region)}`;
+    const res = await fetch(url);
+    const json = await res.json();
+    const data = json.data || [];
+    _radarCache[key] = { data, ts: Date.now() };
+    return data;
+  } catch { return []; }
+}
+
+async function loadRadarDeals() {
+  const origin = document.getElementById('radar-origin')?.value || _currentRadarOrigin;
+  _currentRadarOrigin = origin;
+  localStorage.setItem('th_origin', origin);
+  const grid = document.getElementById('radar-grid');
+  if (!grid) return;
+  grid.innerHTML = Array(6).fill('<div class="deal-card-v3 skeleton-v3"></div>').join('');
+  const deals = await fetchRadarDeals('all', origin, _currentRegion !== 'all' ? _currentRegion : null, 12);
+  if (!deals.length) { grid.innerHTML = '<div style="padding:32px;color:var(--txt3);text-align:center;grid-column:1/-1">No deals found. Try a different airport.</div>'; return; }
+  grid.innerHTML = deals.map(d => buildDealCardV3(d)).join('');
+}
+
+function filterRegion(btn, region) {
+  document.querySelectorAll('.rfil').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  _currentRegion = region;
+  loadRadarDeals();
+}
+
+async function loadErrorFares() {
+  const grid = document.getElementById('error-grid');
+  const empty = document.getElementById('error-empty');
+  if (!grid) return;
+  const deals = await fetchRadarDeals('error', _currentRadarOrigin, null, 3);
+  if (!deals.length) {
+    grid.style.display = 'none';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  grid.style.display = '';
+  if (empty) empty.style.display = 'none';
+  grid.innerHTML = deals.map(d => buildDealCardV3(d)).join('');
+}
+
+async function loadPriceDrops() {
+  const grid = document.getElementById('drops-grid');
+  if (!grid) return;
+  grid.innerHTML = Array(4).fill('<div class="deal-card-v3 skeleton-v3"></div>').join('');
+  const deals = await fetchRadarDeals('drops', _currentRadarOrigin, null, 8);
+  if (!deals.length) { grid.innerHTML = '<div style="padding:32px;color:var(--txt3);text-align:center;grid-column:1/-1">Loading price drops…</div>'; return; }
+  grid.innerHTML = deals.map(d => buildDealCardV3(d)).join('');
+}
+
+async function loadAirportDeals(origin) {
+  const grid = document.getElementById('airport-deals-grid');
+  const sub  = document.getElementById('airport-section-sub');
+  if (!grid) return;
+  if (sub) sub.textContent = `Showing the best deals from ${AIRPORT_NAMES[origin] || origin}.`;
+  grid.innerHTML = Array(4).fill('<div class="deal-card-v3 skeleton-v3"></div>').join('');
+  const deals = await fetchRadarDeals('from_airport', origin, null, 8);
+  grid.innerHTML = deals.length ? deals.map(d => buildDealCardV3(d)).join('') : '<div style="padding:32px;color:var(--txt3);text-align:center;grid-column:1/-1">No current deals from this airport.</div>';
+}
+
+function switchAirport(btn, code) {
+  document.querySelectorAll('.atab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadAirportDeals(code);
+}
+
+async function loadTrendingV2() {
+  const scroll = document.getElementById('trending-scroll-v2');
+  if (!scroll) return;
+  const deals = await fetchRadarDeals('top', _currentRadarOrigin, null, 12);
+  if (!deals.length) { scroll.innerHTML = ''; return; }
+  scroll.innerHTML = deals.map(d =>
+    `<a class="trend-card-v2" href="/deal/${d.slug}">
+      <div class="tc2-emoji">${d.dest_emoji || '✈️'}</div>
+      <div class="tc2-dest">${d.dest_name}</div>
+      <div class="tc2-country">${d.dest_country}</div>
+      <div class="tc2-from">from</div>
+      <div class="tc2-price">£${d.price}</div>
+    </a>`
+  ).join('');
+}
+
+async function subscribeRadar() {
+  const email  = document.getElementById('email-capture-v2')?.value;
+  const origin = document.getElementById('origin-capture-v2')?.value || 'LHR';
+  const btn    = document.getElementById('email-radar-btn');
+  const fb     = document.getElementById('email-radar-feedback');
+  if (!email || !email.includes('@')) { if (fb) { fb.textContent = '⚠️ Enter a valid email address.'; fb.style.color = 'var(--red)'; } return; }
+  if (btn) { btn.textContent = 'Subscribing…'; btn.disabled = true; }
+  try {
+    await fetch('/.netlify/functions/subscribe', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email, origin_preference: origin, source: 'homepage_radar' }) });
+    if (btn) { btn.textContent = '✅ You\'re subscribed!'; btn.style.background = 'var(--grn)'; }
+    if (fb) { fb.textContent = '🎉 First deal digest lands Monday morning. Add deals@triphunt.org to your contacts.'; fb.style.color = 'var(--grn)'; }
+    // Also request push if supported
+    setTimeout(() => { if (typeof TH !== 'undefined' && TH.Push) TH.Push.requestGeneral(); }, 2000);
+  } catch {
+    if (btn) { btn.textContent = 'Subscribe'; btn.disabled = false; }
+    if (fb) { fb.textContent = 'Something went wrong. Try again.'; fb.style.color = 'var(--red)'; }
+  }
+}
+
+async function requestPushFromRadar() {
+  const btn = document.getElementById('push-cta-btn');
+  if (typeof TH !== 'undefined' && TH.Push) {
+    const granted = await TH.Push.requestGeneral();
+    if (granted && btn) { btn.textContent = '✅ Alerts enabled'; btn.classList.add('granted'); }
+  } else if ('Notification' in window) {
+    const perm = await Notification.requestPermission();
+    if (perm === 'granted' && btn) { btn.textContent = '✅ Alerts enabled'; btn.classList.add('granted'); }
+  }
+}
+
+// Boot all radar sections
+function bootRadar() {
+  // Detect user's preferred airport from localStorage
+  const savedOrigin = localStorage.getItem('th_origin') || 'LHR';
+  _currentRadarOrigin = savedOrigin;
+  const radarSelect = document.getElementById('radar-origin');
+  if (radarSelect) radarSelect.value = savedOrigin;
+
+  // Load all sections in parallel (staggered for perceived performance)
+  loadRadarDeals();
+  setTimeout(loadErrorFares, 200);
+  setTimeout(loadPriceDrops, 400);
+  setTimeout(() => loadAirportDeals(savedOrigin), 600);
+  setTimeout(loadTrendingV2, 800);
+
+  // Push CTA state
+  if ('Notification' in window && Notification.permission === 'granted') {
+    const btn = document.getElementById('push-cta-btn');
+    if (btn) { btn.textContent = '✅ Alerts enabled'; btn.classList.add('granted'); btn.disabled = true; }
+  }
+}
+
 /* TODAY'S TOP DEALS */
 async function loadTopDeals(){
-  const origin=document.getElementById("top-deals-origin").value||"LHR";
+  const origin=document.getElementById("top-deals-origin")?.value||"LHR";
   const grid=document.getElementById("top-deals-grid");
   const sub=document.getElementById("top-deals-sub");
 
-  // Show fallback deals IMMEDIATELY — so cards are always visible without waiting for API
-  grid.innerHTML=renderFallbackDeals(origin);
   if(sub) sub.textContent="Popular routes from "+origin+" · Prices updated regularly · Click to book";
 
   // Then try to upgrade with live data from Netlify function
@@ -6008,6 +6388,8 @@ document.addEventListener("DOMContentLoaded",()=>{
   initExitIntent();
   updateVisitorCount();
   setInterval(updateVisitorCount, 30000);
+  // Boot new deal radar sections
+  bootRadar();
   loadFeaturedPackages();
   setTimeout(renderWL, 300);
   applyABTests();
@@ -7329,13 +7711,15 @@ function renderDealDiscovery(type) {
 }
 
 function buildBookingUrl_safe(origin, dest, dep, ret, adults) {
+  // Always include dates — Aviasales shows "Oops" error without them
+  function _def(){ const d=new Date(); d.setDate(d.getDate()+21); while(d.getDay()!==2)d.setDate(d.getDate()+1); return d.toISOString().slice(0,10); }
+  function _defR(s){ const d=new Date(s); d.setDate(d.getDate()+7); return d.toISOString().slice(0,10); }
   const p  = parseInt(adults) || 2;
-  const dd = _ddmm(dep);
-  const rd = _ddmm(ret);
-  let path;
-  if (dd && rd) path = origin + dd + dest + rd + p + "1";
-  else if (dd)  path = origin + dd + dest + p + "1";
-  else          path = origin + dest;
+  const sd = dep || _def();
+  const sr = ret || _defR(sd);
+  const dd = _ddmm(sd);
+  const rd = _ddmm(sr);
+  const path = origin + dd + dest + rd + p + "1";
   return "https://www.aviasales.com/search/" + path + "?marker=" + MARKER + "&currency=GBP&locale=en-GB";
 }
 
@@ -7410,6 +7794,226 @@ if (_origSearchFlights2) {
 }
 
 /* ── Scroll-reveal handled by initScrollReveal() above ── */
+
+</script>
+
+<!-- ═══ TRUST SIGNALS ════════════════════════════════════════════ -->
+<div id="th-trust-section"></div>
+
+<!-- ═══ SCRIPTS: Photos · Mobile Nav · Trust ════════════════════ -->
+<script src="/js/photos.js"></script>
+<script src="/js/trust.js"></script>
+<script src="/js/mobile-nav.js" data-auto></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  TH.Trust.injectAll("#th-trust-section");
+  TH.MobileNav.init({ onRefresh: function() { window.location.reload(); } });
+  var observer = new MutationObserver(function() { TH.Photos.injectAll(); });
+  observer.observe(document.body, { childList:true, subtree:true });
+  TH.Photos.injectAll();
+});
+</script>
+<script src="/js/push.js" defer></script>
+
+<script>
+
+// ═══════════════════════════════════════════════════════════════
+// DEAL RADAR ENGINE — homepage JS
+// ═══════════════════════════════════════════════════════════════
+
+const RADAR = (function() {
+  const MARKER = '499405';
+  let currentOrigin = 'LHR';
+
+  const DEST_PHOTOS = {
+    BCN:'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=600&q=70',
+    LIS:'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=600&q=70',
+    FCO:'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=600&q=70',
+    AMS:'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=600&q=70',
+    ATH:'https://images.unsplash.com/photo-1555993539-1732b0258235?w=600&q=70',
+    DXB:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&q=70',
+    BKK:'https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=600&q=70',
+    DPS:'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=70',
+    NRT:'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=70',
+    JFK:'https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=600&q=70',
+    SIN:'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=600&q=70',
+    CPT:'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=600&q=70',
+    TFS:'https://images.unsplash.com/photo-1582721478779-0ae163c05a60?w=600&q=70',
+    MAD:'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=600&q=70',
+    PRG:'https://images.unsplash.com/photo-1541849546-216549ae216d?w=600&q=70',
+  };
+
+  function upsellLink(deal) {
+    const p = new URLSearchParams({
+      origin: deal.origin_code || 'LHR',
+      dest:   deal.dest_code,
+      price:  Math.round(deal.price),
+      typical:Math.round(deal.typical_price || deal.price * 1.65),
+      book_url: deal.booking_url || '#',
+    });
+    return '/upsell.html?' + p.toString();
+  }
+
+  function dealPageLink(deal) {
+    if (deal.slug) return '/deal/' + deal.slug;
+    const city = (deal.origin_city || deal.origin_code || 'london').toLowerCase().replace(/\s/g,'-');
+    const dest = (deal.dest_name || deal.dest_code || 'barcelona').toLowerCase().replace(/\s/g,'-');
+    return `/deal/${city}-to-${dest}-${Math.round(deal.price)}`;
+  }
+
+  function buildRadarCard(deal, isError) {
+    const photo    = DEST_PHOTOS[deal.dest_code] || '';
+    const badgeCls = isError ? 'rc-badge-err' : deal.deal_score >= 80 ? 'rc-badge-exc' : 'rc-badge-great';
+    const badgeTxt = isError ? '🚨 Error fare' : deal.deal_score >= 80 ? '🔥 Exceptional' : '⚡ Great deal';
+    const bookCls  = isError ? 'rc-book rc-book-error' : 'rc-book';
+    const link     = upsellLink(deal);
+    const dealLink = dealPageLink(deal);
+
+    return `
+    <div class="radar-card" onclick="window.location.href='${dealLink}'">
+      ${photo ? `<div style="height:90px;border-radius:10px;overflow:hidden;margin:-2px -2px 0;"><img src="${photo}" alt="${deal.dest_name}" loading="lazy" style="width:100%;height:100%;object-fit:cover;filter:brightness(.75)"></div>` : ''}
+      <div class="rc-badge-row">
+        <span class="rc-badge ${badgeCls}">${badgeTxt}</span>
+        ${deal.stops === 0 ? '<span class="rc-badge rc-badge-dir">Direct</span>' : ''}
+        <span class="rc-score">${deal.deal_score}/100</span>
+      </div>
+      <div>
+        <div class="rc-route">${deal.dest_emoji || '✈️'} ${deal.origin_code} → ${deal.dest_code}</div>
+        <div class="rc-route-sub">${deal.dest_name}, ${deal.dest_country || ''}</div>
+      </div>
+      <div class="rc-price-row">
+        <div class="rc-price">£${Math.round(deal.price)}</div>
+        ${deal.typical_price ? `<div class="rc-typical">£${Math.round(deal.typical_price)}</div>` : ''}
+        ${deal.saving_pct ? `<div class="rc-save">-${deal.saving_pct}%</div>` : ''}
+      </div>
+      <div class="rc-footer">
+        <div class="rc-airline">${deal.airline || 'Multiple airlines'} · ${deal.stops === 0 ? 'Direct' : deal.stops + ' stop'}</div>
+        <a class="${bookCls}" href="${link}" onclick="event.stopPropagation()">Book →</a>
+      </div>
+    </div>`;
+  }
+
+  function buildPriceDropItem(deal, rank) {
+    return `
+    <div class="pd-item" onclick="window.location.href='${dealPageLink(deal)}'">
+      <div class="pd-rank">#${rank}</div>
+      <div class="pd-emoji">${deal.dest_emoji || '✈️'}</div>
+      <div class="pd-route">
+        <div class="pd-route-name">${deal.origin_city || deal.origin_code} → ${deal.dest_name}</div>
+        <div class="pd-route-sub">${deal.airline || ''} · ${deal.stops === 0 ? 'Direct' : deal.stops + ' stop'}</div>
+      </div>
+      <div class="pd-price">£${Math.round(deal.price)}</div>
+      <div class="pd-saving">
+        <div class="pd-pct">-${deal.saving_pct}%</div>
+        <div class="pd-amount">Save £${deal.saving_amount || ''}</div>
+      </div>
+      <button class="pd-book" onclick="event.stopPropagation();window.open('${upsellLink(deal)}','_blank')">Book →</button>
+    </div>`;
+  }
+
+  async function fetchDeals(section, origin, limit = 6) {
+    try {
+      const q = new URLSearchParams({ section, origin: origin || currentOrigin, limit });
+      const res = await fetch(`/.netlify/functions/getLiveDeals?${q}`);
+      const data = await res.json();
+      return data.success ? data.data : [];
+    } catch(e) {
+      console.warn('[Radar] fetch error:', e.message);
+      return [];
+    }
+  }
+
+  function showSkeletons(gridId, count = 6) {
+    const el = document.getElementById(gridId);
+    if (!el) return;
+    el.innerHTML = Array(count).fill('<div class="radar-skeleton"></div>').join('');
+  }
+
+  async function loadBestDeals(origin) {
+    showSkeletons('radar-best-grid', 6);
+    const deals = await fetchDeals('best', origin, 12);
+    const grid  = document.getElementById('radar-best-grid');
+    if (!grid) return;
+    if (!deals.length) { grid.innerHTML = '<div style="color:var(--txt3);font-size:14px;grid-column:1/-1;padding:20px 0">No deals found. Try another airport.</div>'; return; }
+    grid.innerHTML = deals.slice(0, 9).map(d => buildRadarCard(d, d.is_error_fare)).join('');
+    const sub = document.getElementById('radar-best-sub');
+    if (sub) sub.textContent = `${deals.length} deals found from ${deals[0]?.origin_city || origin} · Score 50+ · Updated every 2 hours`;
+  }
+
+  async function loadErrorFares() {
+    showSkeletons('radar-error-grid', 3);
+    const deals = await fetchDeals('error_fares', 'ANY', 6);
+    const grid  = document.getElementById('radar-error-grid');
+    if (!grid) return;
+    if (!deals.length) { grid.innerHTML = '<div style="color:var(--txt3);font-size:14px;grid-column:1/-1;padding:12px 0">No error fares detected right now. Check back soon.</div>'; return; }
+    grid.innerHTML = deals.slice(0, 3).map(d => buildRadarCard(d, true)).join('');
+  }
+
+  async function loadPriceDrops() {
+    const deals = await fetchDeals('exceptional', 'ANY', 8);
+    const list  = document.getElementById('radar-drops-list');
+    if (!list) return;
+    if (!deals.length) { list.innerHTML = '<div style="color:var(--txt3);font-size:14px;padding:12px 0">Calculating price drops…</div>'; return; }
+    // Sort by saving_pct desc
+    const sorted = [...deals].sort((a, b) => (b.saving_pct || 0) - (a.saving_pct || 0));
+    list.innerHTML = sorted.slice(0, 6).map((d, i) => buildPriceDropItem(d, i + 1)).join('');
+  }
+
+  async function loadLongHaul(origin) {
+    showSkeletons('radar-longhaul-grid', 4);
+    const deals = await fetchDeals('longhaul', origin, 8);
+    const grid  = document.getElementById('radar-longhaul-grid');
+    if (!grid) return;
+    if (!deals.length) { grid.innerHTML = '<div style="color:var(--txt3);font-size:14px;grid-column:1/-1;padding:12px 0">No long-haul deals right now.</div>'; return; }
+    grid.innerHTML = deals.filter(d => d.longhaul).slice(0, 4).map(d => buildRadarCard(d, false)).join('');
+  }
+
+  async function loadRegional(origin) {
+    showSkeletons('radar-regional-grid', 4);
+    const deals = await fetchDeals('regional', origin, 6);
+    const grid  = document.getElementById('radar-regional-grid');
+    if (!grid) return;
+    grid.innerHTML = deals.slice(0, 6).map(d => buildRadarCard(d, d.is_error_fare)).join('');
+  }
+
+  function setRegionalAirport(code, name, btn) {
+    document.querySelectorAll('.airport-pill').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const sub = document.getElementById('radar-regional-sub');
+    if (sub) sub.textContent = `Top deals from ${name}`;
+    const title = document.getElementById('radar-regional-title');
+    if (title) title.textContent = `📍 Deals from ${name}`;
+    loadRegional(code);
+  }
+
+  async function loadAllSections(origin) {
+    currentOrigin = origin || 'LHR';
+    loadBestDeals(currentOrigin);
+    loadErrorFares();
+    loadPriceDrops();
+    loadLongHaul(currentOrigin);
+    loadRegional(currentOrigin);
+  }
+
+  return {
+    loadAllSections,
+    setRegionalAirport,
+  };
+})();
+
+function loadRadarDeals() {
+  const origin = document.getElementById('radar-origin')?.value || 'LHR';
+  RADAR.loadAllSections(origin);
+}
+
+function setRegionalAirport(code, name, btn) {
+  RADAR.setRegionalAirport(code, name, btn);
+}
+
+// Boot radar on DOM ready
+document.addEventListener('DOMContentLoaded', function() {
+  RADAR.loadAllSections('LHR');
+});
 
 </script>
 </body>

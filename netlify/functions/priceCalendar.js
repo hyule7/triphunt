@@ -22,13 +22,10 @@ const cors = {
 const MARKER = process.env.TRAVELPAYOUTS_MARKER || "499405";
 
 function bookingUrl(origin, dest, dep, ret) {
-  // TravelPayouts confirmed deeplink: aviasales.com/search/{ORIG}{DDMM_dep}{DEST}{DDMM_ret}{pax}{cabin}
+  // Always include dates — Aviasales shows "Oops" error without them
   const dd = ddmm(dep);
   const rd = ddmm(ret);
-  let path;
-  if (dd && rd) path = origin + dd + dest + rd + "21";
-  else if (dd)  path = origin + dd + dest + "21";
-  else          path = origin + dest;
+  const path = origin + dd + dest + rd + "21";
   return "https://www.aviasales.com/search/" + path + "?marker=" + MARKER + "&currency=GBP&locale=en-GB";
 }
 

@@ -1,0 +1,24 @@
+# Exclude source and dev files from Netlify deploy upload
+# These are only needed during build, not for serving
+
+# Build scripts (run during build, not served)
+build-seo.js
+build-seo-new.js
+build-seo.js.bak
+
+# Database schema files
+supabase-schema-v31.sql
+supabase-schema.sql
+
+# Node modules (shouldn't exist but just in case)
+node_modules/
+
+# Any package lock files at root
+package-lock.json
+yarn.lock
+
+# Editor/OS files
+.DS_Store
+.env
+.env.local
+*.log

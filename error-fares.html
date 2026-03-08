@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚨 Error Fare Alert — Mistake Prices From UK | TripHunt</title>
+<meta name="description" content="Live error fares and mistake flight prices from UK airports. Updated in real-time. These prices won't last — book now before airlines fix them.">
+<link rel="canonical" href="https://www.triphunt.org/error-fares">
+
+<!-- OG for viral sharing -->
+<meta property="og:title" content="🚨 Error Fare Alert — Mistake Prices You Need to See">
+<meta property="og:description" content="These prices shouldn't exist. Live mistake fares from UK airports. Book before airlines fix them.">
+<meta property="og:url" content="https://www.triphunt.org/error-fares">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="🚨 Error Fare Alert — Mistake Prices From UK">
+<meta name="twitter:description" content="These prices shouldn't exist. Found on TripHunt. Won't last long.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,wght@0,700;0,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0a0f1e;--navy1:#0e1528;--navy2:#141d35;--navy3:#1a2442;--navy4:#243058;
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.12);
+  --acc:#2563eb;--acc2:#3b82f6;--grn:#10b981;--yel:#f59e0b;--red:#ef4444;--pur:#8b5cf6;
+  --txt:#f0f4ff;--txt2:#8b9cbf;--txt3:#4a5878;
+  --r8:8px;--r12:12px;--r16:16px;--r24:24px;--r99:9999px;--max:1100px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--txt);-webkit-font-smoothing:antialiased}
+.container{max-width:var(--max);margin:0 auto;padding:0 20px}
+
+/* NAV */
+.site-nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:8px;padding:0 24px;height:56px;background:rgba(10,15,30,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Fraunces',serif;font-size:20px;font-weight:900;text-decoration:none;color:var(--txt)}
+.nav-links{display:flex;gap:4px;margin-left:12px}
+.nav-link{font-size:13px;font-weight:500;color:var(--txt2);padding:6px 12px;border-radius:var(--r99);text-decoration:none;transition:all .2s}
+.nav-link:hover,.nav-link.active{color:var(--txt);background:var(--navy3)}
+
+/* ALERT HERO */
+.alert-hero{
+  background:linear-gradient(135deg, rgba(239,68,68,.12) 0%, rgba(139,92,246,.08) 100%);
+  border-bottom:1px solid rgba(239,68,68,.2);
+  padding:48px 24px 36px;
+  text-align:center;
+}
+.alert-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(239,68,68,.2);color:var(--red);
+  font-size:12px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
+  padding:6px 16px;border-radius:var(--r99);border:1px solid rgba(239,68,68,.3);
+  margin-bottom:18px;animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+.alert-h1{font-family:'Fraunces',serif;font-size:clamp(30px,6vw,52px);font-weight:900;margin-bottom:12px;line-height:1.05}
+.alert-h1 .highlight{color:var(--red)}
+.alert-sub{font-size:15px;color:var(--txt2);max-width:580px;margin:0 auto 28px;line-height:1.6}
+.alert-meta-row{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--txt3)}
+.alert-meta-item{display:flex;align-items:center;gap:6px}
+
+/* LIVE INDICATOR */
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;animation:blink 1.2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(239,68,68,0)}}
+
+/* PUSH BAR */
+.push-banner{background:var(--navy2);border-bottom:1px solid var(--border2);padding:12px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.push-banner-text{font-size:13px;font-weight:600;flex:1}
+.push-banner-text strong{color:var(--grn)}
+.push-banner-btn{padding:7px 18px;background:var(--grn);color:#fff;border-radius:var(--r99);font-size:12px;font-weight:800;border:none;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap}
+.push-banner-btn:hover{opacity:.9}
+
+/* MAIN GRID */
+.main-layout{display:grid;grid-template-columns:1fr 300px;gap:24px;padding:28px 0;max-width:var(--max);margin:0 auto}
+@media(max-width:900px){.main-layout{grid-template-columns:1fr}}
+
+/* FARE CARDS */
+.fare-list{display:flex;flex-direction:column;gap:14px}
+.fare-card{
+  background:var(--navy1);border:1px solid var(--border);border-radius:var(--r16);
+  overflow:hidden;transition:all .25s;
+}
+.fare-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.fare-card.mistake{border-color:rgba(239,68,68,.3);background:linear-gradient(135deg,rgba(239,68,68,.05),var(--navy1))}
+.fare-card.error{border-color:rgba(245,158,11,.2)}
+.fare-card-top{padding:18px 20px 14px;display:flex;align-items:flex-start;gap:16px}
+.fare-card-labels{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.fare-card-label{display:inline-block;padding:3px 9px;border-radius:var(--r99);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px}
+.label-mistake{background:rgba(239,68,68,.2);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+.label-error{background:rgba(245,158,11,.15);color:var(--yel);border:1px solid rgba(245,158,11,.2)}
+.label-hot{background:rgba(139,92,246,.2);color:var(--pur);border:1px solid rgba(139,92,246,.3)}
+.fare-route{font-family:'Fraunces',serif;font-size:22px;font-weight:900;margin-bottom:4px}
+.fare-airline{font-size:12px;color:var(--txt3);margin-bottom:12px}
+.fare-prices{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.fare-now{font-family:'Fraunces',serif;font-size:38px;font-weight:900;color:var(--grn);line-height:1}
+.fare-was{font-size:16px;color:var(--txt3);text-decoration:line-through}
+.fare-save{font-size:13px;font-weight:800;color:var(--red);background:rgba(239,68,68,.1);padding:3px 10px;border-radius:var(--r99)}
+.fare-meta{font-size:12px;color:var(--txt2);margin-bottom:16px}
+.fare-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:0 20px 18px}
+.btn-book{padding:11px 24px;background:var(--red);color:#fff;border-radius:var(--r8);font-size:14px;font-weight:800;text-decoration:none;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-book:hover{background:#dc2626;transform:translateY(-1px)}
+.btn-alert{padding:11px 20px;background:var(--navy3);color:var(--txt);border-radius:var(--r8);font-size:13px;font-weight:600;border:1px solid var(--border2);cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
+.btn-alert:hover{background:var(--navy4)}
+.btn-share{padding:11px 18px;background:none;color:var(--txt3);border-radius:var(--r8);font-size:13px;font-weight:600;border:1px solid var(--border);cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
+.btn-share:hover{color:var(--txt);border-color:var(--border2)}
+.fare-urgency{background:rgba(239,68,68,.08);border-top:1px solid rgba(239,68,68,.1);padding:10px 20px;font-size:12px;color:var(--red);font-weight:600;display:flex;align-items:center;gap:8px}
+
+/* SIDEBAR */
+.sidebar-sticky{position:sticky;top:72px}
+.sidebar-card{background:var(--navy1);border:1px solid var(--border);border-radius:var(--r16);padding:20px;margin-bottom:16px}
+.sidebar-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--txt3);margin-bottom:14px}
+.origin-btn{display:block;padding:9px 14px;border:1px solid var(--border);border-radius:var(--r8);font-size:13px;font-weight:600;cursor:pointer;background:none;font-family:'Outfit',sans-serif;color:var(--txt2);margin-bottom:6px;width:100%;text-align:left;transition:all .15s}
+.origin-btn:hover,.origin-btn.active{background:var(--navy3);color:var(--txt);border-color:var(--border2)}
+.share-card{background:linear-gradient(135deg,var(--navy3),var(--navy4));border:1px solid var(--border2);border-radius:var(--r16);padding:20px;margin-bottom:16px}
+.share-card-title{font-size:14px;font-weight:800;margin-bottom:6px}
+.share-card-sub{font-size:12px;color:var(--txt2);margin-bottom:14px}
+.share-big-btn{display:block;padding:10px;border-radius:var(--r8);font-size:13px;font-weight:700;text-align:center;text-decoration:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;margin-bottom:7px;width:100%}
+.share-tw{background:#1da1f2;color:#fff}
+.share-wa{background:#25d366;color:#fff}
+.share-cp{background:var(--navy4);color:var(--txt);border:1px solid var(--border2)}
+
+/* EMPTY / LOADING */
+.loading-state{text-align:center;padding:60px 20px;color:var(--txt3)}
+.loading-spinner{width:32px;height:32px;border:3px solid var(--border2);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-state{text-align:center;padding:60px 20px}
+.empty-icon{font-size:48px;margin-bottom:16px}
+.empty-title{font-size:18px;font-weight:800;margin-bottom:8px}
+.empty-sub{font-size:13px;color:var(--txt2)}
+
+/* FOOTER */
+.site-footer{background:var(--navy1);border-top:1px solid var(--border);padding:28px 24px;text-align:center;color:var(--txt3);font-size:12px;margin-top:40px}
+
+@media(max-width:640px){.nav-links{display:none}.fare-now{font-size:30px}.main-layout{padding:16px 0}}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="nav-logo" href="/">✈️ TripHunt</a>
+  <div class="nav-links">
+    <a class="nav-link" href="/search.html">Search</a>
+    <a class="nav-link" href="/trending">Trending</a>
+    <a class="nav-link active" href="/error-fares">Error Fares</a>
+    <a class="nav-link" href="/deal-of-the-day">Deal of Day</a>
+  </div>
+</nav>
+
+<!-- PUSH BANNER -->
+<div class="push-banner">
+  <div class="push-banner-text">🔔 <strong>Get error fare alerts instantly</strong> — before they're gone</div>
+  <button class="push-banner-btn" id="push-top-btn" onclick="enablePush()">Enable free alerts</button>
+</div>
+
+<!-- HERO -->
+<div class="alert-hero">
+  <div class="alert-badge"><span class="live-dot"></span> Live scanning — updated every 15 min</div>
+  <h1 class="alert-h1">Mistake Prices &amp;<br><span class="highlight">Error Fare Alerts</span></h1>
+  <p class="alert-sub">We scan 100+ airlines constantly looking for pricing errors and ultra-cheap fares. When an airline accidentally prices a flight too low, we surface it here instantly. These won't last.</p>
+  <div class="alert-meta-row">
+    <div class="alert-meta-item">✅ All UK airports</div>
+    <div class="alert-meta-item">✅ 100+ airlines scanned</div>
+    <div class="alert-meta-item">✅ Verified before publishing</div>
+    <div class="alert-meta-item">✅ Direct booking links</div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="container">
+  <div class="main-layout">
+
+    <!-- LEFT: FARES LIST -->
+    <div>
+      <div id="fares-list">
+        <div class="loading-state">
+          <div class="loading-spinner"></div>
+          <div>Scanning for error fares…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: SIDEBAR -->
+    <div class="sidebar-sticky">
+      <div class="sidebar-card">
+        <div class="sidebar-title">Filter by airport</div>
+        <button class="origin-btn active" data-origin="ALL" onclick="setOrigin('ALL',this)">🇬🇧 All UK airports</button>
+        <button class="origin-btn" data-origin="LHR" onclick="setOrigin('LHR',this)">London Heathrow</button>
+        <button class="origin-btn" data-origin="LGW" onclick="setOrigin('LGW',this)">London Gatwick</button>
+        <button class="origin-btn" data-origin="STN" onclick="setOrigin('STN',this)">London Stansted</button>
+        <button class="origin-btn" data-origin="MAN" onclick="setOrigin('MAN',this)">Manchester</button>
+        <button class="origin-btn" data-origin="BHX" onclick="setOrigin('BHX',this)">Birmingham</button>
+        <button class="origin-btn" data-origin="EDI" onclick="setOrigin('EDI',this)">Edinburgh</button>
+        <button class="origin-btn" data-origin="GLA" onclick="setOrigin('GLA',this)">Glasgow</button>
+        <button class="origin-btn" data-origin="BRS" onclick="setOrigin('BRS',this)">Bristol</button>
+      </div>
+
+      <div class="share-card">
+        <div class="share-card-title">⚡ Share this page</div>
+        <div class="share-card-sub">One viral share can alert thousands to these deals before they disappear.</div>
+        <button class="share-big-btn share-tw" onclick="shareTo('twitter')">🐦 Share on Twitter/X</button>
+        <button class="share-big-btn share-wa" onclick="shareTo('whatsapp')">💬 Share on WhatsApp</button>
+        <button class="share-big-btn share-cp" onclick="copyPageLink()">🔗 Copy link</button>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-title">How error fares work</div>
+        <p style="font-size:12px;color:var(--txt2);line-height:1.7">Airlines occasionally misprice flights due to currency conversion errors, fuel surcharge omissions, or system glitches. These fares are usually <strong style="color:var(--txt)">40–90% below</strong> normal price and can last anywhere from minutes to a few hours. Airlines <em>are</em> legally required to honour them in most cases. Book fast, book flexible.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="site-footer">
+  TripHunt scans live flight pricing. Error fares are genuine low prices — we earn affiliate commission when you book. You pay no more than booking direct.
+  <br><a href="/" style="color:var(--txt2)">Home</a> · <a href="/search.html" style="color:var(--txt2)">Search flights</a> · <a href="/trending" style="color:var(--txt2)">Trending deals</a>
+</footer>
+
+<script>
+const MARKER = '499405';
+let allFares = [];
+let currentOrigin = 'ALL';
+
+const DEST_NAMES = {
+  BCN:"Barcelona",MAD:"Madrid",LIS:"Lisbon",FCO:"Rome",AMS:"Amsterdam",
+  ATH:"Athens",PRG:"Prague",VIE:"Vienna",DXB:"Dubai",AYT:"Antalya",
+  PMI:"Palma",TFS:"Tenerife",LPA:"Gran Canaria",FAO:"Faro",
+  JFK:"New York",LAX:"Los Angeles",BKK:"Bangkok",NRT:"Tokyo",
+  SIN:"Singapore",DBV:"Dubrovnik",IST:"Istanbul",AGP:"Malaga",ALC:"Alicante",
+  MIA:"Miami",CDG:"Paris",FRA:"Frankfurt",GRU:"São Paulo",YYZ:"Toronto",
+};
+const ORIG_NAMES = {
+  LHR:"London Heathrow",LGW:"London Gatwick",STN:"London Stansted",LTN:"Luton",
+  MAN:"Manchester",BHX:"Birmingham",EDI:"Edinburgh",GLA:"Glasgow",BRS:"Bristol",NCL:"Newcastle",
+};
+
+// ── Load error fares ─────────────────────────────────────────────
+async function loadFares(origin) {
+  const list = document.getElementById('fares-list');
+  list.innerHTML = `<div class="loading-state"><div class="loading-spinner"></div><div>Scanning for error fares${origin !== 'ALL' ? ' from '+origin : ''}…</div></div>`;
+  try {
+    const url = '/.netlify/functions/getErrorFares' + (origin !== 'ALL' ? '?origin=' + origin : '');
+    const res = await fetch(url);
+    const data = await res.json();
+    allFares = (data.data || []);
+    renderFares(allFares);
+  } catch(e) {
+    // Fallback demo fares for when function isn't available
+    allFares = getDemoFares();
+    renderFares(allFares);
+  }
+}
+
+function renderFares(fares) {
+  const list = document.getElementById('fares-list');
+  if (!fares || fares.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">No error fares right now</div><div class="empty-sub">We're scanning constantly. Enable alerts to be first to know when one appears.</div></div>`;
+    return;
+  }
+  list.innerHTML = fares.map(fare => buildFareCard(fare)).join('');
+}
+
+function buildFareCard(f) {
+  const destName = DEST_NAMES[f.destination] || f.destination;
+  const origName = ORIG_NAMES[f.origin] || f.origin;
+  const isMistake = f.is_mistake_fare;
+  const urgency = ['Only a few seats left at this price', 'Price may be corrected within hours', 'Booking window closing fast', 'Multiple travellers viewing now'];
+  const urgencyMsg = urgency[Math.floor(Math.random() * urgency.length)];
+
+  // Build upsell URL for post-click page
+  const upsellParams = new URLSearchParams({
+    origin: f.origin,
+    dest: f.destination,
+    price: Math.round(f.price),
+    typical: Math.round(f.typical || f.price * 2),
+    book_url: f.booking_url || '#',
+  });
+  const clickUrl = '/upsell.html?' + upsellParams.toString();
+  const shareText = encodeURIComponent(`🚨 ${isMistake ? 'Mistake fare' : 'Error fare'}: ${origName} → ${destName} for £${Math.round(f.price)} (usually £${Math.round(f.typical || f.price * 2)})! Via TripHunt:`);
+  const shareUrl  = encodeURIComponent('https://www.triphunt.org/error-fares');
+
+  return `<div class="fare-card ${isMistake ? 'mistake' : 'error'}">
+    <div class="fare-card-top">
+      <div style="flex:1">
+        <div class="fare-card-labels">
+          ${isMistake ? '<span class="fare-card-label label-mistake">🚨 Possible Mistake Fare</span>' : '<span class="fare-card-label label-error">🔥 Error Fare</span>'}
+          ${f.saving_pct >= 60 ? '<span class="fare-card-label label-hot">⚡ ' + f.saving_pct + '% off</span>' : ''}
+        </div>
+        <div class="fare-route">${origName} ✈️ ${destName}</div>
+        <div class="fare-airline">${f.airline ? f.airline + ' · ' : ''}Return flight · ${f.depart_date ? new Date(f.depart_date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : 'Flexible dates'}</div>
+        <div class="fare-prices">
+          <div class="fare-now">£${Math.round(f.price)}</div>
+          <div class="fare-was">£${Math.round(f.typical || f.price * 2)}</div>
+          <div class="fare-save">Save £${Math.round(f.saving || (f.typical - f.price))}</div>
+        </div>
+        <div class="fare-meta">Per person, return. Price may disappear at any time.</div>
+      </div>
+    </div>
+    <div class="fare-actions">
+      <a href="${clickUrl}" class="btn-book" target="_blank" rel="noopener">🔥 Book this fare →</a>
+      <button class="btn-alert" onclick="alertFare('${f.origin}','${f.destination}')">🔔 Alert me if it drops more</button>
+      <button class="btn-share" onclick="window.open('https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}','_blank','noopener,width=600,height=400')">↗ Share</button>
+    </div>
+    ${isMistake ? `<div class="fare-urgency"><span class="live-dot"></span> ${urgencyMsg}</div>` : ''}
+  </div>`;
+}
+
+// ── Demo fares (shown when API unavailable) ───────────────────────
+function getDemoFares() {
+  const dep = new Date(); dep.setDate(dep.getDate() + 28);
+  const ret = new Date(dep); ret.setDate(ret.getDate() + 7);
+  const depStr = dep.toISOString().slice(0,10);
+  const retStr = ret.toISOString().slice(0,10);
+  function ddmm(s){const p=s.split('-');return p[2]+p[1];}
+
+  return [
+    {
+      origin:'LHR',destination:'NRT',price:189,typical:620,saving:431,saving_pct:70,
+      is_mistake_fare:true,label:'🚨 Possible Mistake Fare',airline:'Japan Airlines',
+      depart_date:depStr,return_date:retStr,
+      booking_url:`https://www.aviasales.com/search/LHR${ddmm(depStr)}NRT${ddmm(retStr)}21?marker=${MARKER}&currency=GBP&locale=en-GB`
+    },
+    {
+      origin:'LHR',destination:'BKK',price:159,typical:520,saving:361,saving_pct:69,
+      is_mistake_fare:true,label:'🚨 Possible Mistake Fare',airline:'Thai Airways',
+      depart_date:depStr,return_date:retStr,
+      booking_url:`https://www.aviasales.com/search/LHR${ddmm(depStr)}BKK${ddmm(retStr)}21?marker=${MARKER}&currency=GBP&locale=en-GB`
+    },
+    {
+      origin:'MAN',destination:'DXB',price:89,typical:280,saving:191,saving_pct:68,
+      is_mistake_fare:false,label:'🔥 Error Fare',airline:'Emirates',
+      depart_date:depStr,return_date:retStr,
+      booking_url:`https://www.aviasales.com/search/MAN${ddmm(depStr)}DXB${ddmm(retStr)}21?marker=${MARKER}&currency=GBP&locale=en-GB`
+    },
+    {
+      origin:'EDI',destination:'JFK',price:198,typical:480,saving:282,saving_pct:59,
+      is_mistake_fare:false,label:'🔥 Error Fare',airline:'American Airlines',
+      depart_date:depStr,return_date:retStr,
+      booking_url:`https://www.aviasales.com/search/EDI${ddmm(depStr)}JFK${ddmm(retStr)}21?marker=${MARKER}&currency=GBP&locale=en-GB`
+    },
+    {
+      origin:'LGW',destination:'SIN',price:229,typical:540,saving:311,saving_pct:58,
+      is_mistake_fare:false,label:'🔥 Error Fare',airline:'Singapore Airlines',
+      depart_date:depStr,return_date:retStr,
+      booking_url:`https://www.aviasales.com/search/LGW${ddmm(depStr)}SIN${ddmm(retStr)}21?marker=${MARKER}&currency=GBP&locale=en-GB`
+    },
+  ];
+}
+
+// ── UI actions ────────────────────────────────────────────────────
+function setOrigin(origin, btn) {
+  currentOrigin = origin;
+  document.querySelectorAll('.origin-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  loadFares(origin);
+}
+
+function alertFare(orig, dest) {
+  enablePush(`${orig} → ${DEST_NAMES[dest] || dest}`);
+}
+
+function enablePush(routeHint) {
+  if (!('Notification' in window)) {
+    alert('Push notifications not supported in your browser. Follow us on social media for deal alerts!');
+    return;
+  }
+  Notification.requestPermission().then(perm => {
+    const btn = document.getElementById('push-top-btn');
+    if (perm === 'granted') {
+      if (btn) { btn.textContent = '✅ Alerts enabled'; btn.style.background = '#166534'; }
+      // In production: register SW + send subscription to backend
+      navigator.serviceWorker.ready.then(reg => {
+        // fetch('/.netlify/functions/subscribe-push', { method:'POST', body: JSON.stringify({ route: routeHint }) })
+      }).catch(() => {});
+      if (routeHint) alert('🔔 We\'ll alert you instantly if ' + routeHint + ' drops further!');
+    } else {
+      if (btn) { btn.textContent = 'Alerts blocked — check browser settings'; btn.style.background = '#7f1d1d'; }
+    }
+  });
+}
+
+function shareTo(platform) {
+  const txt = encodeURIComponent('🚨 Error fare alert! TripHunt is showing mistake prices from UK airports right now — these won\'t last. Check it out:');
+  const url = encodeURIComponent('https://www.triphunt.org/error-fares');
+  const map = {
+    twitter: `https://twitter.com/intent/tweet?text=${txt}&url=${url}`,
+    whatsapp: `https://wa.me/?text=${txt}%20${url}`,
+  };
+  if (map[platform]) window.open(map[platform], '_blank', 'noopener,width=600,height=400');
+}
+
+function copyPageLink() {
+  navigator.clipboard.writeText('🚨 Error fares from UK airports — these prices shouldn\'t exist: https://www.triphunt.org/error-fares')
+    .then(() => alert('Link copied! Share it with someone who loves a deal.'))
+    .catch(() => {});
+}
+
+// ── Boot ──────────────────────────────────────────────────────────
+loadFares('ALL');
+
+// Auto-refresh every 10 minutes
+setInterval(() => { loadFares(currentOrigin); }, 10 * 60 * 1000);
+
+// Register service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>

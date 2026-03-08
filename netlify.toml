@@ -1,3 +1,7 @@
+# ════════════════════════════════════════════════════════════════
+# TripHunt — netlify.toml
+# ════════════════════════════════════════════════════════════════
+
 [build]
   publish   = "."
   functions = "netlify/functions"
@@ -6,71 +10,212 @@
 [build.processing]
   skip_processing = true
 
+# ── Function bundler ────────────────────────────────────────────
 [functions]
   node_bundler = "esbuild"
 
+# ── Scheduled functions ─────────────────────────────────────────
 [functions.checkPriceAlerts]
   schedule = "0 7 * * *"
 
-# ── SEO programmatic pages ─────────────────────────────────────
+[functions.sendWeeklyDigest]
+  schedule = "0 8 * * 1"
+
+[functions.dealRadar]
+  schedule = "0 */2 * * *"
+
+# ── Edge Functions (dynamic flight pages) ──────────────────────
+[[edge_functions]]
+  path     = "/flights/*"
+  function = "flightPage"
+
+[[edge_functions]]
+  path     = "/city-flights/*"
+  function = "flightPage"
+
+# ── SEO page redirects ──────────────────────────────────────────
 [[redirects]]
-  from  = "/flights/:route"
-  to    = "/seo-pages/flights/:route/index.html"
+  from   = "/flights/"
+  to     = "/seo-pages/flights/index.html"
   status = 200
 
 [[redirects]]
-  from  = "/flights/"
-  to    = "/seo-pages/flights/index.html"
+  from   = "/flights/:splat"
+  to     = "/seo-pages/flights/:splat/index.html"
   status = 200
 
 [[redirects]]
-  from  = "/cheap-flights-to/:dest"
-  to    = "/seo-pages/cheap-flights-to/:dest/index.html"
+  from   = "/cheap-flights-to/:dest"
+  to     = "/seo-pages/cheap-flights-to/:dest/index.html"
   status = 200
 
 [[redirects]]
-  from  = "/flights-from/:origin"
-  to    = "/seo-pages/flights-from/:origin/index.html"
+  from   = "/cheap-flights/from/:origin/:bracket"
+  to     = "/seo-pages/cheap-flights/from/:origin/:bracket/index.html"
   status = 200
 
 [[redirects]]
-  from  = "/airports/:ap"
-  to    = "/seo-pages/airports/:ap/index.html"
+  from   = "/flights-from/:origin"
+  to     = "/seo-pages/flights-from/:origin/index.html"
   status = 200
 
 [[redirects]]
-  from  = "/airports/"
-  to    = "/seo-pages/airports/index.html"
+  from   = "/airports/"
+  to     = "/seo-pages/airports/index.html"
   status = 200
 
 [[redirects]]
-  from  = "/destinations/:dest"
-  to    = "/seo-pages/destinations/:dest/index.html"
+  from   = "/airports/:ap"
+  to     = "/seo-pages/airports/:ap/index.html"
   status = 200
 
 [[redirects]]
-  from  = "/destinations/"
-  to    = "/seo-pages/destinations/index.html"
+  from   = "/destinations/"
+  to     = "/seo-pages/destinations/index.html"
   status = 200
 
-# ── Main SPA (must be last) ────────────────────────────────────
 [[redirects]]
-  from  = "/*"
-  to    = "/index.html"
+  from   = "/destinations/:dest"
+  to     = "/seo-pages/destinations/:dest/index.html"
   status = 200
 
-# ── Headers ────────────────────────────────────────────────────
+[[redirects]]
+  from   = "/best-time-to-visit/:dest"
+  to     = "/seo-pages/best-time-to-visit/:dest/index.html"
+  status = 200
+
+[[redirects]]
+  from   = "/weekend-trips/"
+  to     = "/seo-pages/weekend-trips/index.html"
+  status = 200
+
+[[redirects]]
+  from   = "/weekend-trips/:origin"
+  to     = "/seo-pages/weekend-trips/:origin/index.html"
+  status = 200
+
+[[redirects]]
+  from   = "/city-flights/:route"
+  to     = "/seo-pages/city-flights/:route/index.html"
+  status = 200
+
+[[redirects]]
+  from   = "/compare/:comparison"
+  to     = "/seo-pages/compare/:comparison/index.html"
+  status = 200
+
+# ── Deal page (serverless rendered) ────────────────────────────
+[[redirects]]
+  from   = "/deal/:slug"
+  to     = "/.netlify/functions/getDealPage"
+  status = 200
+
+# ── App pages ───────────────────────────────────────────────────
+[[redirects]]
+  from   = "/deal-of-the-day"
+  to     = "/deal-of-the-day.html"
+  status = 200
+
+[[redirects]]
+  from   = "/deal-card-generator"
+  to     = "/deal-card-generator.html"
+  status = 200
+
+[[redirects]]
+  from   = "/trending"
+  to     = "/trending.html"
+  status = 200
+
+[[redirects]]
+  from   = "/price-calendar"
+  to     = "/price-calendar.html"
+  status = 200
+
+[[redirects]]
+  from   = "/error-fares"
+  to     = "/error-fares.html"
+  status = 200
+
+[[redirects]]
+  from   = "/share"
+  to     = "/share.html"
+  status = 200
+
+[[redirects]]
+  from   = "/refer"
+  to     = "/share.html"
+  status = 200
+
+[[redirects]]
+  from   = "/invite"
+  to     = "/share.html"
+  status = 200
+
+[[redirects]]
+  from   = "/upsell"
+  to     = "/upsell.html"
+  status = 200
+
+[[redirects]]
+  from   = "/deals"
+  to     = "/deals.html"
+  status = 200
+
+[[redirects]]
+  from   = "/account"
+  to     = "/account.html"
+  status = 200
+
+[[redirects]]
+  from   = "/login"
+  to     = "/account.html"
+  status = 200
+
+[[redirects]]
+  from   = "/signup"
+  to     = "/account.html"
+  status = 200
+
+[[redirects]]
+  from   = "/inspire"
+  to     = "/inspire.html"
+  status = 200
+
+[[redirects]]
+  from   = "/unsubscribe"
+  to     = "/index.html"
+  status = 200
+
+# ── Catch-all SPA fallback (must be last) ──────────────────────
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
+
+# ── Headers ─────────────────────────────────────────────────────
 [[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options        = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy        = "strict-origin-when-cross-origin"
+    Permissions-Policy     = "geolocation=(self)"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
   for = "/seo-pages/*"
   [headers.values]
-    Cache-Control = "public, max-age=86400, stale-while-revalidate=43200"
+    Cache-Control = "public, s-maxage=86400, stale-while-revalidate=604800"
+    X-Robots-Tag  = "index, follow"
 
 [[headers]]
   for = "/.netlify/functions/*"
@@ -81,4 +226,5 @@
 [[headers]]
   for = "/sitemap*.xml"
   [headers.values]
+    Content-Type  = "application/xml; charset=utf-8"
     Cache-Control = "public, max-age=3600"

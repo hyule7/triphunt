@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deal of the Day — Best UK Flight Deals Today | TripHunt</title>
+<meta name="description" content="Today's best flight deal from UK airports. Updated daily with the cheapest return flights from London, Manchester, Edinburgh and more.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://triphunt.org/deal-of-the-day">
+<meta property="og:title" content="Deal of the Day — TripHunt">
+<meta property="og:description" content="Today's best flight deal from UK airports, updated daily.">
+<meta property="og:url" content="https://triphunt.org/deal-of-the-day">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,wght@0,700;0,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0a0f1e; --navy1:#0e1528; --navy2:#141d35; --navy3:#1a2442; --navy4:#243058;
+  --border:rgba(255,255,255,.08); --border2:rgba(255,255,255,.12);
+  --acc:#2563eb; --acc2:#3b82f6; --acc3:#60a5fa;
+  --grn:#10b981; --amber:#f59e0b; --red:#ef4444;
+  --txt:#f0f4ff; --txt2:#8b9cbf; --txt3:#4a5878;
+  --r8:8px; --r12:12px; --r16:16px; --r99:9999px; --max:1240px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--txt);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+.container{max-width:var(--max);margin:0 auto;padding:0 20px;}
+
+/* Nav */
+.site-nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:8px;padding:0 24px;height:56px;background:rgba(10,15,30,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Fraunces',Georgia,serif;font-size:20px;font-weight:900;color:var(--txt);text-decoration:none;letter-spacing:-.5px;display:flex;align-items:center;gap:6px;}
+.nav-links{display:flex;gap:4px;margin-left:8px;}
+.nav-link{background:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;color:var(--txt2);padding:6px 12px;border-radius:var(--r99);text-decoration:none;transition:all .2s;}
+.nav-link:hover,.nav-link.active{color:var(--txt);background:var(--navy3);}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+
+/* Live badge */
+.live-badge{display:flex;align-items:center;gap:5px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);color:var(--grn);font-size:11px;font-weight:700;padding:4px 10px;border-radius:var(--r99);letter-spacing:.3px;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--grn);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+/* Hero */
+.hero{padding:60px 20px 40px;text-align:center;background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 50%,var(--navy) 100%);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(37,99,235,.15),transparent);pointer-events:none;}
+.hero-eyebrow{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--acc3);margin-bottom:12px;}
+.hero h1{font-family:'Fraunces',Georgia,serif;font-size:clamp(36px,6vw,60px);font-weight:900;line-height:1.05;margin-bottom:12px;}
+.hero h1 span{color:var(--acc3);font-style:italic;}
+.hero-sub{font-size:16px;color:var(--txt2);max-width:480px;margin:0 auto 16px;}
+.hero-date{font-size:13px;color:var(--txt3);}
+
+/* Origin tabs */
+.origin-tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:28px 0 0;}
+.origin-tab{padding:8px 18px;border:1px solid var(--border2);border-radius:var(--r99);background:none;color:var(--txt2);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif;}
+.origin-tab:hover{color:var(--txt);border-color:var(--txt3);}
+.origin-tab.active{background:var(--acc);color:#fff;border-color:var(--acc);}
+
+/* Hero deal card */
+.hero-deal-wrap{padding:40px 20px;}
+.hero-deal{max-width:680px;margin:0 auto;background:linear-gradient(135deg,var(--navy2),var(--navy3));border:1px solid var(--border2);border-radius:24px;padding:36px;position:relative;overflow:hidden;box-shadow:0 16px 64px rgba(0,0,0,.5);}
+.hero-deal::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(37,99,235,.2),transparent 70%);pointer-events:none;}
+.hero-deal-grade{display:inline-flex;align-items:center;gap:6px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:var(--amber);font-size:12px;font-weight:700;padding:5px 12px;border-radius:var(--r99);margin-bottom:16px;}
+.hero-deal-route{display:flex;align-items:center;gap:16px;margin-bottom:8px;}
+.hero-deal-city{font-family:'Fraunces',Georgia,serif;font-size:clamp(28px,5vw,42px);font-weight:900;line-height:1;}
+.hero-deal-arrow{font-size:24px;color:var(--txt3);}
+.hero-deal-meta{font-size:13px;color:var(--txt2);margin-bottom:24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.meta-chip{background:var(--navy4);padding:3px 10px;border-radius:var(--r99);font-size:12px;}
+.hero-deal-price-row{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;}
+.hero-deal-price{font-family:'Fraunces',Georgia,serif;font-size:clamp(48px,8vw,72px);font-weight:900;color:var(--txt);line-height:1;}
+.hero-deal-pp{font-size:14px;color:var(--txt2);margin-bottom:12px;}
+.hero-deal-saving{font-size:13px;color:var(--grn);font-weight:600;}
+.btn-book-hero{background:var(--acc);color:#fff;border:none;border-radius:var(--r12);padding:16px 32px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;text-decoration:none;display:inline-block;transition:all .15s;white-space:nowrap;}
+.btn-book-hero:hover{background:var(--acc2);transform:translateY(-1px);}
+
+/* Skeleton */
+.skeleton{background:linear-gradient(90deg,var(--navy2) 25%,var(--navy3) 50%,var(--navy2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.skel-hero{height:260px;border-radius:24px;}
+
+/* More deals */
+.section{padding:48px 0;}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:8px;}
+.section-title{font-family:'Fraunces',Georgia,serif;font-size:26px;font-weight:900;}
+.section-link{font-size:13px;color:var(--acc3);text-decoration:none;font-weight:600;}
+.section-link:hover{text-decoration:underline;}
+.deals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+
+/* Deal card */
+.deal-card{background:var(--navy1);border:1px solid var(--border);border-radius:var(--r16);padding:20px;transition:all .2s;position:relative;overflow:hidden;}
+.deal-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.4);}
+.deal-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+.deal-route{font-weight:700;font-size:16px;}
+.deal-route span{color:var(--txt2);font-weight:400;font-size:14px;}
+.deal-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:var(--r99);}
+.badge-exceptional{background:rgba(239,68,68,.15);color:#f87171;}
+.badge-great{background:rgba(245,158,11,.12);color:var(--amber);}
+.badge-good{background:rgba(16,185,129,.1);color:var(--grn);}
+.badge-fair{background:var(--navy3);color:var(--txt2);}
+.deal-meta{font-size:12px;color:var(--txt2);margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;}
+.deal-price-row{display:flex;align-items:center;justify-content:space-between;}
+.deal-price{font-size:28px;font-weight:800;}
+.btn-deal{background:var(--acc);color:#fff;border:none;border-radius:var(--r8);padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;text-decoration:none;display:inline-block;transition:background .15s;}
+.btn-deal:hover{background:var(--acc2);}
+
+/* Subscribe section */
+.subscribe-section{background:var(--navy1);border:1px solid var(--border2);border-radius:24px;padding:48px 40px;text-align:center;margin:48px 0;}
+.subscribe-section h2{font-family:'Fraunces',Georgia,serif;font-size:clamp(24px,4vw,36px);font-weight:900;margin-bottom:10px;}
+.subscribe-section p{color:var(--txt2);font-size:15px;margin-bottom:28px;max-width:420px;margin-left:auto;margin-right:auto;}
+.subscribe-form{display:flex;gap:10px;max-width:440px;margin:0 auto;flex-wrap:wrap;}
+.subscribe-input{flex:1;min-width:200px;background:var(--navy2);border:1px solid var(--border2);border-radius:var(--r8);padding:12px 16px;color:var(--txt);font-size:14px;font-family:'Outfit',sans-serif;}
+.subscribe-input:focus{outline:none;border-color:var(--acc);}
+.subscribe-input::placeholder{color:var(--txt3);}
+.btn-subscribe{background:var(--acc);color:#fff;border:none;border-radius:var(--r8);padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;transition:background .15s;}
+.btn-subscribe:hover{background:var(--acc2);}
+.subscribe-msg{margin-top:12px;font-size:13px;font-weight:600;}
+.subscribe-msg.success{color:var(--grn);}
+.subscribe-msg.error{color:var(--red);}
+
+/* Share section */
+.share-section{margin:48px 0;}
+.share-title{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:900;margin-bottom:16px;}
+.share-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.share-card{background:var(--navy2);border:1px solid var(--border);border-radius:var(--r12);padding:16px;cursor:pointer;transition:all .15s;text-align:left;}
+.share-card:hover{border-color:var(--border2);background:var(--navy3);}
+.share-card-icon{font-size:20px;margin-bottom:8px;}
+.share-card-title{font-size:14px;font-weight:700;}
+.share-card-sub{font-size:12px;color:var(--txt2);}
+
+/* SEO content */
+.seo-section{padding:48px 0;border-top:1px solid var(--border);}
+.seo-section h2{font-family:'Fraunces',Georgia,serif;font-size:24px;font-weight:900;margin-bottom:16px;}
+.seo-section p{color:var(--txt2);font-size:14px;line-height:1.7;margin-bottom:12px;max-width:720px;}
+
+/* Footer */
+footer{border-top:1px solid var(--border);padding:40px 0;text-align:center;}
+.footer-logo{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:900;color:var(--txt);margin-bottom:8px;}
+.footer-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:12px;}
+.footer-links a{font-size:13px;color:var(--txt2);text-decoration:none;}
+.footer-links a:hover{color:var(--txt);}
+.footer-copy{font-size:12px;color:var(--txt3);}
+
+@media(max-width:640px){
+  .hero-deal{padding:24px;}
+  .subscribe-section{padding:32px 20px;}
+  .hero-deal-route{gap:8px;}
+}
+</style>
+<script src="/js/shared.js" defer></script>
+<script src="/js/analytics.js" defer></script>
+<script src="/js/deal-score.js" defer></script>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="site-nav">
+  <a href="/" class="nav-logo">✈ TripHunt</a>
+  <div class="nav-links">
+    <a href="/search.html" class="nav-link">Flights</a>
+    <a href="/packages.html" class="nav-link">Packages</a>
+    <a href="/error-fares.html" class="nav-link">🚨 Error Fares</a>
+    <a href="/deal-of-the-day.html" class="nav-link active">Deal of the Day</a>
+  </div>
+  <div class="nav-right">
+    <span class="live-badge"><span class="live-dot"></span>Live Prices</span>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">Updated Daily</div>
+    <h1>Deal of the <span>Day</span></h1>
+    <p class="hero-sub">The single best flight deal we've found today — updated every morning.</p>
+    <p class="hero-date" id="todayDate"></p>
+    <div class="origin-tabs" id="originTabs">
+      <button class="origin-tab active" data-origin="LHR">London</button>
+      <button class="origin-tab" data-origin="MAN">Manchester</button>
+      <button class="origin-tab" data-origin="EDI">Edinburgh</button>
+      <button class="origin-tab" data-origin="LGW">Gatwick</button>
+      <button class="origin-tab" data-origin="BHX">Birmingham</button>
+      <button class="origin-tab" data-origin="BRS">Bristol</button>
+    </div>
+  </div>
+</section>
+
+<!-- Hero deal -->
+<div class="hero-deal-wrap">
+  <div id="heroDealContainer">
+    <div class="hero-deal">
+      <div class="skeleton skel-hero"></div>
+    </div>
+  </div>
+</div>
+
+<!-- More deals -->
+<div class="container">
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title" id="moreDealsTitle">More deals from London</h2>
+      <a href="/search.html" class="section-link">Search all flights →</a>
+    </div>
+    <div class="deals-grid" id="moreDealsGrid">
+      ${Array(5).fill('<div class="deal-card"><div class="skeleton" style="height:120px"></div></div>').join('')}
+    </div>
+  </section>
+
+  <!-- Subscribe -->
+  <div class="subscribe-section">
+    <h2>Never miss a deal ✈</h2>
+    <p>Get the best flight deals from your nearest airport delivered every Monday morning.</p>
+    <div class="subscribe-form">
+      <input type="email" class="subscribe-input" id="subEmail" placeholder="your@email.com">
+      <button class="btn-subscribe" onclick="handleSubscribe()">Alert Me</button>
+    </div>
+    <div class="subscribe-msg" id="subMsg"></div>
+  </div>
+
+  <!-- Share -->
+  <div class="share-section">
+    <div class="share-title">Share this deal 📢</div>
+    <div class="share-grid">
+      <div class="share-card" onclick="shareTwitter()">
+        <div class="share-card-icon">𝕏</div>
+        <div class="share-card-title">Post on X / Twitter</div>
+        <div class="share-card-sub">Reach deal hunters instantly</div>
+      </div>
+      <div class="share-card" onclick="shareWhatsApp()">
+        <div class="share-card-icon">💬</div>
+        <div class="share-card-title">Share on WhatsApp</div>
+        <div class="share-card-sub">Send to your group chat</div>
+      </div>
+      <div class="share-card" onclick="copyLink()">
+        <div class="share-card-icon">🔗</div>
+        <div class="share-card-title">Copy Link</div>
+        <div class="share-card-sub" id="copyLinkSub">Copy page URL</div>
+      </div>
+      <a href="/deal-card-generator.html" class="share-card" style="text-decoration:none;color:inherit;">
+        <div class="share-card-icon">🎨</div>
+        <div class="share-card-title">Create Deal Card</div>
+        <div class="share-card-sub">Make a shareable image</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- SEO content -->
+  <section class="seo-section">
+    <h2>How TripHunt finds the Deal of the Day</h2>
+    <p>Every morning, our system scans thousands of routes from UK airports and scores each fare against the typical price for that route. We look for flights that are at least 25% below the average — that's what earns the "Deal of the Day" label.</p>
+    <p>Prices are sourced live from Aviasales, one of the largest flight search engines in the world. All fares shown are return flights per person, and you book directly with the airline or OTA — TripHunt never charges a booking fee.</p>
+    <p>The deal refreshes daily at 8am UTC. Prices can change quickly, so if you see a deal you like, book soon.</p>
+  </section>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-logo">✈ TripHunt</div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/search.html">Search Flights</a>
+      <a href="/packages.html">Packages</a>
+      <a href="/deal-of-the-day.html">Deal of the Day</a>
+    </div>
+    <p class="footer-copy">© 2025 TripHunt · Prices may vary · Affiliate links earn commission</p>
+  </div>
+</footer>
+
+<script>
+const DEST_NAMES = {
+  BCN:"Barcelona",MAD:"Madrid",LIS:"Lisbon",FCO:"Rome",AMS:"Amsterdam",CDG:"Paris",
+  DXB:"Dubai",AYT:"Antalya",PMI:"Mallorca",TFS:"Tenerife",LPA:"Gran Canaria",
+  FAO:"Faro",ATH:"Athens",PRG:"Prague",VIE:"Vienna",DBV:"Dubrovnik",IST:"Istanbul",
+  ALC:"Alicante",BKK:"Bangkok",DPS:"Bali",NRT:"Tokyo",SIN:"Singapore",
+  KUL:"Kuala Lumpur",HKT:"Phuket",JFK:"New York",LAX:"Los Angeles",MIA:"Miami",
+  SFO:"San Francisco",CPT:"Cape Town",SYD:"Sydney",MEL:"Melbourne",ORD:"Chicago",
+};
+const ORIGIN_NAMES = {
+  LHR:"London Heathrow",LGW:"London Gatwick",MAN:"Manchester",EDI:"Edinburgh",
+  BHX:"Birmingham",BRS:"Bristol",LBA:"Leeds Bradford",NCL:"Newcastle",GLA:"Glasgow",
+};
+const ROUTE_AVG = {
+  BCN:120,MAD:110,LIS:105,FCO:115,AMS:95,CDG:90,DXB:280,AYT:160,
+  PMI:130,TFS:170,LPA:175,FAO:140,ATH:145,PRG:100,VIE:105,DBV:155,
+  IST:190,ALC:135,BKK:520,DPS:590,NRT:620,SIN:480,KUL:450,HKT:540,
+  JFK:380,LAX:420,MIA:390,ORD:400,SFO:430,CPT:520,SYD:780,MEL:800,
+};
+
+let currentOrigin = "LHR";
+let currentDeal   = null;
+let allDeals      = [];
+
+// Set today's date
+document.getElementById("todayDate").textContent =
+  new Date().toLocaleDateString("en-GB", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+
+// Origin tab click
+document.getElementById("originTabs").addEventListener("click", e => {
+  const tab = e.target.closest(".origin-tab");
+  if (!tab) return;
+  document.querySelectorAll(".origin-tab").forEach(t => t.classList.remove("active"));
+  tab.classList.add("active");
+  currentOrigin = tab.dataset.origin;
+  loadDeals(currentOrigin);
+  document.getElementById("moreDealsTitle").textContent = "More deals from " + (ORIGIN_NAMES[currentOrigin] || currentOrigin);
+});
+
+// Load deals
+async function loadDeals(origin) {
+  showSkeleton();
+  try {
+    const res  = await fetch("/.netlify/functions/getDeals?origin=" + origin + "&limit=8");
+    const json = await res.json();
+    if (json.success && json.data && json.data.length) {
+      allDeals = json.data.sort((a, b) => (b.deal_score || 0) - (a.deal_score || 0));
+      currentDeal = allDeals[0];
+      renderHeroDeal(currentDeal);
+      renderMoreDeals(allDeals.slice(1));
+    } else {
+      showError();
+    }
+  } catch(e) {
+    showError();
+  }
+}
+
+function gradeInfo(deal) {
+  const g = deal.deal_grade || "fair";
+  const map = {
+    exceptional: { cls:"badge-exceptional", label:"🔥 Exceptional Deal" },
+    great:       { cls:"badge-great",       label:"🔥 Great Deal"       },
+    good:        { cls:"badge-good",        label:"✓ Good Price"        },
+    fair:        { cls:"badge-fair",        label:"· Fair Price"        },
+    high:        { cls:"badge-fair",        label:"↑ Above Average"     },
+  };
+  return map[g] || map.fair;
+}
+
+function savingText(price, dest) {
+  const avg = ROUTE_AVG[dest];
+  if (!avg) return "";
+  const saving = avg - price;
+  if (saving <= 0) return "";
+  return "~£" + saving + " below typical price";
+}
+
+function renderHeroDeal(deal) {
+  const destName = DEST_NAMES[deal.destination] || deal.destination;
+  const gi       = gradeInfo(deal);
+  const saving   = savingText(deal.price, deal.destination);
+  const dateStr  = deal.depart_date ? new Date(deal.depart_date).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}) : "";
+  const retStr   = deal.return_date ? new Date(deal.return_date).toLocaleDateString("en-GB",{day:"numeric",month:"short"}) : "";
+  const direct   = deal.number_of_changes === 0 ? "Direct" : deal.number_of_changes + " stop";
+
+  document.getElementById("heroDealContainer").innerHTML = `
+    <div class="hero-deal">
+      <div class="hero-deal-grade"><span class="${gi.cls}" style="background:none;padding:0;">${gi.label}</span></div>
+      <div class="hero-deal-route">
+        <div class="hero-deal-city">${currentOrigin}</div>
+        <div class="hero-deal-arrow">→</div>
+        <div class="hero-deal-city">${destName}</div>
+      </div>
+      <div class="hero-deal-meta">
+        ${deal.airline ? '<span class="meta-chip">' + deal.airline + '</span>' : ''}
+        <span class="meta-chip">${direct}</span>
+        ${dateStr ? '<span class="meta-chip">Depart ' + dateStr + '</span>' : ''}
+        ${retStr  ? '<span class="meta-chip">Return ' + retStr  + '</span>' : ''}
+        <span class="meta-chip">Return flight</span>
+      </div>
+      <div class="hero-deal-price-row">
+        <div>
+          <div class="hero-deal-price">£${deal.price}</div>
+          <div class="hero-deal-pp">per person return</div>
+          ${saving ? '<div class="hero-deal-saving">💚 ' + saving + '</div>' : ''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+          <a href="${upsellUrl(deal.booking_url, currentOrigin, deal.destination, deal.price)}" class="btn-book-hero">Book This Deal →</a>
+          <a href="/deal-card-generator.html?origin=${currentOrigin}&dest=${deal.destination}&price=${deal.price}&airline=${encodeURIComponent(deal.airline||'')}" style="font-size:12px;color:var(--txt2);text-decoration:none;">🎨 Create shareable card</a>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderMoreDeals(deals) {
+  if (!deals.length) { document.getElementById("moreDealsGrid").innerHTML = ""; return; }
+  document.getElementById("moreDealsGrid").innerHTML = deals.map(deal => {
+    const destName = DEST_NAMES[deal.destination] || deal.destination;
+    const gi       = gradeInfo(deal);
+    const direct   = deal.number_of_changes === 0 ? "Direct" : deal.number_of_changes + " stop";
+    const dateStr  = deal.depart_date ? new Date(deal.depart_date).toLocaleDateString("en-GB",{day:"numeric",month:"short"}) : "";
+    return `
+    <div class="deal-card">
+      <div class="deal-card-top">
+        <div class="deal-route">${currentOrigin} → ${destName} <span>/ ${deal.destination}</span></div>
+        <span class="deal-badge ${gi.cls}">${gi.label}</span>
+      </div>
+      <div class="deal-meta">
+        ${deal.airline ? '<span>' + deal.airline + '</span>' : ''}
+        <span>${direct}</span>
+        ${dateStr ? '<span>' + dateStr + '</span>' : ''}
+      </div>
+      <div class="deal-price-row">
+        <div class="deal-price">£${deal.price}</div>
+        <a href="${upsellUrl(deal.booking_url, currentOrigin, deal.destination, deal.price)}" class="btn-deal">Book →</a>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+
+  function upsellUrl(bookingUrl, orig, dest, price, typical) {
+    const p = new URLSearchParams({
+      origin:  orig || '',
+      dest:    dest || '',
+      price:   Math.round(price || 0),
+      typical: Math.round(typical || (price || 0) * 1.7),
+      book_url: bookingUrl || '',
+    });
+    return '/upsell.html?' + p.toString();
+  }
+
+  function showSkeleton() {
+  document.getElementById("heroDealContainer").innerHTML = `<div class="hero-deal"><div class="skeleton skel-hero"></div></div>`;
+  document.getElementById("moreDealsGrid").innerHTML = Array(5).fill('<div class="deal-card"><div class="skeleton" style="height:120px"></div></div>').join('');
+}
+
+function showError() {
+  document.getElementById("heroDealContainer").innerHTML = `
+    <div class="hero-deal" style="text-align:center;padding:60px 40px;">
+      <div style="font-size:40px;margin-bottom:12px;">😕</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:8px;">Couldn't load deals right now</div>
+      <div style="color:var(--txt2);font-size:14px;margin-bottom:20px;">Our API may be resting. Try again in a moment.</div>
+      <button onclick="loadDeals(currentOrigin)" style="background:var(--acc);color:#fff;border:none;border-radius:var(--r8);padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;">Retry</button>
+    </div>`;
+}
+
+// Subscribe
+async function handleSubscribe() {
+  const emailEl = document.getElementById("subEmail");
+  const msgEl   = document.getElementById("subMsg");
+  const email   = emailEl.value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    msgEl.textContent = "Please enter a valid email address.";
+    msgEl.className   = "subscribe-msg error";
+    return;
+  }
+  msgEl.textContent = "Signing you up...";
+  msgEl.className   = "subscribe-msg";
+  try {
+    const res  = await fetch("/.netlify/functions/subscribe", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ email, origin: currentOrigin, source: "deal-of-the-day" }),
+    });
+    const json = await res.json();
+    if (json.success) {
+      msgEl.textContent = "✅ " + json.message;
+      msgEl.className   = "subscribe-msg success";
+      emailEl.value     = "";
+    } else {
+      msgEl.textContent = json.error || "Something went wrong.";
+      msgEl.className   = "subscribe-msg error";
+    }
+  } catch(e) {
+    msgEl.textContent = "Network error. Please try again.";
+    msgEl.className   = "subscribe-msg error";
+  }
+}
+
+// Share
+function shareTwitter() {
+  if (!currentDeal) return;
+  const dest  = DEST_NAMES[currentDeal.destination] || currentDeal.destination;
+  const tweet = "🚨 " + currentOrigin + " → " + dest + " from £" + currentDeal.price + " return!\nFound on @TripHuntOrg\n" + window.location.href;
+  window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet), "_blank");
+}
+function shareWhatsApp() {
+  if (!currentDeal) return;
+  const dest = DEST_NAMES[currentDeal.destination] || currentDeal.destination;
+  const msg  = "✈ " + currentOrigin + " → " + dest + " from £" + currentDeal.price + " return! " + window.location.href;
+  window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
+}
+function copyLink() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    document.getElementById("copyLinkSub").textContent = "✅ Copied!";
+    setTimeout(() => { document.getElementById("copyLinkSub").textContent = "Copy page URL"; }, 2000);
+  });
+}
+
+// Init
+loadDeals(currentOrigin);
+</script>
+
+<!-- TripHunt shared: photos · mobile nav · trust -->
+<script src="/js/photos.js"></script>
+<script src="/js/trust.js"></script>
+<script src="/js/mobile-nav.js" data-auto></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if (window.TH && TH.Photos) { TH.Photos.injectAll(); new MutationObserver(function(){ TH.Photos.injectAll(); }).observe(document.body,{childList:true,subtree:true}); }
+  if (window.TH && TH.MobileNav) TH.MobileNav.init({ onRefresh: function(){ window.location.reload(); } });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if (window.injectPressBar) window.injectPressBar();
+  if (window.initPullRefresh) window.initPullRefresh(function(){ window.location.reload(); });
+});
+</script>
+</body>
+</html>

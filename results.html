@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Results | TripHunt</title>
+<meta name="description" content="Compare flight prices for your route. Find the cheapest fare from UK airports.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,wght@0,700;0,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0a0f1e; --navy1:#0e1528; --navy2:#141d35; --navy3:#1a2442; --navy4:#243058;
+  --border:rgba(255,255,255,.08); --border2:rgba(255,255,255,.12);
+  --acc:#2563eb; --acc2:#3b82f6; --acc3:#60a5fa;
+  --grn:#10b981; --red:#ef4444; --yel:#f59e0b;
+  --txt:#f0f4ff; --txt2:#8b9cbf; --txt3:#4a5878;
+  --r8:8px; --r12:12px; --r16:16px; --r99:9999px; --max:1240px;
+}
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Outfit',sans-serif; background:var(--navy); color:var(--txt); font-size:15px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+.container { max-width:var(--max); margin:0 auto; padding:0 20px; }
+
+/* Nav */
+.site-nav { position:sticky; top:0; z-index:200; display:flex; align-items:center; gap:8px; padding:0 24px; height:56px; background:rgba(10,15,30,.92); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+.nav-logo { font-family:'Fraunces',Georgia,serif; font-size:20px; font-weight:900; color:var(--txt); text-decoration:none; letter-spacing:-.5px; display:flex; align-items:center; gap:8px; }
+.nav-links { display:flex; gap:4px; margin-left:8px; }
+.nav-link { background:none; border:none; font-family:'Outfit',sans-serif; font-size:13px; font-weight:500; color:var(--txt2); padding:6px 12px; border-radius:var(--r99); text-decoration:none; transition:all .2s; }
+.nav-link:hover { color:var(--txt); background:var(--navy3); }
+
+/* Results header */
+.results-header { background:var(--navy1); border-bottom:1px solid var(--border); padding:16px 24px; }
+.results-route { font-family:'Fraunces',Georgia,serif; font-size:22px; font-weight:900; }
+.results-meta { font-size:13px; color:var(--txt2); margin-top:4px; }
+.results-best-price { display:inline-block; margin-top:8px; padding:4px 14px; background:rgba(16,185,129,.15); color:var(--grn); border-radius:var(--r99); font-size:13px; font-weight:700; }
+
+/* Sort + filter bar */
+.results-toolbar { display:flex; align-items:center; gap:8px; padding:12px 24px; flex-wrap:wrap; background:var(--navy2); border-bottom:1px solid var(--border); }
+.results-count { font-size:13px; font-weight:700; color:var(--txt2); margin-right:auto; }
+.sort-btn { padding:6px 14px; border:1px solid var(--border); border-radius:var(--r99); background:none; color:var(--txt2); font-size:12px; font-weight:600; cursor:pointer; font-family:'Outfit',sans-serif; transition:all .15s; }
+.sort-btn.active { background:var(--acc); color:#fff; border-color:var(--acc); }
+.sort-btn:hover:not(.active) { background:var(--navy3); color:var(--txt); }
+
+/* Main layout */
+.results-layout { display:flex; gap:20px; padding:20px 24px; max-width:var(--max); margin:0 auto; }
+@media(max-width:768px) { .results-layout { flex-direction:column; padding:12px 14px; } }
+
+/* Sidebar */
+.results-sidebar { width:220px; flex-shrink:0; }
+@media(max-width:768px) { .results-sidebar { width:100%; } }
+.filter-panel { background:var(--navy1); border:1px solid var(--border); border-radius:var(--r12); padding:16px; margin-bottom:14px; }
+.filter-title { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.7px; color:var(--txt3); margin-bottom:10px; }
+.filter-option { display:flex; align-items:center; gap:8px; padding:5px 0; cursor:pointer; font-size:13px; color:var(--txt2); }
+.filter-option input { accent-color:var(--acc); }
+.filter-option:hover { color:var(--txt); }
+
+/* Results main */
+.results-main { flex:1; min-width:0; }
+#th-results-grid { display:flex; flex-direction:column; gap:10px; }
+
+/* Back to search */
+.back-btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; background:var(--navy2); border:1px solid var(--border); border-radius:var(--r99); font-size:12px; font-weight:600; color:var(--txt2); text-decoration:none; transition:all .15s; margin-bottom:16px; cursor:pointer; }
+.back-btn:hover { color:var(--txt); background:var(--navy3); }
+
+/* Modify search bar */
+.modify-bar { background:var(--navy1); border:1px solid var(--border2); border-radius:var(--r12); padding:14px 18px; margin-bottom:16px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.modify-bar-route { font-size:15px; font-weight:700; }
+.modify-bar-btn { padding:7px 16px; background:var(--acc); color:#fff; border:none; border-radius:var(--r8); font-size:13px; font-weight:700; cursor:pointer; font-family:'Outfit',sans-serif; margin-left:auto; text-decoration:none; }
+
+/* Also compare strip */
+.also-compare { background:var(--navy2); border:1px solid var(--border); border-radius:var(--r12); padding:14px; margin-top:20px; }
+.also-compare-title { font-size:12px; font-weight:700; color:var(--txt2); margin-bottom:10px; text-transform:uppercase; letter-spacing:.5px; }
+.compare-links { display:flex; gap:8px; flex-wrap:wrap; }
+.compare-link { padding:8px 14px; border:1px solid var(--border); border-radius:var(--r8); font-size:12px; font-weight:600; color:var(--txt2); text-decoration:none; transition:all .15s; }
+.compare-link:hover { color:var(--txt); border-color:var(--border2); }
+
+/* Footer */
+.site-footer { background:var(--navy1); border-top:1px solid var(--border); padding:24px; text-align:center; color:var(--txt3); font-size:12px; margin-top:40px; }
+</style>
+<script src="/js/shared.js" defer></script>
+<script src="/js/analytics.js" defer></script>
+<script src="/js/deal-score.js" defer></script>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="site-nav">
+  <a class="nav-logo" href="/">✈️ TripHunt</a>
+  <div class="nav-links">
+    <a class="nav-link" href="/search.html">Search</a>
+    <a class="nav-link" href="/packages.html">Packages</a>
+  </div>
+</nav>
+
+<!-- ── RESULTS HEADER ── -->
+<div class="results-header">
+  <div id="th-results-route" class="results-route">Searching flights…</div>
+  <div id="th-results-summary" class="results-meta"></div>
+  <div id="th-best-price" class="results-best-price" style="display:none"></div>
+</div>
+
+<!-- ── TOOLBAR ── -->
+<div class="results-toolbar">
+  <span class="results-count" id="th-results-count">Loading…</span>
+  <button class="sort-btn active" data-sort="price" onclick="sortBy('price',this)">💸 Cheapest</button>
+  <button class="sort-btn" data-sort="deal"   onclick="sortBy('deal',this)">🔥 Best Deal</button>
+  <button class="sort-btn" data-sort="direct" onclick="sortBy('direct',this)">✈ Direct first</button>
+</div>
+
+<!-- ── LAYOUT ── -->
+<div class="results-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="results-sidebar">
+    <a class="back-btn" href="/search.html">← New search</a>
+
+    <div class="filter-panel">
+      <div class="filter-title">Stops</div>
+      <label class="filter-option"><input type="checkbox" id="flt-direct" checked onchange="applyFilters()"> Direct only</label>
+      <label class="filter-option"><input type="checkbox" id="flt-1stop"  checked onchange="applyFilters()"> 1 Stop</label>
+      <label class="filter-option"><input type="checkbox" id="flt-2stop"  checked onchange="applyFilters()"> 2+ Stops</label>
+    </div>
+
+    <div class="filter-panel">
+      <div class="filter-title">Max Price</div>
+      <div style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:8px">£<span id="price-val">2000</span></div>
+      <input type="range" id="price-range" min="50" max="2000" value="2000" step="10" style="width:100%;accent-color:var(--acc)"
+             oninput="document.getElementById('price-val').textContent=this.value;applyFilters()">
+    </div>
+
+    <div class="also-compare">
+      <div class="also-compare-title">Also compare on</div>
+      <div class="compare-links" id="compare-links">
+        <a class="compare-link" id="sky-link"  href="#" target="_blank" rel="noopener">🔵 Skyscanner</a>
+        <a class="compare-link" id="gfl-link"  href="#" target="_blank" rel="noopener">🔴 Google</a>
+        <a class="compare-link" id="kiwi-link" href="#" target="_blank" rel="noopener">🟢 Kiwi.com</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RESULTS -->
+  <main class="results-main">
+    <div class="modify-bar">
+      <div>
+        <div class="modify-bar-route" id="modify-route">–</div>
+        <div style="font-size:12px;color:var(--txt2)" id="modify-dates">–</div>
+      </div>
+      <a class="modify-bar-btn" href="/search.html">Modify search</a>
+    </div>
+
+    <div id="th-results-grid"></div>
+  </main>
+</div>
+
+<footer class="site-footer">
+  TripHunt compares fares from 100+ airlines. Prices in GBP. We earn affiliate commission when you book — you pay the same as booking direct.
+</footer>
+
+<script>
+// ── Update page titles from URL params ──────────────────────────
+(function() {
+  const DEST_NAMES = {
+    BCN:"Barcelona",MAD:"Madrid",LIS:"Lisbon",FCO:"Rome",AMS:"Amsterdam",
+    ATH:"Athens",PRG:"Prague",VIE:"Vienna",DXB:"Dubai",AYT:"Antalya",PMI:"Palma",
+    TFS:"Tenerife",LPA:"Gran Canaria",FAO:"Faro",JFK:"New York",LAX:"Los Angeles",
+    BKK:"Bangkok",NRT:"Tokyo",SIN:"Singapore",DBV:"Dubrovnik",IST:"Istanbul",
+    AGP:"Malaga",ALC:"Alicante",LHR:"London",LGW:"London",MAN:"Manchester",EDI:"Edinburgh",
+  };
+  const p    = new URLSearchParams(window.location.search);
+  const orig = p.get("origin") || "LHR";
+  const dest = p.get("destination") || "";
+  const dep  = p.get("depart_date") || "";
+  const ret  = p.get("return_date")  || "";
+  const adults = p.get("adults") || "2";
+
+  const origName = DEST_NAMES[orig] || orig;
+  const destName = dest ? (DEST_NAMES[dest] || dest) : "Anywhere";
+
+  const routeEl   = document.getElementById("th-results-route");
+  const modRoute  = document.getElementById("modify-route");
+  const modDates  = document.getElementById("modify-dates");
+  const bestPrice = document.getElementById("th-best-price");
+
+  if (routeEl)  routeEl.textContent  = origName + " → " + destName;
+  if (modRoute) modRoute.textContent = origName + " → " + destName;
+  document.title = origName + " → " + destName + " Flights | TripHunt";
+
+  const depStr = dep ? new Date(dep).toLocaleDateString("en-GB", {day:"numeric",month:"short",year:"numeric"}) : "";
+  const retStr = ret ? new Date(ret).toLocaleDateString("en-GB", {day:"numeric",month:"short"}) : "";
+  const datesText = [depStr, retStr].filter(Boolean).join(" → ") + (adults > 1 ? " · " + adults + " adults" : "");
+  if (modDates) modDates.textContent = datesText;
+
+  // Build comparison links
+  function yymmdd(s) { if(!s) return""; const p=s.slice(0,10).split("-"); return p.length===3?p[0].slice(2)+p[1]+p[2]:""; }
+  const skyUrl  = `https://www.skyscanner.net/transport/flights/${orig.toLowerCase()}/${(dest||"").toLowerCase()}/${yymmdd(dep)}/${yymmdd(ret)}/?adults=${adults}&currency=GBP`;
+  const gflUrl  = `https://www.google.com/flights?hl=en#flt=${orig}.${dest}.${dep}*${dest}.${orig}.${ret};c:GBP;e:1;sc:b;sd:1;t:f`;
+  const kiwiUrl = `https://www.kiwi.com/en/search/results/${orig.toLowerCase()}/${(dest||"").toLowerCase()}/${dep}/${ret}`;
+  const skyLink  = document.getElementById("sky-link");
+  const gflLink  = document.getElementById("gfl-link");
+  const kiwiLink = document.getElementById("kiwi-link");
+  if (skyLink)  skyLink.href  = skyUrl;
+  if (gflLink)  gflLink.href  = gflUrl;
+  if (kiwiLink) kiwiLink.href = kiwiUrl;
+})();
+
+// ── Filter + sort ────────────────────────────────────────────────
+let _allFlights = [];
+function sortBy(mode, btn) {
+  document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
+  if(btn) btn.classList.add("active");
+  renderFiltered(mode);
+}
+function applyFilters() { renderFiltered(); }
+
+function renderFiltered(sortMode) {
+  const grid      = document.getElementById("th-results-grid");
+  const countEl   = document.getElementById("th-results-count");
+  const maxPrice  = parseInt(document.getElementById("price-range")?.value) || 99999;
+  const wantDirect = document.getElementById("flt-direct")?.checked;
+  const want1Stop  = document.getElementById("flt-1stop")?.checked;
+  const want2Stop  = document.getElementById("flt-2stop")?.checked;
+
+  let filtered = _allFlights.filter(f => {
+    if (f.price > maxPrice) return false;
+    const stops = f.number_of_changes ?? 0;
+    if (stops === 0 && !wantDirect) return false;
+    if (stops === 1 && !want1Stop)  return false;
+    if (stops >= 2 && !want2Stop)   return false;
+    return true;
+  });
+
+  const mode = sortMode || document.querySelector(".sort-btn.active")?.dataset.sort || "price";
+  if (mode === "price")  filtered.sort((a,b) => a.price - b.price);
+  if (mode === "deal")   filtered.sort((a,b) => (b.deal_score||0) - (a.deal_score||0));
+  if (mode === "direct") filtered.sort((a,b) => (a.number_of_changes??0) - (b.number_of_changes??0));
+
+  if (countEl) countEl.textContent = filtered.length + " result" + (filtered.length !== 1 ? "s" : "");
+
+  const params = Object.fromEntries(new URLSearchParams(window.location.search));
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div style="text-align:center;padding:40px;color:var(--txt2)">No flights match your filters. Try widening your search.</div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map((f, i) => TH_RESULTS.buildResultCard ? TH_RESULTS.buildResultCard(f, params, i === 0) : "").join("");
+}
+
+// Hook into results loader to store data
+const _origLoad = window.TH_RESULTS;
+</script>
+
+<!-- Shared JS -->
+<script src="/js/ui.js"></script>
+<script src="/js/results.js"></script>
+
+<script>
+// After results.js loads, patch it to store flights for filtering
+const _origLoadResults = TH_RESULTS.loadResults;
+
+// Make buildResultCard globally accessible for re-rendering
+document.addEventListener("DOMContentLoaded", function() {
+  // Override grid render to store data
+  const origFetch = window.fetch;
+  // Results.js handles everything via DOMContentLoaded
+  // Filter controls hook into _allFlights which results.js should populate
+
+  // Patch: after results.js runs and populates grid, store data
+  // This is done via results.js calling window._storeResults
+  window._storeResults = function(flights, params) {
+    _allFlights = flights;
+    const bestPrice = document.getElementById("th-best-price");
+    if (bestPrice && flights.length) {
+      bestPrice.textContent = "Best price: £" + Math.round(flights[0].price);
+      bestPrice.style.display = "";
+    }
+  };
+});
+</script>
+
+
+<!-- TripHunt shared: photos · mobile nav · trust -->
+<script src="/js/photos.js"></script>
+<script src="/js/trust.js"></script>
+<script src="/js/mobile-nav.js" data-auto></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if (window.TH && TH.Photos) { TH.Photos.injectAll(); new MutationObserver(function(){ TH.Photos.injectAll(); }).observe(document.body,{childList:true,subtree:true}); }
+  if (window.TH && TH.MobileNav) TH.MobileNav.init({ onRefresh: function(){ window.location.reload(); } });
+});
+</script>
+<script src="/js/push.js" defer></script>
+</body>
+</html>

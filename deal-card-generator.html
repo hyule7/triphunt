@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deal Card Generator — TripHunt</title>
+<meta name="description" content="Create shareable flight deal images for social media. Perfect for X, Instagram, WhatsApp and TikTok.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,wght@0,700;0,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0a0f1e; --navy1:#0e1528; --navy2:#141d35; --navy3:#1a2442; --navy4:#243058;
+  --border:rgba(255,255,255,.08); --border2:rgba(255,255,255,.12);
+  --acc:#2563eb; --acc2:#3b82f6; --acc3:#60a5fa;
+  --grn:#10b981; --amber:#f59e0b;
+  --txt:#f0f4ff; --txt2:#8b9cbf; --txt3:#4a5878;
+  --r8:8px; --r12:12px; --r16:16px; --r99:9999px; --max:1240px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--txt);font-size:15px;-webkit-font-smoothing:antialiased;}
+.container{max-width:var(--max);margin:0 auto;padding:0 20px;}
+
+/* Nav */
+.site-nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:8px;padding:0 24px;height:56px;background:rgba(10,15,30,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Fraunces',Georgia,serif;font-size:20px;font-weight:900;color:var(--txt);text-decoration:none;letter-spacing:-.5px;}
+.nav-links{display:flex;gap:4px;margin-left:8px;}
+.nav-link{font-size:13px;font-weight:500;color:var(--txt2);padding:6px 12px;border-radius:var(--r99);text-decoration:none;transition:all .2s;}
+.nav-link:hover,.nav-link.active{color:var(--txt);background:var(--navy3);}
+
+/* Page layout */
+.page-wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;padding:48px 0;align-items:start;}
+@media(max-width:900px){.page-wrap{grid-template-columns:1fr;}}
+
+/* Controls */
+.controls-panel{background:var(--navy1);border:1px solid var(--border);border-radius:var(--r16);padding:28px;}
+.controls-panel h2{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:900;margin-bottom:24px;}
+.field-group{margin-bottom:18px;}
+.field-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--txt3);margin-bottom:6px;display:block;}
+.field-input,.field-select{width:100%;background:var(--navy2);border:1px solid var(--border);border-radius:var(--r8);padding:10px 12px;color:var(--txt);font-size:14px;font-family:'Outfit',sans-serif;transition:border-color .15s;}
+.field-input:focus,.field-select:focus{outline:none;border-color:var(--acc);}
+.field-input::placeholder{color:var(--txt3);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* Theme buttons */
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px;}
+.theme-btn{height:36px;border-radius:var(--r8);border:2px solid transparent;cursor:pointer;transition:all .15s;position:relative;}
+.theme-btn.active{border-color:#fff;transform:scale(1.05);}
+.theme-btn.active::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:14px;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.8);}
+
+/* Action buttons */
+.btn-row{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;}
+.btn-primary{flex:1;background:var(--acc);color:#fff;border:none;border-radius:var(--r8);padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s;}
+.btn-primary:hover{background:var(--acc2);}
+.btn-secondary{flex:1;background:var(--navy2);color:var(--txt);border:1px solid var(--border2);border-radius:var(--r8);padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s;}
+.btn-secondary:hover{background:var(--navy3);}
+
+/* Preview */
+.preview-panel{position:sticky;top:80px;}
+.preview-panel h2{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:900;margin-bottom:20px;}
+.canvas-wrap{border-radius:var(--r12);overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.6);}
+canvas{display:block;width:100%;height:auto;}
+
+/* Formats */
+.format-tabs{display:flex;gap:8px;margin-bottom:16px;}
+.format-tab{padding:6px 14px;background:var(--navy2);border:1px solid var(--border);border-radius:var(--r99);font-size:12px;font-weight:600;cursor:pointer;color:var(--txt2);transition:all .15s;font-family:'Outfit',sans-serif;}
+.format-tab.active{background:var(--acc);color:#fff;border-color:var(--acc);}
+
+/* Download info */
+.download-info{margin-top:16px;font-size:12px;color:var(--txt3);line-height:1.6;}
+.download-info strong{color:var(--txt2);}
+</style>
+<script src="/js/shared.js" defer></script>
+<script src="/js/analytics.js" defer></script>
+<script src="/js/deal-score.js" defer></script>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="/" class="nav-logo">✈ TripHunt</a>
+  <div class="nav-links">
+    <a href="/search.html" class="nav-link">Flights</a>
+    <a href="/deal-of-the-day.html" class="nav-link">Deal of the Day</a>
+    <a href="/deal-card-generator.html" class="nav-link active">Card Generator</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div style="padding:40px 0 0;">
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--acc3);margin-bottom:8px;">Social Media Tool</div>
+    <h1 style="font-family:'Fraunces',Georgia,serif;font-size:clamp(28px,5vw,44px);font-weight:900;line-height:1.1;margin-bottom:8px;">Deal Card <span style="color:var(--acc3);font-style:italic;">Generator</span></h1>
+    <p style="color:var(--txt2);font-size:15px;max-width:560px;">Create a shareable deal card image for X, Instagram, TikTok or WhatsApp. Paste a deal, download the image, post it.</p>
+  </div>
+
+  <div class="page-wrap">
+    <!-- Controls -->
+    <div class="controls-panel">
+      <h2>Deal Details</h2>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">From (IATA)</label>
+          <input type="text" class="field-input" id="fOrigin" placeholder="LHR" maxlength="3" style="text-transform:uppercase;">
+        </div>
+        <div class="field-group">
+          <label class="field-label">To (IATA or city)</label>
+          <input type="text" class="field-input" id="fDest" placeholder="BCN" maxlength="20">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Price (£)</label>
+          <input type="number" class="field-input" id="fPrice" placeholder="89" min="1" max="9999">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Airline (optional)</label>
+          <input type="text" class="field-input" id="fAirline" placeholder="Vueling">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Depart Date</label>
+          <input type="date" class="field-input" id="fDepart">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Trip Type</label>
+          <select class="field-select" id="fType">
+            <option value="Return">Return</option>
+            <option value="One Way">One Way</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Custom tagline (optional)</label>
+        <input type="text" class="field-input" id="fTagline" placeholder="Book before midnight!" maxlength="60">
+      </div>
+
+      <!-- Theme -->
+      <div class="field-group">
+        <label class="field-label">Theme</label>
+        <div class="theme-grid">
+          <button class="theme-btn active" data-theme="dark" style="background:linear-gradient(135deg,#0a0f1e,#1a2442);" title="Dark"></button>
+          <button class="theme-btn" data-theme="fire" style="background:linear-gradient(135deg,#7c2d12,#dc2626);" title="Fire"></button>
+          <button class="theme-btn" data-theme="ocean" style="background:linear-gradient(135deg,#0c4a6e,#0284c7);" title="Ocean"></button>
+          <button class="theme-btn" data-theme="forest" style="background:linear-gradient(135deg,#14532d,#16a34a);" title="Forest"></button>
+          <button class="theme-btn" data-theme="purple" style="background:linear-gradient(135deg,#4c1d95,#7c3aed);" title="Purple"></button>
+          <button class="theme-btn" data-theme="gold" style="background:linear-gradient(135deg,#78350f,#d97706);" title="Gold"></button>
+        </div>
+      </div>
+
+      <!-- Format tabs -->
+      <div class="field-group">
+        <label class="field-label">Format</label>
+        <div class="format-tabs" id="formatTabs">
+          <button class="format-tab active" data-w="1200" data-h="630">Landscape</button>
+          <button class="format-tab" data-w="1080" data-h="1080">Square</button>
+          <button class="format-tab" data-w="1080" data-h="1920">Story</button>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="downloadCard()">⬇ Download PNG</button>
+        <button class="btn-secondary" onclick="shareCard()">📤 Share</button>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="preview-panel">
+      <h2>Preview</h2>
+      <div class="canvas-wrap">
+        <canvas id="dealCanvas" width="1200" height="630"></canvas>
+      </div>
+      <div class="download-info">
+        <strong>How to use:</strong> Download the image → post on X/Twitter, Instagram Stories, or WhatsApp. Tag <strong>@TripHuntOrg</strong> for a retweet.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DEST_NAMES = {
+  BCN:"Barcelona",MAD:"Madrid",LIS:"Lisbon",FCO:"Rome",AMS:"Amsterdam",CDG:"Paris",
+  DXB:"Dubai",AYT:"Antalya",PMI:"Mallorca",TFS:"Tenerife",LPA:"Gran Canaria",
+  FAO:"Faro",ATH:"Athens",PRG:"Prague",VIE:"Vienna",DBV:"Dubrovnik",IST:"Istanbul",
+  ALC:"Alicante",BKK:"Bangkok",DPS:"Bali",NRT:"Tokyo",SIN:"Singapore",
+  KUL:"Kuala Lumpur",HKT:"Phuket",JFK:"New York",LAX:"Los Angeles",
+  MIA:"Miami",SFO:"San Francisco",CPT:"Cape Town",SYD:"Sydney",MEL:"Melbourne",
+};
+const AIRPORT_NAMES = {
+  LHR:"London",LGW:"London",MAN:"Manchester",EDI:"Edinburgh",
+  BHX:"Birmingham",BRS:"Bristol",LBA:"Leeds",NCL:"Newcastle",GLA:"Glasgow",
+};
+
+const THEMES = {
+  dark:   { bg1:"#0a0f1e", bg2:"#243058", accent:"#2563eb", text:"#f0f4ff", sub:"#8b9cbf", badge:"#2563eb" },
+  fire:   { bg1:"#7c2d12", bg2:"#450a0a", accent:"#ef4444", text:"#fff7ed", sub:"#fcd34d", badge:"#dc2626" },
+  ocean:  { bg1:"#0c4a6e", bg2:"#082f49", accent:"#0ea5e9", text:"#e0f2fe", sub:"#7dd3fc", badge:"#0284c7" },
+  forest: { bg1:"#14532d", bg2:"#052e16", accent:"#16a34a", text:"#f0fdf4", sub:"#86efac", badge:"#15803d" },
+  purple: { bg1:"#4c1d95", bg2:"#2e1065", accent:"#7c3aed", text:"#faf5ff", sub:"#c4b5fd", badge:"#6d28d9" },
+  gold:   { bg1:"#78350f", bg2:"#3b1206", accent:"#d97706", text:"#fffbeb", sub:"#fde68a", badge:"#b45309" },
+};
+
+let currentTheme  = "dark";
+let canvasW       = 1200;
+let canvasH       = 630;
+let currentDeal   = null;
+
+const canvas = document.getElementById("dealCanvas");
+const ctx    = canvas.getContext("2d");
+
+// Read URL params
+const params = new URLSearchParams(window.location.search);
+if (params.get("origin"))  document.getElementById("fOrigin").value  = params.get("origin");
+if (params.get("dest"))    document.getElementById("fDest").value    = params.get("dest");
+if (params.get("price"))   document.getElementById("fPrice").value   = params.get("price");
+if (params.get("airline")) document.getElementById("fAirline").value = decodeURIComponent(params.get("airline"));
+
+// Theme buttons
+document.querySelectorAll(".theme-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".theme-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentTheme = btn.dataset.theme;
+    drawCard();
+  });
+});
+
+// Format tabs
+document.getElementById("formatTabs").addEventListener("click", e => {
+  const tab = e.target.closest(".format-tab");
+  if (!tab) return;
+  document.querySelectorAll(".format-tab").forEach(t => t.classList.remove("active"));
+  tab.classList.add("active");
+  canvasW = parseInt(tab.dataset.w);
+  canvasH = parseInt(tab.dataset.h);
+  canvas.width  = canvasW;
+  canvas.height = canvasH;
+  drawCard();
+});
+
+// Live update on input
+["fOrigin","fDest","fPrice","fAirline","fDepart","fType","fTagline"].forEach(id => {
+  document.getElementById(id).addEventListener("input", drawCard);
+});
+
+function getData() {
+  const origin  = (document.getElementById("fOrigin").value || "LHR").toUpperCase().slice(0,3);
+  const destRaw = document.getElementById("fDest").value.toUpperCase().slice(0,3);
+  const dest    = DEST_NAMES[destRaw] || document.getElementById("fDest").value || "Barcelona";
+  const destCode = destRaw;
+  const price   = parseInt(document.getElementById("fPrice").value) || 89;
+  const airline = document.getElementById("fAirline").value || "";
+  const depart  = document.getElementById("fDepart").value;
+  const tripType = document.getElementById("fType").value;
+  const tagline = document.getElementById("fTagline").value;
+  const fromCity = AIRPORT_NAMES[origin] || origin;
+  return { origin, dest, destCode, price, airline, depart, tripType, tagline, fromCity };
+}
+
+function drawCard() {
+  const d = getData();
+  const t = THEMES[currentTheme];
+  const W = canvasW, H = canvasH;
+  const isSquare  = W === H;
+  const isStory   = H > W;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, t.bg1);
+  grad.addColorStop(1, t.bg2);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Decorative circle
+  const circleGrad = ctx.createRadialGradient(W * .85, H * .15, 0, W * .85, H * .15, W * .4);
+  circleGrad.addColorStop(0, t.accent + "33");
+  circleGrad.addColorStop(1, "transparent");
+  ctx.fillStyle = circleGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid lines (subtle)
+  ctx.strokeStyle = "rgba(255,255,255,.04)";
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 80) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let y = 0; y < H; y += 80) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+  const pad  = isStory ? 80 : 60;
+  const midX = W / 2;
+
+  if (isStory) {
+    // ── STORY (1080×1920) ──────────────────────────────────────────
+    // Logo
+    ctx.font = "bold 36px Georgia, serif";
+    ctx.fillStyle = t.text;
+    ctx.textAlign = "center";
+    ctx.fillText("✈ TripHunt", midX, 120);
+
+    // "DEAL ALERT" badge
+    drawBadge(ctx, "🚨 DEAL ALERT", midX, 200, t.badge, t.text, 28, 60);
+
+    // Big price
+    ctx.font = "900 200px Georgia, serif";
+    ctx.fillStyle = t.text;
+    ctx.textAlign = "center";
+    ctx.fillText("£" + d.price, midX, 520);
+
+    // Per person
+    ctx.font = "500 40px Outfit, sans-serif";
+    ctx.fillStyle = t.sub;
+    ctx.fillText("per person · " + d.tripType, midX, 580);
+
+    // Route
+    ctx.font = "900 100px Georgia, serif";
+    ctx.fillStyle = t.text;
+    ctx.fillText(d.fromCity, midX, 760);
+    ctx.font = "300 60px Outfit, sans-serif";
+    ctx.fillStyle = t.sub;
+    ctx.fillText("↓", midX, 840);
+    ctx.font = "900 100px Georgia, serif";
+    ctx.fillStyle = t.accent === "#2563eb" ? "#60a5fa" : t.accent;
+    ctx.fillText(d.dest, midX, 960);
+
+    // Details
+    const detParts = [];
+    if (d.airline) detParts.push(d.airline);
+    if (d.depart)  detParts.push(fmtDate(d.depart));
+    if (detParts.length) {
+      ctx.font = "500 38px Outfit, sans-serif";
+      ctx.fillStyle = t.sub;
+      ctx.fillText(detParts.join(" · "), midX, 1060);
+    }
+
+    // Tagline / CTA
+    const cta = d.tagline || "Book now at triphunt.org";
+    ctx.font = "600 42px Outfit, sans-serif";
+    ctx.fillStyle = t.text;
+    ctx.fillText(cta, midX, 1200);
+
+    // Bottom bar
+    ctx.fillStyle = t.accent + "66";
+    roundRect(ctx, pad, H - 160, W - pad * 2, 80, 16);
+    ctx.font = "700 36px Outfit, sans-serif";
+    ctx.fillStyle = t.text;
+    ctx.fillText("triphunt.org", midX, H - 108);
+
+  } else if (isSquare) {
+    // ── SQUARE (1080×1080) ─────────────────────────────────────────
+    // Logo top-left
+    ctx.font = "bold 30px Georgia, serif";
+    ctx.fillStyle = t.text;
+    ctx.textAlign = "left";
+    ctx.fillText("✈ TripHunt", pad, pad + 30);
+
+    // Badge top-right
+    drawBadge(ctx, "🚨 DEAL ALERT", W - pad, 62, t.badge, t.text, 22, 50, "right");
+
+    // Price (huge, centred)
+    ctx.font = "900 180px Georgia, serif";
+    ctx.fillStyle = t.text;
+    ctx.textAlign = "center";
+    ctx.fillText("£" + d.price, midX, 420);
+
+    ctx.font = "500 32px Outfit, sans-serif";
+    ctx.fillStyle = t.sub;
+    ctx.fillText("per person · " + d.tripType, midX, 470);
+
+    // Route
+    ctx.font = "800 64px Georgia, serif";
+    ctx.fillStyle = t.text;
+    ctx.fillText(d.fromCity + " → " + d.dest, midX, 580);
+
+    // Details
+    const parts = [];
+    if (d.airline) parts.push(d.airline);
+    if (d.depart)  parts.push(fmtDate(d.depart));
+    if (parts.length) {
+      ctx.font = "500 30px Outfit, sans-serif";
+      ctx.fillStyle = t.sub;
+      ctx.fillText(parts.join(" · "), midX, 640);
+    }
+
+    // CTA
+    const cta = d.tagline || "triphunt.org";
+    ctx.font = "700 32px Outfit, sans-serif";
+    ctx.fillStyle = t.accent === "#2563eb" ? "#60a5fa" : t.accent;
+    ctx.fillText(cta, midX, H - pad);
+
+  } else {
+    // ── LANDSCAPE (1200×630) ───────────────────────────────────────
+    const leftX = pad;
+    const rightX = W - pad;
+
+    // Logo
+    ctx.font = "bold 24px Georgia, serif";
+    ctx.fillStyle = t.text;
+    ctx.textAlign = "left";
+    ctx.fillText("✈ TripHunt", leftX, 60);
+
+    // "DEAL ALERT" top right
+    drawBadge(ctx, "🚨 DEAL ALERT", rightX, 48, t.badge, t.text, 18, 44, "right");
+
+    // Route (left column)
+    const routeY = 160;
+    ctx.font = "900 72px Georgia, serif";
+    ctx.fillStyle = t.text;
+    ctx.textAlign = "left";
+    ctx.fillText(d.fromCity, leftX, routeY);
+
+    ctx.font = "300 40px Outfit, sans-serif";
+    ctx.fillStyle = t.sub;
+    ctx.fillText("→  " + d.dest, leftX, routeY + 60);
+
+    // Details below route
+    const parts = [];
+    if (d.airline) parts.push(d.airline);
+    if (d.depart)  parts.push(fmtDate(d.depart));
+    parts.push(d.tripType);
+    ctx.font = "500 22px Outfit, sans-serif";
+    ctx.fillStyle = t.sub;
+    ctx.textAlign = "left";
+    ctx.fillText(parts.join(" · "), leftX, routeY + 120);
+
+    // Tagline
+    if (d.tagline) {
+      ctx.font = "600 20px Outfit, sans-serif";
+      ctx.fillStyle = t.accent === "#2563eb" ? "#60a5fa" : t.accent;
+      ctx.fillText(d.tagline, leftX, routeY + 160);
+    }
+
+    // Price (right side, big)
+    ctx.textAlign = "right";
+    ctx.font = "900 140px Georgia, serif";
+    ctx.fillStyle = t.text;
+    ctx.fillText("£" + d.price, rightX, 340);
+
+    ctx.font = "500 24px Outfit, sans-serif";
+    ctx.fillStyle = t.sub;
+    ctx.fillText("per person · " + d.tripType, rightX, 380);
+
+    // Bottom
+    ctx.fillStyle = "rgba(255,255,255,.06)";
+    ctx.fillRect(0, H - 70, W, 70);
+
+    ctx.font = "600 20px Outfit, sans-serif";
+    ctx.fillStyle = t.sub;
+    ctx.textAlign = "left";
+    ctx.fillText("Find more deals at triphunt.org", leftX, H - 24);
+
+    ctx.textAlign = "right";
+    ctx.fillStyle = t.text;
+    ctx.fillText(d.origin + " → " + d.destCode, rightX, H - 24);
+  }
+}
+
+function drawBadge(ctx, text, x, y, bgColor, textColor, fontSize, height, align = "center") {
+  ctx.save();
+  ctx.font = "700 " + fontSize + "px Outfit, sans-serif";
+  const tw = ctx.measureText(text).width;
+  const bw = tw + 32;
+  let bx;
+  if (align === "right")  bx = x - bw;
+  else if (align === "left") bx = x;
+  else bx = x - bw / 2;
+  const by = y - height * .7;
+  ctx.fillStyle = bgColor + "cc";
+  roundRect(ctx, bx, by, bw, height, height / 2);
+  ctx.fillStyle = textColor;
+  ctx.textAlign = align === "right" ? "right" : (align === "left" ? "left" : "center");
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function fmtDate(s) {
+  if (!s) return "";
+  try { return new Date(s).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}); }
+  catch(e) { return s; }
+}
+
+function downloadCard() {
+  const d = getData();
+  const link = document.createElement("a");
+  link.download = "triphunt-deal-" + (d.origin || "LHR") + "-" + (d.destCode || "BCN") + "-£" + d.price + ".png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+
+async function shareCard() {
+  const d = getData();
+  if (navigator.share && navigator.canShare) {
+    try {
+      canvas.toBlob(async blob => {
+        const file = new File([blob], "triphunt-deal.png", { type:"image/png" });
+        if (navigator.canShare({ files:[file] })) {
+          await navigator.share({ files:[file], title:"✈ " + d.origin + " → " + d.dest + " from £" + d.price, text:"Check out this deal on TripHunt!" });
+        } else {
+          downloadCard();
+        }
+      });
+    } catch(e) { downloadCard(); }
+  } else {
+    downloadCard();
+  }
+}
+
+// Draw on load
+drawCard();
+</script>
+
+<!-- TripHunt shared: photos · mobile nav · trust -->
+<script src="/js/photos.js"></script>
+<script src="/js/trust.js"></script>
+<script src="/js/mobile-nav.js" data-auto></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if (window.TH && TH.Photos) { TH.Photos.injectAll(); new MutationObserver(function(){ TH.Photos.injectAll(); }).observe(document.body,{childList:true,subtree:true}); }
+  if (window.TH && TH.MobileNav) TH.MobileNav.init({ onRefresh: function(){ window.location.reload(); } });
+});
+</script>
+</body>
+</html>

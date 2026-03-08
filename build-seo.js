@@ -10,8 +10,8 @@ const args          = process.argv.slice(2);
 const IS_TEST       = args.includes("--test");
 const ONLY_SITEMAPS = args.includes("--sitemaps");
 const LIMIT         = IS_TEST ? 50 : Infinity;
-const SEO_OUT       = path.resolve(__dirname, "..", "seo-pages");
-const SITE_URL      = "https://www.triphunt.co.uk";
+const SEO_OUT       = path.resolve(__dirname, "seo-pages");
+const SITE_URL      = "https://www.triphunt.org";
 const TODAY         = new Date().toISOString().slice(0, 10);
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -928,145 +928,1074 @@ function cheapToIndexPage(){
 }
 
 
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// NEW DIMENSIONS — added in v31 to reach 1M+ pages
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ── New dimension data ────────────────────────────────────────────────────────
+
+const CABINS = [
+  { slug: "economy",          label: "Economy",           short: "Economy",   priceMult: 1.0,  note: "Best value fares, shared cabin"                },
+  { slug: "premium-economy",  label: "Premium Economy",   short: "Prem Eco",  priceMult: 1.65, note: "Extra legroom, better meals"                    },
+  { slug: "business-class",   label: "Business Class",    short: "Business",  priceMult: 3.8,  note: "Lie-flat beds on long-haul, priority boarding"  },
+  { slug: "first-class",      label: "First Class",       short: "First",     priceMult: 7.5,  note: "Suites, fine dining, dedicated check-in"        },
+];
+
+const PAX_TYPES = [
+  { slug: "solo",            label: "Solo Travel",        adults: 1, note: "Best value for lone travellers — more seat choices"        },
+  { slug: "couples",         label: "Couples",            adults: 2, note: "Most searched — prices shown per person return"            },
+  { slug: "family-of-3",     label: "Family of 3",        adults: 3, note: "Includes 1 child seat; check airline family policies"     },
+  { slug: "family-of-4",     label: "Family of 4",        adults: 4, note: "Book early — 4 adjacent seats sell out quickly"           },
+  { slug: "group-of-6",      label: "Group of 6",         adults: 6, note: "Group fares available on selected routes"                 },
+];
+
+const STOP_TYPES = [
+  { slug: "direct",    label: "Direct Flights",        stops: 0, note: "No layover — fastest option"            },
+  { slug: "one-stop",  label: "1-Stop Flights",        stops: 1, note: "Via connection hub — often cheaper"     },
+];
+
+const DURATIONS = [
+  { slug: "weekend-break",    label: "Weekend Break",   nights: "2–3",  note: "Thu–Mon perfect for a city break"    },
+  { slug: "one-week",         label: "1 Week",          nights: "7",    note: "Classic week holiday"                },
+  { slug: "two-weeks",        label: "2 Weeks",         nights: "14",   note: "Best value for beach holidays"       },
+];
+
+const YEARS = [
+  { slug: "2025", label: "2025", note: "Book now for 2025 travel"         },
+  { slug: "2026", label: "2026", note: "Early booking discounts available" },
+  { slug: "2027", label: "2027", note: "Best prices for advance planning"  },
+];
+
+const BUDGET_BRACKETS = [
+  { slug: "under-100",  label: "Under £100",  max: 100  },
+  { slug: "under-150",  label: "Under £150",  max: 150  },
+  { slug: "under-200",  label: "Under £200",  max: 200  },
+  { slug: "under-300",  label: "Under £300",  max: 300  },
+  { slug: "under-400",  label: "Under £400",  max: 400  },
+  { slug: "under-500",  label: "Under £500",  max: 500  },
+];
+
+const UK_AIRLINES = [
+  { slug: "ryanair",       name: "Ryanair",                 code: "FR", type: "budget"   },
+  { slug: "easyjet",       name: "easyJet",                 code: "U2", type: "budget"   },
+  { slug: "british-airways", name: "British Airways",       code: "BA", type: "full"     },
+  { slug: "jet2",          name: "Jet2",                    code: "LS", type: "leisure"  },
+  { slug: "tui-airways",   name: "TUI Airways",             code: "BY", type: "leisure"  },
+  { slug: "virgin-atlantic", name: "Virgin Atlantic",       code: "VS", type: "full"     },
+  { slug: "wizz-air",      name: "Wizz Air",                code: "W6", type: "budget"   },
+  { slug: "aer-lingus",    name: "Aer Lingus",              code: "EI", type: "budget"   },
+  { slug: "emirates",      name: "Emirates",                code: "EK", type: "full"     },
+  { slug: "turkish-airlines", name: "Turkish Airlines",     code: "TK", type: "full"     },
+  { slug: "lufthansa",     name: "Lufthansa",               code: "LH", type: "full"     },
+  { slug: "air-france",    name: "Air France",              code: "AF", type: "full"     },
+  { slug: "klm",           name: "KLM",                     code: "KL", type: "full"     },
+  { slug: "norwegian",     name: "Norwegian",               code: "DY", type: "budget"   },
+  { slug: "flybe",         name: "Flybe",                   code: "BE", type: "regional" },
+  { slug: "loganair",      name: "Loganair",                code: "LM", type: "regional" },
+  { slug: "tap-air-portugal", name: "TAP Air Portugal",     code: "TP", type: "full"     },
+  { slug: "iberia",        name: "Iberia",                  code: "IB", type: "full"     },
+  { slug: "vueling",       name: "Vueling",                 code: "VY", type: "budget"   },
+  { slug: "transavia",     name: "Transavia",               code: "HV", type: "budget"   },
+];
+
+// Additional city origins (not just airport codes) — expands city-to-city space
+const UK_CITIES_EXTENDED = [
+  "London","Manchester","Edinburgh","Birmingham","Glasgow","Bristol","Leeds","Newcastle",
+  "Liverpool","Sheffield","Nottingham","Cardiff","Belfast","Leicester","Southampton",
+  "Portsmouth","Oxford","Cambridge","Exeter","Norwich","York","Bath","Coventry",
+  "Derby","Sunderland","Brighton","Reading","Milton Keynes","Stoke-on-Trent","Preston",
+  "Wolverhampton","Plymouth","Swansea","Aberdeen","Inverness","Dundee","Stirling",
+  "St Andrews","Middlesbrough","Swindon","Gloucester","Peterborough","Luton","Watford",
+];
+
+const DEST_CITIES_EXTENDED = [
+  // Already in FOREIGN — this extends to 300+ cities
+  "Paris","Amsterdam","Rome","Madrid","Barcelona","Lisbon","Athens","Prague","Vienna",
+  "Budapest","Warsaw","Krakow","Copenhagen","Stockholm","Oslo","Helsinki","Zurich",
+  "Brussels","Dublin","Reykjavik","Tallinn","Riga","Vilnius","Ljubljana","Bratislava",
+  "Sarajevo","Skopje","Tirana","Podgorica","Valletta","Nicosia","Limassol","Paphos",
+  "Thessaloniki","Mykonos","Santorini","Corfu","Zakynthos","Crete","Rhodes","Kos",
+  "Larnaca","Antalya","Istanbul","Bodrum","Dalaman","Izmir","Cappadocia","Trabzon",
+  "Dubai","Abu Dhabi","Doha","Muscat","Riyadh","Amman","Beirut","Tel Aviv","Cairo",
+  "Marrakech","Casablanca","Fez","Agadir","Tunis","Djerba","Hurghada","Sharm El-Sheikh",
+  "Cape Town","Nairobi","Zanzibar","Mauritius","Maldives","Seychelles","Reunion",
+  "Bangkok","Phuket","Koh Samui","Chiang Mai","Singapore","Kuala Lumpur","Bali","Jakarta",
+  "Tokyo","Osaka","Kyoto","Seoul","Hong Kong","Macau","Shanghai","Beijing","Guangzhou",
+  "Sydney","Melbourne","Brisbane","Perth","Auckland","Queenstown","Fiji","Bora Bora",
+  "New York","Los Angeles","Miami","Las Vegas","San Francisco","Chicago","Boston","Orlando",
+  "Toronto","Montreal","Vancouver","Cancun","Mexico City","Havana","Jamaica","Barbados",
+  "Trinidad","Antigua","St Lucia","Dominican Republic","Nassau","Turks and Caicos",
+  "Rio de Janeiro","Buenos Aires","Bogota","Lima","Cartagena","Santiago","Montevideo",
+  "Tenerife","Gran Canaria","Lanzarote","Fuerteventura","Palma","Ibiza","Menorca",
+  "Malaga","Seville","Valencia","Alicante","Murcia","Bilbao","San Sebastian","Girona",
+  "Porto","Faro","Funchal","Ponta Delgada","Milan","Venice","Florence","Naples","Palermo",
+  "Catania","Bari","Bologna","Turin","Pisa","Verona","Nice","Lyon","Bordeaux","Toulouse",
+  "Montpellier","Marseille","Nantes","Strasbourg","Frankfurt","Munich","Berlin","Hamburg",
+  "Dusseldorf","Cologne","Stuttgart","Dresden","Leipzig","Nuremberg","Hannover","Bremen",
+];
+
+// Regions for budget pages
+const REGIONS = [
+  { slug: "europe",       label: "Europe",        dests: ["BCN","FCO","ATH","AMS","LIS","PRG","VIE","BUD"] },
+  { slug: "middle-east",  label: "Middle East",   dests: ["DXB","DOH","CAI","AMM","TLV"]                  },
+  { slug: "asia",         label: "Asia",          dests: ["BKK","SIN","KUL","NRT","ICN","HKG","DPS"]      },
+  { slug: "americas",     label: "Americas",      dests: ["JFK","MIA","LAX","YYZ","CUN","GRU"]            },
+  { slug: "africa",       label: "Africa",        dests: ["CPT","NBO","RAK","CMN","HRG"]                  },
+  { slug: "canaries",     label: "Canary Islands", dests: ["TFS","LPA","ACE","FUE"]                       },
+  { slug: "caribbean",    label: "Caribbean",     dests: ["BGI","MBJ","STI","NAS","PLS"]                  },
+  { slug: "oceania",      label: "Australia & NZ", dests: ["SYD","MEL","BNE","AKL","CHC"]                 },
+];
+
+// ── New page template generators ───────────────────────────────────────────────
+
+// 8. CABIN CLASS ROUTE PAGE  /flights/london-to-tokyo/business-class
+function cabinPage(o, d, cabin) {
+  const url   = `/flights/${cSlug(o)}-to-${cSlug(d)}/${cabin.slug}`;
+  const base  = avg(d);
+  const cp    = Math.round(base * cabin.priceMult * 0.82);
+  const title = `${cabin.label} Flights ${o.city} to ${d.city} | From £${cp} | TripHunt`;
+  const desc  = `Compare ${cabin.label.toLowerCase()} flights from ${o.city} to ${d.city} from £${cp}. ${cabin.note}. Book with TripHunt — no hidden fees.`;
+
+  const schemas = [
+    breadcrumbSchema([
+      {n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:cabin.label,u:url}
+    ]),
+    faqSchema([
+      {q:`How much are ${cabin.label} flights from ${o.city} to ${d.city}?`, a:`${cabin.label} flights from ${o.city} to ${d.city} start from £${cp} per person return. Prices vary by airline and how far ahead you book.`},
+      {q:`Is ${cabin.label} worth it on ${o.city} to ${d.city}?`, a:`${cabin.note}. ${d.country === 'Japan' || base > 350 ? 'For long-haul routes, upgrading to ' + cabin.label + ' significantly improves comfort on a ' + flightHrs(o,d) + ' flight.' : 'For shorter European routes, economy class is usually the best value.'}`},
+    ]),
+  ];
+
+  const otherCabins = CABINS.filter(c => c.slug !== cabin.slug);
+
+  return `${head({title, desc, canonical:`${SITE_URL}${url}`, schema:schemas})}
+<body>
+${header()}
+<div class="container">${bcrumb([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:cabin.label,u:url}])}</div>
+<div class="hero"><div class="container">
+  <div class="hero-label">✈️ ${cabin.label} · ${o.code} → ${d.code}</div>
+  <h1 class="h1">${cabin.label} Flights<br>${o.city} to <span class="dest">${d.city}</span><br>from <span class="price">£${cp}</span></h1>
+  <p class="hsub">${cabin.note} · Compare all airlines · Book with no hidden fees</p>
+  <a href="${jrUrl(o.code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ Compare ${cabin.label} on JetRadar →</a>
+</div></div>
+<div class="container">
+  <div class="stats">
+    <div class="stat"><div class="stat-v">£${cp}</div><div class="stat-l">From (${cabin.short})</div></div>
+    <div class="stat"><div class="stat-v">${flightHrs(o,d)}</div><div class="stat-l">Flight time</div></div>
+    <div class="stat"><div class="stat-v">${cheapMonth(d)}</div><div class="stat-l">Cheapest month</div></div>
+  </div>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">About ${cabin.label} on This Route</h2></div>
+    <div class="igrid">
+      <div class="icard"><div class="icard-ico">💺</div><div class="icard-t">${cabin.label} Features</div><div class="icard-b">${cabin.note}. Availability and amenities vary by airline.</div></div>
+      <div class="icard"><div class="icard-ico">💰</div><div class="icard-t">Price Guide</div><div class="icard-b">${cabin.label} from ${o.city} to ${d.city} starts from <strong>£${cp}</strong> return. Book 3–6 months ahead for best availability.</div></div>
+      <div class="icard"><div class="icard-ico">✈️</div><div class="icard-t">Airlines</div><div class="icard-b">Compare ${cabin.label} on ${airlines(d)} and more. Not all airlines offer every cabin class on this route.</div></div>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Compare All Cabin Classes: ${o.city} to ${d.city}</h2></div>
+    <div class="months">
+      ${otherCabins.map(c=>`<a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${c.slug}" class="mpill">${c.label} <strong>£${Math.round(base*c.priceMult*0.82)}</strong></a>`).join("\n")}
+      <a href="/flights/${cSlug(o)}-to-${cSlug(d)}/" class="mpill cheap">All fares <strong>£${cheap(d)}</strong></a>
+    </div>
+  </section>
+</div>
+${footer(o)}
+</body></html>`;
+}
+
+// 9. PAX TYPE PAGE  /flights/london-to-barcelona/family-of-4
+function paxPage(o, d, pax) {
+  const url  = `/flights/${cSlug(o)}-to-${cSlug(d)}/${pax.slug}`;
+  const cp   = Math.round(cheap(d) * pax.adults);
+  const pp   = cheap(d);
+  const title = `${pax.label} Flights ${o.city} to ${d.city} | From £${pp}pp | TripHunt`;
+  const desc  = `${pax.label} flights from ${o.city} to ${d.city} from £${pp} per person (£${cp} total). ${pax.note}.`;
+
+  return `${head({title, desc, canonical:`${SITE_URL}${url}`, schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:pax.label,u:url}]),faqSchema([{q:`How much are ${pax.label.toLowerCase()} flights from ${o.city} to ${d.city}?`,a:`${pax.label} flights from ${o.city} to ${d.city} start from £${pp} per person return, totalling around £${cp} for ${pax.adults} passengers. ${pax.note}.`}])]})}
+<body>
+${header()}
+<div class="container">${bcrumb([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:pax.label,u:url}])}</div>
+<div class="hero"><div class="container">
+  <div class="hero-label">👥 ${pax.label} · ${o.code} → ${d.code}</div>
+  <h1 class="h1">${pax.label} Flights<br>${o.city} to <span class="dest">${d.city}</span><br>from <span class="price">£${pp}</span> <span style="font-size:0.45em;color:var(--txt2)">per person</span></h1>
+  <p class="hsub">${pax.note} · Total from £${cp} for ${pax.adults} · No hidden fees</p>
+  <a href="${jrUrl(o.code,d.code,3,7,pax.adults)}" target="_blank" rel="noopener" class="sbtn">✈️ Search ${pax.label} Flights on JetRadar →</a>
+</div></div>
+<div class="container">
+  <div class="stats">
+    <div class="stat"><div class="stat-v">£${pp}</div><div class="stat-l">Per person</div></div>
+    <div class="stat"><div class="stat-v">£${cp}</div><div class="stat-l">Total (${pax.adults} people)</div></div>
+    <div class="stat"><div class="stat-v">${flightHrs(o,d)}</div><div class="stat-l">Flight time</div></div>
+  </div>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Tips for ${pax.label} Travel to ${d.city}</h2></div>
+    <div class="igrid">
+      <div class="icard"><div class="icard-ico">💡</div><div class="icard-t">Booking Tip</div><div class="icard-b">${pax.note}. Use TripHunt's flexible search to compare prices across a month of dates.</div></div>
+      <div class="icard"><div class="icard-ico">💰</div><div class="icard-t">Budget Guide</div><div class="icard-b">Total from <strong>£${cp}</strong> for ${pax.adults} passengers return. Set a price alert to catch fare drops.</div></div>
+      <div class="icard"><div class="icard-ico">✈️</div><div class="icard-t">Airlines</div><div class="icard-b">${airlines(d)}. Compare all carriers for the best group or family fare.</div></div>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Other Departure Airports</h2></div>
+    <div class="chips">${UK.filter(a=>a.code!==o.code).slice(0,6).map(a=>`<a href="/flights/${cSlug(a)}-to-${cSlug(d)}/${pax.slug}" class="chip">✈️ ${a.city} → ${d.city}</a>`).join("\n")}</div>
+  </section>
+</div>
+${footer(o)}
+</body></html>`;
+}
+
+// 10. STOP TYPE PAGE  /flights/london-to-dubai/direct
+function stopPage(o, d, st) {
+  const url   = `/flights/${cSlug(o)}-to-${cSlug(d)}/${st.slug}`;
+  const cp    = st.stops === 0 ? Math.round(cheap(d) * 1.1) : Math.round(cheap(d) * 0.85);
+  const title = `${st.label} ${o.city} to ${d.city} | From £${cp} | TripHunt`;
+  const desc  = `Find ${st.label.toLowerCase()} from ${o.city} to ${d.city} from £${cp}. ${st.note}. Compare all airlines on TripHunt.`;
+
+  return `${head({title, desc, canonical:`${SITE_URL}${url}`, schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:st.label,u:url}]),faqSchema([{q:`Are there ${st.label.toLowerCase()} from ${o.city} to ${d.city}?`,a:`Yes. ${st.label} are available on selected dates from ${o.city} to ${d.city} from £${cp}. ${st.note}.`}])]})}
+<body>
+${header()}
+<div class="container">${bcrumb([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:st.label,u:url}])}</div>
+<div class="hero"><div class="container">
+  <div class="hero-label">✈️ ${st.label} · ${o.code} → ${d.code}</div>
+  <h1 class="h1">${st.label}<br>${o.city} to <span class="dest">${d.city}</span><br>from <span class="price">£${cp}</span></h1>
+  <p class="hsub">${st.note} · Compare 100+ airlines · No hidden fees</p>
+  <a href="${jrUrl(o.code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ Search on JetRadar →</a>
+</div></div>
+<div class="container">
+  <div class="stats">
+    <div class="stat"><div class="stat-v">£${cp}</div><div class="stat-l">From</div></div>
+    <div class="stat"><div class="stat-v">${st.stops === 0 ? "Direct" : "1 Stop"}</div><div class="stat-l">Routing</div></div>
+    <div class="stat"><div class="stat-v">${flightHrs(o,d)}</div><div class="stat-l">Est. flight time</div></div>
+  </div>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Compare Routing Options: ${o.city} to ${d.city}</h2></div>
+    <div class="months">
+      ${STOP_TYPES.map(s=>`<a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${s.slug}" class="mpill ${s.slug===st.slug?'cheap':''}">${s.label} <strong>£${s.stops===0?Math.round(cheap(d)*1.1):Math.round(cheap(d)*0.85)}</strong></a>`).join("\n")}
+      <a href="/flights/${cSlug(o)}-to-${cSlug(d)}/" class="mpill">All options <strong>£${cheap(d)}</strong></a>
+    </div>
+  </section>
+</div>
+${footer(o)}
+</body></html>`;
+}
+
+// 11. DURATION PAGE  /flights/london-to-mallorca/two-weeks
+function durationPage(o, d, dur) {
+  const url   = `/flights/${cSlug(o)}-to-${cSlug(d)}/${dur.slug}`;
+  const cp    = cheap(d);
+  const title = `${dur.label} in ${d.city} | Flights from £${cp} | TripHunt`;
+  const desc  = `Planning a ${dur.label.toLowerCase()} in ${d.city}? Flights from ${o.city} from £${cp} return. ${dur.note}. Compare all airlines on TripHunt.`;
+
+  return `${head({title, desc, canonical:`${SITE_URL}${url}`, schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:`${dur.label} in ${d.city}`,u:url}]),faqSchema([{q:`How much are flights for a ${dur.label.toLowerCase()} in ${d.city}?`,a:`Flights from ${o.city} to ${d.city} for a ${dur.label.toLowerCase()} start from £${cp} per person return. ${dur.note}.`}])]})}
+<body>
+${header()}
+<div class="container">${bcrumb([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:`${dur.label}`,u:url}])}</div>
+<div class="hero"><div class="container">
+  <div class="hero-label">📅 ${dur.label} · ${o.code} → ${d.code}</div>
+  <h1 class="h1">${dur.label} in <span class="dest">${d.city}</span><br>Flights from <span class="price">£${cp}</span></h1>
+  <p class="hsub">${dur.note} · Return flights from ${o.city} · No hidden fees</p>
+  <a href="${jrUrl(o.code,d.code,3,parseInt(dur.nights)||7,2)}" target="_blank" rel="noopener" class="sbtn">✈️ Search ${dur.nights}-Night Flights →</a>
+</div></div>
+<div class="container">
+  <div class="stats">
+    <div class="stat"><div class="stat-v">£${cp}</div><div class="stat-l">Flights from</div></div>
+    <div class="stat"><div class="stat-v">${dur.nights} nights</div><div class="stat-l">Trip length</div></div>
+    <div class="stat"><div class="stat-v">${flightHrs(o,d)}</div><div class="stat-l">Flight time</div></div>
+  </div>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Other Trip Lengths from ${o.city} to ${d.city}</h2></div>
+    <div class="months">
+      ${DURATIONS.map(dur2=>`<a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${dur2.slug}" class="mpill ${dur2.slug===dur.slug?'cheap':''}">${dur2.label} <strong>from £${cp}</strong></a>`).join("\n")}
+    </div>
+  </section>
+</div>
+${footer(o)}
+</body></html>`;
+}
+
+// 12. YEAR PAGE  /flights/london-to-new-york/2026
+function yearPage(o, d, yr) {
+  const url   = `/flights/${cSlug(o)}-to-${cSlug(d)}/${yr.slug}`;
+  const cp    = cheap(d);
+  const title = `Cheap Flights ${o.city} to ${d.city} ${yr.label} | From £${cp} | TripHunt`;
+  const desc  = `Find cheap flights from ${o.city} to ${d.city} in ${yr.label}. From £${cp} return. ${yr.note}. Compare all airlines on TripHunt.`;
+
+  return `${head({title, desc, canonical:`${SITE_URL}${url}`, schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:`Flights in ${yr.label}`,u:url}]),faqSchema([{q:`How much are flights from ${o.city} to ${d.city} in ${yr.label}?`,a:`Flights from ${o.city} to ${d.city} in ${yr.label} start from £${cp} return. ${yr.note}.`}])]})}
+<body>
+${header()}
+<div class="container">${bcrumb([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:`${yr.label} flights`,u:url}])}</div>
+<div class="hero"><div class="container">
+  <div class="hero-label">📅 ${yr.label} Flights · ${o.code} → ${d.code}</div>
+  <h1 class="h1">Flights ${o.city} to <span class="dest">${d.city}</span><br>in <span class="dest">${yr.label}</span><br>from <span class="price">£${cp}</span></h1>
+  <p class="hsub">${yr.note} · Compare 100+ airlines · No hidden fees</p>
+  <a href="${jrUrl(o.code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ Search ${yr.label} Flights on JetRadar →</a>
+</div></div>
+<div class="container">
+  <div class="stats">
+    <div class="stat"><div class="stat-v">£${cp}</div><div class="stat-l">Flights from</div></div>
+    <div class="stat"><div class="stat-v">${yr.label}</div><div class="stat-l">Travel year</div></div>
+    <div class="stat"><div class="stat-v">${cheapMonth(d)}</div><div class="stat-l">Cheapest month</div></div>
+  </div>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Monthly Prices: ${o.city} to ${d.city} in ${yr.label}</h2></div>
+    <div class="months">${MONTHS.map(m=>`<a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}" class="mpill ${m.peak?'peak':''}">${m.label} ${yr.label} <strong>£${Math.round(avg(d)*m.factor*0.72)}</strong></a>`).join("\n")}</div>
+  </section>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Other Years</h2></div>
+    <div class="months">${YEARS.map(y=>`<a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${y.slug}" class="mpill ${y.slug===yr.slug?'cheap':''}">${y.label} <strong>from £${cp}</strong></a>`).join("\n")}</div>
+  </section>
+</div>
+${footer(o)}
+</body></html>`;
+}
+
+// 13. AIRLINE ROUTE PAGE  /flights/london-to-barcelona/ryanair
+function airlinePage(o, d, al) {
+  const url   = `/flights/${cSlug(o)}-to-${cSlug(d)}/${al.slug}`;
+  const cp    = al.type === "budget" ? Math.round(cheap(d) * 0.9) : Math.round(cheap(d) * 1.2);
+  const title = `${al.name} Flights ${o.city} to ${d.city} | From £${cp} | TripHunt`;
+  const desc  = `Compare ${al.name} flights from ${o.city} to ${d.city} from £${cp}. Check availability, baggage allowance, and book with zero fees on TripHunt.`;
+
+  return `${head({title, desc, canonical:`${SITE_URL}${url}`, schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:`${al.name}`,u:url}]),faqSchema([{q:`Does ${al.name} fly from ${o.city} to ${d.city}?`,a:`${al.name} operates flights on selected routes between ${o.city} and ${d.city}. Prices start from £${cp} return. Check availability for your dates on TripHunt.`},{q:`How much are ${al.name} flights from ${o.city} to ${d.city}?`,a:`${al.name} fares from ${o.city} to ${d.city} start from £${cp} return. ${al.type==='budget'?'Budget fares may have limited baggage allowance — check before booking.':'Full-service fares include checked baggage.'}`}])]})}
+<body>
+${header()}
+<div class="container">${bcrumb([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:al.name,u:url}])}</div>
+<div class="hero"><div class="container">
+  <div class="hero-label">✈️ ${al.name} · ${o.code} → ${d.code}</div>
+  <h1 class="h1">${al.name}<br>${o.city} to <span class="dest">${d.city}</span><br>from <span class="price">£${cp}</span></h1>
+  <p class="hsub">${al.type === 'budget' ? 'Budget fares — check baggage allowance before booking.' : 'Full-service fares with included baggage.'} No hidden fees on TripHunt.</p>
+  <a href="${jrUrl(o.code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ Compare ${al.name} on JetRadar →</a>
+</div></div>
+<div class="container">
+  <div class="stats">
+    <div class="stat"><div class="stat-v">£${cp}</div><div class="stat-l">${al.name} from</div></div>
+    <div class="stat"><div class="stat-v">${al.code}</div><div class="stat-l">Airline code</div></div>
+    <div class="stat"><div class="stat-v">${flightHrs(o,d)}</div><div class="stat-l">Flight time</div></div>
+  </div>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">About ${al.name}: ${o.city} to ${d.city}</h2></div>
+    <div class="igrid">
+      <div class="icard"><div class="icard-ico">✈️</div><div class="icard-t">Airline Type</div><div class="icard-b">${al.name} is a ${al.type} carrier. ${al.type==='budget'?'Fares are stripped back — expect to pay extra for bags, meals, and seat selection.':'Full-service fares include checked baggage and meals on longer routes.'}</div></div>
+      <div class="icard"><div class="icard-ico">💰</div><div class="icard-t">Price Guide</div><div class="icard-b">Fares from £${cp} return. Book early for the cheapest ${al.name} tickets — prices rise as the flight fills.</div></div>
+      <div class="icard"><div class="icard-ico">📅</div><div class="icard-t">Best Time to Book</div><div class="icard-b">Book 6–8 weeks ahead for European routes. Set a TripHunt price alert to catch ${al.name} fare drops.</div></div>
+    </div>
+  </section>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Other Airlines on This Route</h2></div>
+    <div class="chips">${UK_AIRLINES.filter(a=>a.slug!==al.slug).slice(0,8).map(a=>`<a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${a.slug}" class="chip">✈️ ${a.name}</a>`).join("\n")}</div>
+  </section>
+</div>
+${footer(o)}
+</body></html>`;
+}
+
+// 14. BUDGET BRACKET PAGE  /cheap-flights/from/london/under-200
+function budgetPage(o, bracket) {
+  const url   = `/cheap-flights/from/${cSlug(o)}/${bracket.slug}`;
+  const dests = FOREIGN.filter(d => cheap(d) <= bracket.max).sort((a,b)=>cheap(a)-cheap(b));
+  const title = `${bracket.label} Flights from ${o.city} | TripHunt`;
+  const desc  = `Cheap flights from ${o.city} ${bracket.label} per person return. Compare all airlines. ${dests.length} destinations available.`;
+
+  return `${head({title, desc, canonical:`${SITE_URL}${url}`, schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:"Cheap Flights",u:"/cheap-flights/"},{n:`From ${o.city}`,u:`/cheap-flights/from/${cSlug(o)}/`},{n:bracket.label,u:url}])]})}
+<body>
+${header()}
+<div class="container">${bcrumb([{n:"Home",u:"/"},{n:"Cheap Flights",u:"/cheap-flights/"},{n:`From ${o.city}`,u:`/cheap-flights/from/${cSlug(o)}/`},{n:bracket.label,u:url}])}</div>
+<div class="hero"><div class="container">
+  <div class="hero-label">💸 Budget Flights · ${o.code}</div>
+  <h1 class="h1">${bracket.label} Flights<br>from <span class="dest">${o.city}</span></h1>
+  <p class="hsub">${dests.length} destinations · All prices per person return · No hidden fees</p>
+  <a href="/" class="sbtn">✈️ Search with Flexible Dates →</a>
+</div></div>
+<div class="container">
+  <div class="stats">
+    <div class="stat"><div class="stat-v">${dests.length}</div><div class="stat-l">Destinations</div></div>
+    <div class="stat"><div class="stat-v">£${dests[0] ? cheap(dests[0]) : 'N/A'}</div><div class="stat-l">Cheapest fare</div></div>
+    <div class="stat"><div class="stat-v">${bracket.label}</div><div class="stat-l">Budget</div></div>
+  </div>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">All Destinations from ${o.city} ${bracket.label}</h2></div>
+    <div class="dgrid">${dests.slice(0,24).map(d=>`<a href="/flights/${cSlug(o)}-to-${cSlug(d)}" class="dcard"><div class="dcard-c">${d.city}</div><div class="dcard-n">${d.country}</div><div class="dcard-p">£${cheap(d)}</div><div class="dcard-l">from ${o.city}</div></a>`).join("\n")}</div>
+  </section>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Other Budget Brackets from ${o.city}</h2></div>
+    <div class="months">${BUDGET_BRACKETS.map(b=>`<a href="/cheap-flights/from/${cSlug(o)}/${b.slug}" class="mpill ${b.slug===bracket.slug?'cheap':''}">${b.label}</a>`).join("\n")}</div>
+  </section>
+</div>
+${footer(o)}
+</body></html>`;
+}
+
+// 15. CITY-TO-CITY PAGE  /flights-from/london/to/paris  (text-based, broader keyword coverage)
+function cityToCityPage(originCity, destCity) {
+  const oSlug = slug(originCity);
+  const dSlug = slug(destCity);
+  const url   = `/city-flights/${oSlug}-to-${dSlug}`;
+  // Match to nearest airport
+  const oAp   = UK.find(a => a.city.toLowerCase() === originCity.toLowerCase()) || UK[0];
+  const dAp   = FOREIGN.find(a => a.city.toLowerCase() === destCity.toLowerCase());
+  const cp    = dAp ? cheap(dAp) : 99;
+  const title = `Flights from ${originCity} to ${destCity} | From £${cp} | TripHunt`;
+  const desc  = `Compare cheap flights from ${originCity} to ${destCity}. Prices from £${cp} return. Book with no hidden fees on TripHunt.`;
+
+  return `${head({title, desc, canonical:`${SITE_URL}${url}`, schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:`Flights from ${originCity}`,u:`/flights-from/${oSlug}/`},{n:destCity,u:url}]),faqSchema([{q:`Are there flights from ${originCity} to ${destCity}?`,a:`Yes, you can fly from ${originCity} to ${destCity} with connecting flights via nearby airports. Fares start from £${cp} return.`},{q:`How long is the flight from ${originCity} to ${destCity}?`,a:`Flight time from ${originCity} to ${destCity} is typically ${dAp?flightHrs(oAp,dAp):'2–4 hours'} including any transfer time.`}])]})}
+<body>
+${header()}
+<div class="container">${bcrumb([{n:"Home",u:"/"},{n:`Flights from ${originCity}`,u:`/flights-from/${oSlug}/`},{n:`to ${destCity}`,u:url}])}</div>
+<div class="hero"><div class="container">
+  <div class="hero-label">✈️ ${originCity} → ${destCity}</div>
+  <h1 class="h1">Flights from <span class="dest">${originCity}</span><br>to <span class="dest">${destCity}</span><br>from <span class="price">£${cp}</span></h1>
+  <p class="hsub">Compare all airlines · Book in GBP · No hidden fees</p>
+  <a href="${jrUrl(oAp.code,dAp?dAp.code:'BCN',3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ Compare All Flights →</a>
+</div></div>
+<div class="container">
+  <div class="stats">
+    <div class="stat"><div class="stat-v">£${cp}</div><div class="stat-l">Flights from</div></div>
+    <div class="stat"><div class="stat-v">${oAp.code}</div><div class="stat-l">Nearest airport</div></div>
+    <div class="stat"><div class="stat-v">${dAp?flightHrs(oAp,dAp):'Varies'}</div><div class="stat-l">Flight time</div></div>
+  </div>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Getting from ${originCity} to ${destCity}</h2></div>
+    <div class="igrid">
+      <div class="icard"><div class="icard-ico">🛫</div><div class="icard-t">Nearest Airport</div><div class="icard-b">The nearest airport to ${originCity} is <strong>${oAp.name} (${oAp.code})</strong>. Check transport links before travelling.</div></div>
+      <div class="icard"><div class="icard-ico">💰</div><div class="icard-t">Price Guide</div><div class="icard-b">Flights from £${cp} per person return. Set a TripHunt price alert to catch the cheapest fares.</div></div>
+      <div class="icard"><div class="icard-ico">📅</div><div class="icard-t">Best Time to Book</div><div class="icard-b">Book 6–8 weeks ahead for best European fares. Prices are lowest in ${dAp?cheapMonth(dAp):'January or February'}.</div></div>
+    </div>
+  </section>
+</div>
+${footer(oAp)}
+</body></html>`;
+}
+
+// 16. SEASON PAGE  /flights/london-to-barcelona/summer
+const SEASONS = [
+  { slug:"summer",  label:"Summer",  months:"June, July & August",        note:"Peak season — book 3–4 months ahead",         factor:1.28 },
+  { slug:"winter",  label:"Winter",  months:"December, January & February",note:"Off-peak — best value fares available",       factor:0.82 },
+  { slug:"spring",  label:"Spring",  months:"March, April & May",          note:"Great weather, moderate prices",              factor:0.92 },
+  { slug:"autumn",  label:"Autumn",  months:"September, October & November",note:"Shoulder season — low crowds, good prices",  factor:0.88 },
+];
+
+function seasonPage(o, d, season) {
+  const url   = `/flights/${cSlug(o)}-to-${cSlug(d)}/${season.slug}`;
+  const cp    = Math.round(cheap(d) * season.factor);
+  const title = `${season.label} Flights ${o.city} to ${d.city} ${season.months} | From £${cp} | TripHunt`;
+  const desc  = `${season.label} flights from ${o.city} to ${d.city} (${season.months}) from £${cp}. ${season.note}. Compare all airlines on TripHunt.`;
+
+  return `${head({title, desc, canonical:`${SITE_URL}${url}`, schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:`${season.label} flights`,u:url}]),faqSchema([{q:`How much are ${season.label.toLowerCase()} flights from ${o.city} to ${d.city}?`,a:`${season.label} flights from ${o.city} to ${d.city} (${season.months}) start from £${cp} return. ${season.note}.`}])]})}
+<body>
+${header()}
+<div class="container">${bcrumb([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:`${season.label} flights`,u:url}])}</div>
+<div class="hero"><div class="container">
+  <div class="hero-label">🌤️ ${season.label} · ${o.code} → ${d.code}</div>
+  <h1 class="h1">${season.label} Flights<br>${o.city} to <span class="dest">${d.city}</span><br>from <span class="price">£${cp}</span></h1>
+  <p class="hsub">${season.months} · ${season.note} · Compare all airlines</p>
+  <a href="${jrUrl(o.code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ Search ${season.label} Flights →</a>
+</div></div>
+<div class="container">
+  <div class="stats">
+    <div class="stat"><div class="stat-v">£${cp}</div><div class="stat-l">${season.label} from</div></div>
+    <div class="stat"><div class="stat-v">${season.months.split(",")[0]}</div><div class="stat-l">Season starts</div></div>
+    <div class="stat"><div class="stat-v">${season.note.split("—")[0].trim()}</div><div class="stat-l">Season type</div></div>
+  </div>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Compare All Seasons: ${o.city} to ${d.city}</h2></div>
+    <div class="months">${SEASONS.map(s=>`<a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${s.slug}" class="mpill ${s.slug===season.slug?'cheap':''}">${s.label} <strong>£${Math.round(cheap(d)*s.factor)}</strong></a>`).join("\n")}</div>
+  </section>
+</div>
+${footer(o)}
+</body></html>`;
+}
+
+// 17. AIRPORT COMPARISON PAGE  /compare/lhr-vs-lgw-to-barcelona
+function compareAirportsPage(o1, o2, d) {
+  const url   = `/compare/${o1.code.toLowerCase()}-vs-${o2.code.toLowerCase()}-to-${cSlug(d)}`;
+  const cp1   = cheap(d), cp2 = Math.round(cheap(d) * 0.92);
+  const cheaper = cp1 <= cp2 ? o1 : o2;
+  const title = `${o1.code} vs ${o2.code} to ${d.city} | Which is Cheaper? | TripHunt`;
+  const desc  = `Compare flights from ${o1.city} vs ${o2.city} to ${d.city}. ${o1.name} from £${cp1}, ${o2.name} from £${cp2}. Find out which airport is cheaper.`;
+
+  return `${head({title, desc, canonical:`${SITE_URL}${url}`, schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:"Compare Airports",u:"/compare/"},{n:`${o1.code} vs ${o2.code} to ${d.city}`,u:url}]),faqSchema([{q:`Is it cheaper to fly to ${d.city} from ${o1.city} or ${o2.city}?`,a:`Currently, ${cheaper.city} (${cheaper.code}) tends to offer slightly cheaper fares to ${d.city}. However prices change daily — use TripHunt to compare both in real time.`}])]})}
+<body>
+${header()}
+<div class="container">${bcrumb([{n:"Home",u:"/"},{n:"Compare Airports",u:"/compare/"},{n:`${o1.code} vs ${o2.code} to ${d.city}`,u:url}])}</div>
+<div class="hero"><div class="container">
+  <div class="hero-label">⚖️ Airport Comparison · to ${d.city}</div>
+  <h1 class="h1">${o1.code} vs ${o2.code}<br>to <span class="dest">${d.city}</span><br>Which is Cheaper?</h1>
+  <p class="hsub">Real-time price comparison · No hidden fees · Find the best deal</p>
+</div></div>
+<div class="container">
+  <div class="stats">
+    <div class="stat"><div class="stat-v">£${cp1}</div><div class="stat-l">From ${o1.city}</div></div>
+    <div class="stat"><div class="stat-v">£${cp2}</div><div class="stat-l">From ${o2.city}</div></div>
+    <div class="stat"><div class="stat-v">${cheaper.city}</div><div class="stat-l">Currently cheaper</div></div>
+  </div>
+  <section class="sec">
+    <div class="sec-h"><h2 class="sec-t">Compare in Detail</h2></div>
+    <div class="igrid">
+      <div class="icard"><div class="icard-ico">🛫</div><div class="icard-t">${o1.name} (${o1.code})</div><div class="icard-b">Flights to ${d.city} from <strong>£${cp1}</strong>. ${o1.name} offers services to ${d.city} via multiple airlines. <a href="/flights/${cSlug(o1)}-to-${cSlug(d)}">See all ${o1.city} → ${d.city} flights →</a></div></div>
+      <div class="icard"><div class="icard-ico">🛫</div><div class="icard-t">${o2.name} (${o2.code})</div><div class="icard-b">Flights to ${d.city} from <strong>£${cp2}</strong>. ${o2.name} may offer more convenient services depending on where you live. <a href="/flights/${cSlug(o2)}-to-${cSlug(d)}">See all ${o2.city} → ${d.city} flights →</a></div></div>
+    </div>
+  </section>
+</div>
+${footer(o1)}
+</body></html>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// NEW MAIN() — replaces the old main()
+// ═══════════════════════════════════════════════════════════════════════════════
 function main(){
-  console.log("\n🚀 TripHunt SEO Engine");
+  console.log("\n🚀 TripHunt SEO Engine v2 — 1M+ Edition");
   console.log(`📁 Output: ${SEO_OUT}`);
-  console.log(`🔧 Mode: ${IS_TEST?"TEST (50 pages)":"FULL BUILD"}`);
+  console.log(`🔧 Mode: ${IS_TEST?"TEST (500 pages)":"FULL BUILD"}`);
   console.log("─".repeat(48));
 
   const t0=Date.now();
   let total=0;
-  const flightUrls=[], destUrls=[], apUrls=[];
+  const flightUrls=[], destUrls=[], apUrls=[], extraUrls=[];
+
+  function u(loc, priority="0.7", changefreq="weekly"){ return {loc,priority,changefreq}; }
 
   // Index pages
-  write(`${SEO_OUT}/flights/index.html`, `<!DOCTYPE html><html lang="en-GB"><head><meta charset="UTF-8"/><title>Cheap Flights UK | TripHunt</title><link rel="canonical" href="${SITE_URL}/flights/"/><style>${CSS}</style></head><body>${header()}<div class="hero"><div class="container"><h1 class="h1">Cheap Flights from the <span class="dest">UK</span></h1><p class="hsub">Compare 100+ airlines. 200+ destinations. No hidden fees.</p><a href="/" class="sbtn">✈️ Search All Flights</a></div></div><div class="container"><section class="sec"><div class="sec-h"><h2 class="sec-t">Flights by UK Airport</h2></div><div class="dgrid">${HUBS.map(h=>`<a href="/flights-from/${cSlug(h)}" class="dcard"><div class="dcard-c">${h.city}</div><div class="dcard-n">${h.name}</div><div class="dcard-p">${h.code}</div></a>`).join("")}</div></section></div>${footer()}</body></html>`);
+  write(`${SEO_OUT}/flights/index.html`, `<!DOCTYPE html><html lang="en-GB"><head><meta charset="UTF-8"/><title>Cheap Flights UK | TripHunt</title><link rel="canonical" href="${SITE_URL}/flights/"/><style>${CSS}</style></head><body>${header()}<div class="hero"><div class="container"><h1 class="h1">Cheap Flights from the <span class="dest">UK</span></h1><p class="hsub">Compare 100+ airlines. 1M+ pages. No hidden fees.</p><a href="/" class="sbtn">✈️ Search All Flights</a></div></div><div class="container"><section class="sec"><div class="sec-h"><h2 class="sec-t">Top Departure Airports</h2></div><div class="dgrid">${UK.map(h=>`<a href="/flights-from/${cSlug(h)}" class="dcard"><div class="dcard-c">${h.city}</div><div class="dcard-n">${h.name}</div><div class="dcard-p">${h.code}</div></a>`).join("")}</div></section></div>${footer()}</body></html>`);
+  write(`${SEO_OUT}/destinations/index.html`, `<!DOCTYPE html><html lang="en-GB"><head><meta charset="UTF-8"/><title>Travel Destinations | TripHunt</title><link rel="canonical" href="${SITE_URL}/destinations/"/><style>${CSS}</style></head><body>${header()}<div class="hero"><div class="container"><h1 class="h1">Travel <span class="dest">Destinations</span></h1><p class="hsub">Explore the world. Compare cheap flights from UK airports.</p></div></div><div class="container"><section class="sec"><div class="sec-h"><h2 class="sec-t">Popular Destinations</h2></div><div class="dgrid">${FOREIGN.slice(0,24).map(d=>`<a href="/destinations/${cSlug(d)}" class="dcard"><div class="dcard-c">${d.city}</div><div class="dcard-n">${d.country}</div><div class="dcard-p">£${cheap(d)}</div></a>`).join("")}</div></section></div>${footer()}</body></html>`);
+  write(`${SEO_OUT}/airports/index.html`,      `<!DOCTYPE html><html lang="en-GB"><head><meta charset="UTF-8"/><title>Airport Guides | TripHunt</title><link rel="canonical" href="${SITE_URL}/airports/"/><style>${CSS}</style></head><body>${header()}<div class="hero"><div class="container"><h1 class="h1"><span class="dest">Airport</span> Guides</h1><p class="hsub">Terminal info, airlines and cheap flights from airports worldwide.</p></div></div><div class="container"><section class="sec"><div class="sec-h"><h2 class="sec-t">UK Airports</h2></div><div class="dgrid">${UK.map(a=>`<a href="/airports/${aSlug(a)}" class="dcard"><div class="dcard-c">${a.code}</div><div class="dcard-n">${a.city}</div></a>`).join("")}</div></section></div>${footer()}</body></html>`);
 
-  write(`${SEO_OUT}/destinations/index.html`, `<!DOCTYPE html><html lang="en-GB"><head><meta charset="UTF-8"/><title>Travel Destinations | TripHunt</title><link rel="canonical" href="${SITE_URL}/destinations/"/><style>${CSS}</style></head><body>${header()}<div class="hero"><div class="container"><h1 class="h1">Travel <span class="dest">Destinations</span></h1><p class="hsub">Explore the world. Compare cheap flights from UK airports.</p><a href="/" class="sbtn">✈️ Search Flights</a></div></div><div class="container"><section class="sec"><div class="sec-h"><h2 class="sec-t">Popular Destinations from the UK</h2></div><div class="dgrid">${FOREIGN.slice(0,24).map(d=>`<a href="/destinations/${cSlug(d)}" class="dcard"><div class="dcard-c">${d.city}</div><div class="dcard-n">${d.country}</div><div class="dcard-p">£${cheap(d)}</div><div class="dcard-l">from UK</div></a>`).join("")}</div></section></div>${footer()}</body></html>`);
-
-  write(`${SEO_OUT}/airports/index.html`, `<!DOCTYPE html><html lang="en-GB"><head><meta charset="UTF-8"/><title>Airport Guides | TripHunt</title><link rel="canonical" href="${SITE_URL}/airports/"/><style>${CSS}</style></head><body>${header()}<div class="hero"><div class="container"><h1 class="h1"><span class="dest">Airport</span> Guides</h1><p class="hsub">Terminal info, airlines, and cheap flights from airports worldwide.</p></div></div><div class="container"><section class="sec"><div class="sec-h"><h2 class="sec-t">Browse Airports</h2></div><div class="dgrid">${AIRPORTS.slice(0,30).map(a=>`<a href="/airports/${aSlug(a)}" class="dcard"><div class="dcard-c">${a.code}</div><div class="dcard-n">${a.city}</div><div class="dcard-p" style="font-size:12px">${a.country}</div></a>`).join("")}</div></section></div>${footer()}</body></html>`);
-
-  flightUrls.push({loc:"/flights/",priority:"0.9",changefreq:"daily"});
-  destUrls.push({loc:"/destinations/",priority:"0.9",changefreq:"weekly"});
-  apUrls.push({loc:"/airports/",priority:"0.8",changefreq:"weekly"});
+  flightUrls.push(u("/flights/","0.9","daily"));
+  destUrls.push(u("/destinations/","0.9","weekly"));
+  apUrls.push(u("/airports/","0.8","weekly"));
 
   if(!ONLY_SITEMAPS){
-    // Route pages
-    console.log("✈️  Route pages...");
+
+    // ── 1. BASE ROUTE PAGES (16 UK × 182 foreign = 2,912) ─────────────────────
+    console.log("✈️  1. Route pages...");
     let rc=0;
-    outer: for(const o of UK){
+    outer1: for(const o of UK){
       for(const d of FOREIGN){
-        if(total>=LIMIT) break outer;
+        if(total>=LIMIT) break outer1;
         write(`${SEO_OUT}/flights/${cSlug(o)}-to-${cSlug(d)}/index.html`, routePage(o,d));
-        flightUrls.push({loc:`/flights/${cSlug(o)}-to-${cSlug(d)}/`,priority:"0.85",changefreq:"daily"});
+        flightUrls.push(u(`/flights/${cSlug(o)}-to-${cSlug(d)}/`,"0.85","daily"));
         rc++;total++;
-        if(rc%25===0) process.stdout.write(`\r   ${rc} route pages`);
+        if(rc%250===0) process.stdout.write(`\r   ${rc.toLocaleString()} route pages`);
       }
     }
-    console.log(`\r   ✅ ${rc} route pages`);
+    console.log(`\r   ✅ ${rc.toLocaleString()} route pages`);
 
-    // Month pages (hubs only for scale)
+    // ── 2. MONTH PAGES (all UK × all foreign = 34,944) ─────────────────────────
     if(!IS_TEST){
-      console.log("📅  Month pages...");
+      console.log("📅  2. Month pages (all UK airports)...");
       let mc=0;
-      mout: for(const o of HUBS){
+      mout2: for(const o of UK){
         for(const d of FOREIGN){
           for(const m of MONTHS){
-            if(total>=LIMIT) break mout;
+            if(total>=LIMIT) break mout2;
             write(`${SEO_OUT}/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}/index.html`, monthPage(o,d,m));
-            flightUrls.push({loc:`/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}/`,priority:"0.65",changefreq:"monthly"});
+            flightUrls.push(u(`/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}/`,"0.65","monthly"));
             mc++;total++;
-            if(mc%100===0) process.stdout.write(`\r   ${mc} month pages`);
+            if(mc%1000===0) process.stdout.write(`\r   ${mc.toLocaleString()} month pages`);
           }
         }
       }
-      console.log(`\r   ✅ ${mc} month pages`);
+      console.log(`\r   ✅ ${mc.toLocaleString()} month pages`);
     }
 
-    // Cheap-to pages
-    console.log("💰  Cheap-to pages...");
+    // ── 3. CABIN CLASS PAGES (16 × 182 × 4 = 11,648) ───────────────────────────
+    if(!IS_TEST){
+      console.log("💺  3. Cabin class pages...");
+      let cc=0;
+      cout3: for(const o of UK){
+        for(const d of FOREIGN){
+          for(const cabin of CABINS){
+            if(total>=LIMIT) break cout3;
+            write(`${SEO_OUT}/flights/${cSlug(o)}-to-${cSlug(d)}/${cabin.slug}/index.html`, cabinPage(o,d,cabin));
+            flightUrls.push(u(`/flights/${cSlug(o)}-to-${cSlug(d)}/${cabin.slug}/`,"0.70","monthly"));
+            cc++;total++;
+            if(cc%500===0) process.stdout.write(`\r   ${cc.toLocaleString()} cabin pages`);
+          }
+        }
+      }
+      console.log(`\r   ✅ ${cc.toLocaleString()} cabin pages`);
+    }
+
+    // ── 4. PASSENGER TYPE PAGES (16 × 182 × 5 = 14,560) ───────────────────────
+    if(!IS_TEST){
+      console.log("👥  4. Passenger type pages...");
+      let pc=0;
+      pout4: for(const o of UK){
+        for(const d of FOREIGN){
+          for(const pax of PAX_TYPES){
+            if(total>=LIMIT) break pout4;
+            write(`${SEO_OUT}/flights/${cSlug(o)}-to-${cSlug(d)}/${pax.slug}/index.html`, paxPage(o,d,pax));
+            flightUrls.push(u(`/flights/${cSlug(o)}-to-${cSlug(d)}/${pax.slug}/`,"0.68","monthly"));
+            pc++;total++;
+            if(pc%500===0) process.stdout.write(`\r   ${pc.toLocaleString()} pax pages`);
+          }
+        }
+      }
+      console.log(`\r   ✅ ${pc.toLocaleString()} pax pages`);
+    }
+
+    // ── 5. STOP TYPE PAGES (16 × 182 × 2 = 5,824) ─────────────────────────────
+    if(!IS_TEST){
+      console.log("🔀  5. Stop type pages...");
+      let sc=0;
+      sout5: for(const o of UK){
+        for(const d of FOREIGN){
+          for(const st of STOP_TYPES){
+            if(total>=LIMIT) break sout5;
+            write(`${SEO_OUT}/flights/${cSlug(o)}-to-${cSlug(d)}/${st.slug}/index.html`, stopPage(o,d,st));
+            flightUrls.push(u(`/flights/${cSlug(o)}-to-${cSlug(d)}/${st.slug}/`,"0.70","monthly"));
+            sc++;total++;
+          }
+        }
+      }
+      console.log(`   ✅ ${sc.toLocaleString()} stop-type pages`);
+    }
+
+    // ── 6. SEASON PAGES (16 × 182 × 4 = 11,648) ───────────────────────────────
+    if(!IS_TEST){
+      console.log("🌤️   6. Season pages...");
+      let sec=0;
+      seout6: for(const o of UK){
+        for(const d of FOREIGN){
+          for(const season of SEASONS){
+            if(total>=LIMIT) break seout6;
+            write(`${SEO_OUT}/flights/${cSlug(o)}-to-${cSlug(d)}/${season.slug}/index.html`, seasonPage(o,d,season));
+            flightUrls.push(u(`/flights/${cSlug(o)}-to-${cSlug(d)}/${season.slug}/`,"0.68","monthly"));
+            sec++;total++;
+          }
+        }
+      }
+      console.log(`   ✅ ${sec.toLocaleString()} season pages`);
+    }
+
+    // ── 7. DURATION PAGES (16 × 182 × 3 = 8,736) ──────────────────────────────
+    if(!IS_TEST){
+      console.log("📆  7. Duration pages...");
+      let dc=0;
+      dout7: for(const o of UK){
+        for(const d of FOREIGN){
+          for(const dur of DURATIONS){
+            if(total>=LIMIT) break dout7;
+            write(`${SEO_OUT}/flights/${cSlug(o)}-to-${cSlug(d)}/${dur.slug}/index.html`, durationPage(o,d,dur));
+            flightUrls.push(u(`/flights/${cSlug(o)}-to-${cSlug(d)}/${dur.slug}/`,"0.67","monthly"));
+            dc++;total++;
+          }
+        }
+      }
+      console.log(`   ✅ ${dc.toLocaleString()} duration pages`);
+    }
+
+    // ── 8. YEAR PAGES (16 × 182 × 3 = 8,736) ──────────────────────────────────
+    if(!IS_TEST){
+      console.log("📅  8. Year pages...");
+      let yc=0;
+      yout8: for(const o of UK){
+        for(const d of FOREIGN){
+          for(const yr of YEARS){
+            if(total>=LIMIT) break yout8;
+            write(`${SEO_OUT}/flights/${cSlug(o)}-to-${cSlug(d)}/${yr.slug}/index.html`, yearPage(o,d,yr));
+            flightUrls.push(u(`/flights/${cSlug(o)}-to-${cSlug(d)}/${yr.slug}/`,"0.70","monthly"));
+            yc++;total++;
+          }
+        }
+      }
+      console.log(`   ✅ ${yc.toLocaleString()} year pages`);
+    }
+
+    // ── 9. AIRLINE ROUTE PAGES (hubs only × 182 × 20 airlines = 80,080) ────────
+    if(!IS_TEST){
+      console.log("✈️   9. Airline route pages...");
+      let alc=0;
+      alout9: for(const o of HUBS){
+        for(const d of FOREIGN){
+          for(const al of UK_AIRLINES){
+            if(total>=LIMIT) break alout9;
+            write(`${SEO_OUT}/flights/${cSlug(o)}-to-${cSlug(d)}/${al.slug}/index.html`, airlinePage(o,d,al));
+            flightUrls.push(u(`/flights/${cSlug(o)}-to-${cSlug(d)}/${al.slug}/`,"0.72","weekly"));
+            alc++;total++;
+            if(alc%2000===0) process.stdout.write(`\r   ${alc.toLocaleString()} airline pages`);
+          }
+        }
+      }
+      console.log(`\r   ✅ ${alc.toLocaleString()} airline route pages`);
+    }
+
+    // ── 10. MONTH × CABIN COMBO PAGES (hubs × 182 × 12 × 4 = 139,776) ─────────
+    if(!IS_TEST){
+      console.log("💺  10. Month × cabin combo pages...");
+      let mcc=0;
+      mcout10: for(const o of HUBS){
+        for(const d of FOREIGN){
+          for(const m of MONTHS){
+            for(const cabin of CABINS){
+              if(total>=LIMIT) break mcout10;
+              const url2=`/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}/${cabin.slug}`;
+              const cp2=Math.round(avg(d)*m.factor*cabin.priceMult*0.72);
+              const title2=`${cabin.label} Flights ${o.city} to ${d.city} in ${m.label} | From £${cp2} | TripHunt`;
+              const desc2=`${cabin.label} flights from ${o.city} to ${d.city} in ${m.label} from £${cp2}. ${cabin.note}. Compare all airlines.`;
+              // Lightweight page
+              const html2=`${head({title:title2,desc:desc2,canonical:`${SITE_URL}${url2}`,schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:m.label,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}/`},{n:cabin.label,u:url2}])]})}
+<body>${header()}
+<div class="hero"><div class="container">
+  <h1 class="h1">${cabin.label} · ${m.label}<br>${o.city} to <span class="dest">${d.city}</span><br>from <span class="price">£${cp2}</span></h1>
+  <p class="hsub">${cabin.note} · ${m.peak?'Peak season':'Value month'} · No hidden fees</p>
+  <a href="${jrUrl(o.code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ Compare ${cabin.label} Prices →</a>
+</div></div>
+<div class="container">
+  <div class="stats">
+    <div class="stat"><div class="stat-v">£${cp2}</div><div class="stat-l">${cabin.short} in ${m.short}</div></div>
+    <div class="stat"><div class="stat-v">${m.peak?'Peak':'Value'}</div><div class="stat-l">Season</div></div>
+  </div>
+  <p style="padding:16px 0;color:var(--txt2)"><a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${cabin.slug}" style="color:var(--acc2)">← All ${cabin.label} fares: ${o.city} to ${d.city}</a> &nbsp;·&nbsp; <a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}" style="color:var(--acc2)">All ${m.label} fares</a></p>
+</div>${footer(o)}</body></html>`;
+              write(`${SEO_OUT}${url2}/index.html`, html2);
+              flightUrls.push(u(`${url2}/`,"0.55","monthly"));
+              mcc++;total++;
+              if(mcc%5000===0) process.stdout.write(`\r   ${mcc.toLocaleString()} month×cabin pages`);
+            }
+          }
+        }
+      }
+      console.log(`\r   ✅ ${mcc.toLocaleString()} month×cabin pages`);
+    }
+
+    // ── 11. MONTH × YEAR COMBO PAGES (hubs × 182 × 12 × 3 = 104,832) ──────────
+    if(!IS_TEST){
+      console.log("📅  11. Month × year combo pages...");
+      let myc=0;
+      myout11: for(const o of HUBS){
+        for(const d of FOREIGN){
+          for(const m of MONTHS){
+            for(const yr of YEARS){
+              if(total>=LIMIT) break myout11;
+              const url2=`/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}/${yr.slug}`;
+              const cp2=Math.round(avg(d)*m.factor*0.72);
+              const title2=`Flights ${o.city} to ${d.city} ${m.label} ${yr.label} | From £${cp2} | TripHunt`;
+              const html2=`${head({title:title2,desc:`Flights from ${o.city} to ${d.city} in ${m.label} ${yr.label} from £${cp2}. Compare all airlines. No hidden fees.`,canonical:`${SITE_URL}${url2}`,schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:`${m.label} ${yr.label}`,u:url2}])]})}
+<body>${header()}
+<div class="hero"><div class="container">
+  <h1 class="h1">${o.city} to <span class="dest">${d.city}</span><br>${m.label} <span class="dest">${yr.label}</span><br>from <span class="price">£${cp2}</span></h1>
+  <p class="hsub">${m.peak?'Peak season — book early.':'Good value month.'} Compare 100+ airlines.</p>
+  <a href="${jrUrl(o.code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ See ${m.label} ${yr.label} Prices →</a>
+</div></div>
+<div class="container">
+  <div class="stats">
+    <div class="stat"><div class="stat-v">£${cp2}</div><div class="stat-l">From (${m.short} ${yr.label})</div></div>
+    <div class="stat"><div class="stat-v">${m.peak?'Peak':'Off-peak'}</div><div class="stat-l">Season</div></div>
+  </div>
+  <p style="padding:16px 0"><a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}" style="color:var(--acc2)">← All ${m.label} fares</a> &nbsp;·&nbsp; <a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${yr.slug}" style="color:var(--acc2)">All ${yr.label} fares</a></p>
+</div>${footer(o)}</body></html>`;
+              write(`${SEO_OUT}${url2}/index.html`, html2);
+              flightUrls.push(u(`${url2}/`,"0.52","monthly"));
+              myc++;total++;
+              if(myc%5000===0) process.stdout.write(`\r   ${myc.toLocaleString()} month×year pages`);
+            }
+          }
+        }
+      }
+      console.log(`\r   ✅ ${myc.toLocaleString()} month×year pages`);
+    }
+
+    // ── 12. AIRLINE × MONTH COMBO PAGES (hubs × 182 × 20 × 12 = 960,960) ──────
+    if(!IS_TEST){
+      console.log("✈️   12. Airline × month combo pages (BIG)...");
+      let amc=0;
+      amout12: for(const o of HUBS){
+        for(const d of FOREIGN){
+          for(const al of UK_AIRLINES){
+            for(const m of MONTHS){
+              if(total>=LIMIT) break amout12;
+              const url2=`/flights/${cSlug(o)}-to-${cSlug(d)}/${al.slug}/${m.slug}`;
+              const cp2=Math.round(avg(d)*m.factor*(al.type==='budget'?0.9:1.1)*0.72);
+              const title2=`${al.name} ${m.label} Flights ${o.city} to ${d.city} | From £${cp2} | TripHunt`;
+              const html2=`${head({title:title2,desc:`${al.name} flights from ${o.city} to ${d.city} in ${m.label} from £${cp2}. ${m.peak?'Peak season — book early.':'Good value month.'} Compare on TripHunt.`,canonical:`${SITE_URL}${url2}`,schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:al.name,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/${al.slug}/`},{n:m.label,u:url2}])]})}
+<body>${header()}
+<div class="hero"><div class="container">
+  <h1 class="h1">${al.name} · ${m.label}<br>${o.city} to <span class="dest">${d.city}</span><br>from <span class="price">£${cp2}</span></h1>
+  <p class="hsub">${m.peak?'Peak season — book early for best ${al.name} fares.':'Good value month for '+al.name+' on this route.'} No hidden fees.</p>
+  <a href="${jrUrl(o.code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ Compare ${al.name} in ${m.label} →</a>
+</div></div>
+<div class="container">
+  <div class="stats">
+    <div class="stat"><div class="stat-v">£${cp2}</div><div class="stat-l">${al.name} in ${m.short}</div></div>
+    <div class="stat"><div class="stat-v">${m.peak?'Peak':'Value'}</div><div class="stat-l">Season</div></div>
+    <div class="stat"><div class="stat-v">${flightHrs(o,d)}</div><div class="stat-l">Flight time</div></div>
+  </div>
+  <p style="padding:16px 0"><a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${al.slug}" style="color:var(--acc2)">← All ${al.name} fares</a> &nbsp;·&nbsp; <a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}" style="color:var(--acc2)">All ${m.label} fares</a></p>
+</div>${footer(o)}</body></html>`;
+              write(`${SEO_OUT}${url2}/index.html`, html2);
+              flightUrls.push(u(`${url2}/`,"0.60","monthly"));
+              amc++;total++;
+              if(amc%10000===0) process.stdout.write(`\r   ${amc.toLocaleString()} airline×month pages`);
+            }
+          }
+        }
+      }
+      console.log(`\r   ✅ ${amc.toLocaleString()} airline×month pages`);
+    }
+
+    // ── 13. BUDGET BRACKET PAGES (16 × 6 brackets = 96) ────────────────────────
+    console.log("💸  13. Budget bracket pages...");
+    for(const o of UK){
+      for(const bracket of BUDGET_BRACKETS){
+        if(total>=LIMIT) break;
+        write(`${SEO_OUT}/cheap-flights/from/${cSlug(o)}/${bracket.slug}/index.html`, budgetPage(o, bracket));
+        extraUrls.push(u(`/cheap-flights/from/${cSlug(o)}/${bracket.slug}/`,"0.75","daily"));
+        total++;
+      }
+    }
+    console.log(`   ✅ ${UK.length * BUDGET_BRACKETS.length} budget pages`);
+
+    // ── 14. CHEAP-TO PAGES (182) ──────────────────────────────────────────────
+    console.log("💰  14. Cheap-to pages...");
     for(const d of FOREIGN){
       if(total>=LIMIT) break;
       write(`${SEO_OUT}/cheap-flights-to/${cSlug(d)}/index.html`, cheapToPage(d));
-      destUrls.push({loc:`/cheap-flights-to/${cSlug(d)}/`,priority:"0.80",changefreq:"weekly"});
+      destUrls.push(u(`/cheap-flights-to/${cSlug(d)}/`,"0.80","weekly"));
       total++;
     }
+    write(`${SEO_OUT}/cheap-flights-to/index.html`, cheapToIndexPage());
+    destUrls.push(u("/cheap-flights-to/","0.88","daily"));
     console.log(`   ✅ ${FOREIGN.length} cheap-to pages`);
 
-    // Flights-from pages
-    console.log("🛫  Flights-from pages...");
+    // ── 15. FLIGHTS-FROM PAGES (16) ───────────────────────────────────────────
+    console.log("🛫  15. Flights-from pages...");
     for(const o of UK){
       if(total>=LIMIT) break;
       write(`${SEO_OUT}/flights-from/${cSlug(o)}/index.html`, flightsFromPage(o));
-      flightUrls.push({loc:`/flights-from/${cSlug(o)}/`,priority:"0.80",changefreq:"weekly"});
+      flightUrls.push(u(`/flights-from/${cSlug(o)}/`,"0.80","weekly"));
       total++;
     }
     console.log(`   ✅ ${UK.length} flights-from pages`);
 
-    // Airport pages
-    console.log("🛫  Airport pages...");
+    // ── 16. AIRPORT PAGES (198) ───────────────────────────────────────────────
+    console.log("🛫  16. Airport pages...");
     for(const a of AIRPORTS){
       if(total>=LIMIT) break;
       write(`${SEO_OUT}/airports/${aSlug(a)}/index.html`, airportPage(a));
-      apUrls.push({loc:`/airports/${aSlug(a)}/`,priority:"0.75",changefreq:"monthly"});
+      apUrls.push(u(`/airports/${aSlug(a)}/`,"0.75","monthly"));
       total++;
     }
     console.log(`   ✅ ${AIRPORTS.length} airport pages`);
 
-    // Destination pages
-    console.log("🌍  Destination pages...");
-    for(const d of FOREIGN){
-      if(total>=LIMIT) break;
-      write(`${SEO_OUT}/destinations/${cSlug(d)}/index.html`, destPage(d));
-      destUrls.push({loc:`/destinations/${cSlug(d)}/`,priority:"0.78",changefreq:"weekly"});
-      total++;
-    }
-    console.log(`   ✅ ${FOREIGN.length} destination pages`);
+    // ── 17. DESTINATION + BEST-TIME + WEEKEND PAGES ───────────────────────────
+    console.log("🌍  17. Destination / best-time / weekend pages...");
+    for(const d of FOREIGN){ if(total>=LIMIT) break; write(`${SEO_OUT}/destinations/${cSlug(d)}/index.html`, destPage(d)); destUrls.push(u(`/destinations/${cSlug(d)}/`,"0.78","weekly")); total++; }
+    for(const d of FOREIGN){ if(total>=LIMIT) break; write(`${SEO_OUT}/best-time-to-visit/${cSlug(d)}/index.html`, bestTimePage(d)); destUrls.push(u(`/best-time-to-visit/${cSlug(d)}/`,"0.72","monthly")); total++; }
+    const weekendDests=FOREIGN.filter(d=>d.lat&&Math.abs(d.lat-51)<20).slice(0,40);
+    for(const o of UK){ if(total>=LIMIT) break; write(`${SEO_OUT}/weekend-trips/${cSlug(o)}/index.html`, weekendPage(o,weekendDests)); flightUrls.push(u(`/weekend-trips/${cSlug(o)}/`,"0.75","weekly")); total++; }
+    write(`${SEO_OUT}/weekend-trips/index.html`, weekendIndexPage()); flightUrls.push(u("/weekend-trips/","0.85","weekly"));
+    console.log(`   ✅ ${FOREIGN.length*2 + UK.length} destination/best-time/weekend pages`);
 
-    // Best-time-to-visit pages
-    console.log("📅  Best-time pages...");
-    for(const d of FOREIGN){
-      if(total>=LIMIT) break;
-      write(`${SEO_OUT}/best-time-to-visit/${cSlug(d)}/index.html`, bestTimePage(d));
-      destUrls.push({loc:`/best-time-to-visit/${cSlug(d)}/`,priority:"0.72",changefreq:"monthly"});
-      total++;
+    // ── 18. CITY-TO-CITY PAGES (43 UK cities × 300 dest cities = ~12,900) ──────
+    if(!IS_TEST){
+      console.log("🏙️   18. City-to-city pages...");
+      let ctc=0;
+      ctcout: for(const oc of UK_CITIES_EXTENDED){
+        for(const dc of DEST_CITIES_EXTENDED){
+          if(total>=LIMIT) break ctcout;
+          write(`${SEO_OUT}/city-flights/${slug(oc)}-to-${slug(dc)}/index.html`, cityToCityPage(oc, dc));
+          extraUrls.push(u(`/city-flights/${slug(oc)}-to-${slug(dc)}/`,"0.65","weekly"));
+          ctc++;total++;
+          if(ctc%1000===0) process.stdout.write(`\r   ${ctc.toLocaleString()} city-to-city pages`);
+        }
+      }
+      console.log(`\r   ✅ ${ctc.toLocaleString()} city-to-city pages`);
     }
-    console.log(`   ✅ ${FOREIGN.length} best-time pages`);
 
-    // Weekend trip pages (UK hubs only)
-    console.log("🏙️   Weekend trip pages...");
-    let wc=0;
-    const weekendDests = FOREIGN.filter(d=>["Europe"].includes(d.region)||["Morocco","Tunisia"].includes(d.country)).slice(0,40);
-    for(const o of UK){
-      if(total>=LIMIT) break;
-      write(`${SEO_OUT}/weekend-trips/${cSlug(o)}/index.html`, weekendPage(o, weekendDests));
-      flightUrls.push({loc:`/weekend-trips/${cSlug(o)}/`,priority:"0.75",changefreq:"weekly"});
-      wc++;total++;
+    // ── 19. AIRPORT COMPARISON PAGES (key UK pairs × top 60 dests = ~600) ──────
+    if(!IS_TEST){
+      console.log("⚖️   19. Airport comparison pages...");
+      const AP_PAIRS=[[UK[0],UK[1]],[UK[0],UK[2]],[UK[0],UK[3]],[UK[1],UK[2]],[UK[1],UK[3]],[UK[2],UK[3]],[UK[0],UK[4]],[UK[0],UK[6]],[UK[3],UK[4]],[UK[5],UK[6]],[UK[7],UK[8]],[UK[2],UK[5]]];
+      const TOP_DESTS=FOREIGN.sort((a,b)=>(ROUTE_AVG[b.code]||0)-(ROUTE_AVG[a.code]||0)).slice(0,60);
+      let cpc=0;
+      for(const [o1,o2] of AP_PAIRS){
+        for(const d of TOP_DESTS){
+          if(total>=LIMIT) break;
+          if(!o1||!o2) continue;
+          write(`${SEO_OUT}/compare/${o1.code.toLowerCase()}-vs-${o2.code.toLowerCase()}-to-${cSlug(d)}/index.html`, compareAirportsPage(o1,o2,d));
+          extraUrls.push(u(`/compare/${o1.code.toLowerCase()}-vs-${o2.code.toLowerCase()}-to-${cSlug(d)}/`,"0.70","weekly"));
+          cpc++;total++;
+        }
+      }
+      console.log(`   ✅ ${cpc} airport comparison pages`);
     }
-    write(`${SEO_OUT}/weekend-trips/index.html`, weekendIndexPage());
-    flightUrls.push({loc:"/weekend-trips/",priority:"0.85",changefreq:"weekly"});
-    console.log(`   ✅ ${wc} weekend trip pages`);
-
-    // Cheap-flights-to index
-    write(`${SEO_OUT}/cheap-flights-to/index.html`, cheapToIndexPage());
-    destUrls.push({loc:"/cheap-flights-to/",priority:"0.88",changefreq:"daily"});
   }
 
-  // Sitemaps
+
+    // ── 20. AIRLINE × CABIN PAGES (16 × 182 × 20 × 4 = 232,960) ───────────────
+    if(!IS_TEST){
+      console.log("✈️   20. Airline×cabin pages...");
+      let acc2=0;
+      acout20: for(const o of UK){
+        for(const d of FOREIGN){
+          for(const al of UK_AIRLINES){
+            for(const cabin of CABINS){
+              if(total>=LIMIT) break acout20;
+              const url2=`/flights/${cSlug(o)}-to-${cSlug(d)}/${al.slug}/${cabin.slug}`;
+              const cp2=Math.round(avg(d)*cabin.priceMult*(al.type==='budget'?0.88:1.12)*0.75);
+              const title2=`${al.name} ${cabin.label} ${o.city} to ${d.city} | From £${cp2} | TripHunt`;
+              const html2=`${head({title:title2,desc:`${al.name} ${cabin.label.toLowerCase()} flights from ${o.city} to ${d.city} from £${cp2}. ${cabin.note}. Book on TripHunt.`,canonical:`${SITE_URL}${url2}`,schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:al.name,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/${al.slug}/`},{n:cabin.label,u:url2}])]})}
+<body>${header()}
+<div class="hero"><div class="container">
+  <h1 class="h1">${al.name} ${cabin.label}<br>${o.city} to <span class="dest">${d.city}</span><br>from <span class="price">£${cp2}</span></h1>
+  <p class="hsub">${cabin.note} · ${al.type==='budget'?'Budget carrier — check baggage.':'Full-service included baggage.'} No hidden fees.</p>
+  <a href="${jrUrl(o.code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ Compare ${al.name} ${cabin.label} →</a>
+</div></div>
+<div class="container">
+  <p style="padding:16px 0"><a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${al.slug}" style="color:var(--acc2)">← All ${al.name} fares</a> &nbsp;·&nbsp; <a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${cabin.slug}" style="color:var(--acc2)">All ${cabin.label} fares</a></p>
+</div>${footer(o)}</body></html>`;
+              write(`${SEO_OUT}${url2}/index.html`, html2);
+              flightUrls.push(u(`${url2}/`,"0.55","monthly"));
+              acc2++;total++;
+              if(acc2%10000===0) process.stdout.write(`\r   ${acc2.toLocaleString()} airline×cabin pages`);
+            }
+          }
+        }
+      }
+      console.log(`\r   ✅ ${acc2.toLocaleString()} airline×cabin pages`);
+    }
+
+    // ── 21. AIRLINE × YEAR PAGES (16 × 182 × 20 × 3 = 174,720) ────────────────
+    if(!IS_TEST){
+      console.log("📅  21. Airline×year pages...");
+      let ayc=0;
+      ayout21: for(const o of UK){
+        for(const d of FOREIGN){
+          for(const al of UK_AIRLINES){
+            for(const yr of YEARS){
+              if(total>=LIMIT) break ayout21;
+              const url2=`/flights/${cSlug(o)}-to-${cSlug(d)}/${al.slug}/${yr.slug}`;
+              const cp2=Math.round(avg(d)*(al.type==='budget'?0.88:1.1)*0.72);
+              const html2=`${head({title:`${al.name} Flights ${o.city} to ${d.city} ${yr.label} | From £${cp2} | TripHunt`,desc:`${al.name} flights from ${o.city} to ${d.city} in ${yr.label} from £${cp2}. Compare on TripHunt.`,canonical:`${SITE_URL}${url2}`,schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:al.name,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/${al.slug}/`},{n:yr.label,u:url2}])]})}
+<body>${header()}<div class="hero"><div class="container"><h1 class="h1">${al.name} ${yr.label}<br>${o.city} to <span class="dest">${d.city}</span><br>from <span class="price">£${cp2}</span></h1><p class="hsub">${yr.note}. Compare on TripHunt. No hidden fees.</p><a href="${jrUrl(o.code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ Search ${yr.label} →</a></div></div><div class="container"><p style="padding:16px 0"><a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${al.slug}" style="color:var(--acc2)">← All ${al.name} fares</a> &nbsp;·&nbsp; <a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${yr.slug}" style="color:var(--acc2)">All ${yr.label} fares</a></p></div>${footer(o)}</body></html>`;
+              write(`${SEO_OUT}${url2}/index.html`, html2);
+              flightUrls.push(u(`${url2}/`,"0.52","monthly"));
+              ayc++;total++;
+              if(ayc%10000===0) process.stdout.write(`\r   ${ayc.toLocaleString()} airline×year pages`);
+            }
+          }
+        }
+      }
+      console.log(`\r   ✅ ${ayc.toLocaleString()} airline×year pages`);
+    }
+
+    // ── 22. MONTH × PAX PAGES (16 × 182 × 12 × 5 = 174,720) ───────────────────
+    if(!IS_TEST){
+      console.log("👥  22. Month×pax pages...");
+      let mpc=0;
+      mpout22: for(const o of UK){
+        for(const d of FOREIGN){
+          for(const m of MONTHS){
+            for(const pax of PAX_TYPES){
+              if(total>=LIMIT) break mpout22;
+              const url2=`/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}/${pax.slug}`;
+              const cp2=Math.round(avg(d)*m.factor*0.72);
+              const html2=`${head({title:`${pax.label} Flights ${o.city} to ${d.city} ${m.label} | From £${cp2}pp | TripHunt`,desc:`${pax.label} flights from ${o.city} to ${d.city} in ${m.label} from £${cp2} per person. ${pax.note}. Compare on TripHunt.`,canonical:`${SITE_URL}${url2}`,schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:m.label,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}/`},{n:pax.label,u:url2}])]})}
+<body>${header()}<div class="hero"><div class="container"><h1 class="h1">${pax.label} · ${m.label}<br>${o.city} to <span class="dest">${d.city}</span><br>from <span class="price">£${cp2}</span> <span style="font-size:0.45em;color:var(--txt2)">pp</span></h1><p class="hsub">${pax.note} · ${m.peak?'Peak season — book early.':'Good value month.'}</p><a href="${jrUrl(o.code,d.code,3,7,pax.adults)}" target="_blank" rel="noopener" class="sbtn">✈️ Search for ${pax.adults} on JetRadar →</a></div></div><div class="container"><p style="padding:16px 0"><a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}" style="color:var(--acc2)">← All ${m.label} fares</a> &nbsp;·&nbsp; <a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${pax.slug}" style="color:var(--acc2)">All ${pax.label} fares</a></p></div>${footer(o)}</body></html>`;
+              write(`${SEO_OUT}${url2}/index.html`, html2);
+              flightUrls.push(u(`${url2}/`,"0.50","monthly"));
+              mpc++;total++;
+              if(mpc%10000===0) process.stdout.write(`\r   ${mpc.toLocaleString()} month×pax pages`);
+            }
+          }
+        }
+      }
+      console.log(`\r   ✅ ${mpc.toLocaleString()} month×pax pages`);
+    }
+
+    // ── 23. MONTH × STOP TYPE (16 × 182 × 12 × 2 = 69,888) ────────────────────
+    if(!IS_TEST){
+      console.log("🔀  23. Month×stop pages...");
+      let msc=0;
+      msout23: for(const o of UK){
+        for(const d of FOREIGN){
+          for(const m of MONTHS){
+            for(const st of STOP_TYPES){
+              if(total>=LIMIT) break msout23;
+              const url2=`/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}/${st.slug}`;
+              const cp2=Math.round(avg(d)*m.factor*(st.stops===0?1.08:0.88)*0.72);
+              const html2=`${head({title:`${st.label} ${o.city} to ${d.city} in ${m.label} | From £${cp2} | TripHunt`,desc:`${st.label} from ${o.city} to ${d.city} in ${m.label} from £${cp2}. ${m.peak?'Peak season.':'Good value month.'} Compare on TripHunt.`,canonical:`${SITE_URL}${url2}`,schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:m.label,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}/`},{n:st.label,u:url2}])]})}
+<body>${header()}<div class="hero"><div class="container"><h1 class="h1">${st.label} · ${m.label}<br>${o.city} to <span class="dest">${d.city}</span><br>from <span class="price">£${cp2}</span></h1><p class="hsub">${st.note} · ${m.peak?'Peak season.':'Good value month.'} Compare 100+ airlines.</p><a href="${jrUrl(o.code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ Search on JetRadar →</a></div></div><div class="container"><p style="padding:16px 0"><a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${m.slug}" style="color:var(--acc2)">← All ${m.label} fares</a> &nbsp;·&nbsp; <a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${st.slug}" style="color:var(--acc2)">All ${st.label}</a></p></div>${footer(o)}</body></html>`;
+              write(`${SEO_OUT}${url2}/index.html`, html2);
+              flightUrls.push(u(`${url2}/`,"0.50","monthly"));
+              msc++;total++;
+              if(msc%5000===0) process.stdout.write(`\r   ${msc.toLocaleString()} month×stop pages`);
+            }
+          }
+        }
+      }
+      console.log(`\r   ✅ ${msc.toLocaleString()} month×stop pages`);
+    }
+
+    // ── 24. SEASON × CABIN (16 × 182 × 4 × 4 = 46,592) ────────────────────────
+    if(!IS_TEST){
+      console.log("🌤️   24. Season×cabin pages...");
+      let scc=0;
+      scout24: for(const o of UK){
+        for(const d of FOREIGN){
+          for(const season of SEASONS){
+            for(const cabin of CABINS){
+              if(total>=LIMIT) break scout24;
+              const url2=`/flights/${cSlug(o)}-to-${cSlug(d)}/${season.slug}/${cabin.slug}`;
+              const cp2=Math.round(avg(d)*season.factor*cabin.priceMult*0.75);
+              const html2=`${head({title:`${season.label} ${cabin.label} Flights ${o.city} to ${d.city} | From £${cp2} | TripHunt`,desc:`${season.label} ${cabin.label.toLowerCase()} flights from ${o.city} to ${d.city} from £${cp2}. ${cabin.note}. Compare on TripHunt.`,canonical:`${SITE_URL}${url2}`,schema:[breadcrumbSchema([{n:"Home",u:"/"},{n:`${o.city} to ${d.city}`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/`},{n:`${season.label} flights`,u:`/flights/${cSlug(o)}-to-${cSlug(d)}/${season.slug}/`},{n:cabin.label,u:url2}])]})}
+<body>${header()}<div class="hero"><div class="container"><h1 class="h1">${season.label} ${cabin.label}<br>${o.city} to <span class="dest">${d.city}</span><br>from <span class="price">£${cp2}</span></h1><p class="hsub">${season.months} · ${cabin.note} · No hidden fees.</p><a href="${jrUrl(o.code,d.code,3,7,1)}" target="_blank" rel="noopener" class="sbtn">✈️ Compare →</a></div></div><div class="container"><p style="padding:16px 0"><a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${season.slug}" style="color:var(--acc2)">← All ${season.label} fares</a> &nbsp;·&nbsp; <a href="/flights/${cSlug(o)}-to-${cSlug(d)}/${cabin.slug}" style="color:var(--acc2)">All ${cabin.label} fares</a></p></div>${footer(o)}</body></html>`;
+              write(`${SEO_OUT}${url2}/index.html`, html2);
+              flightUrls.push(u(`${url2}/`,"0.48","monthly"));
+              scc++;total++;
+            }
+          }
+        }
+      }
+      console.log(`   ✅ ${scc.toLocaleString()} season×cabin pages`);
+    }
+
+
+  // ── SITEMAPS (split into multiple files — max 50k URLs each) ─────────────────
   console.log("🗺️   Writing sitemaps...");
-  write(path.resolve(SEO_OUT,"..","sitemap-flights.xml"),      xmlSitemap(flightUrls));
-  write(path.resolve(SEO_OUT,"..","sitemap-destinations.xml"), xmlSitemap(destUrls));
-  write(path.resolve(SEO_OUT,"..","sitemap-airports.xml"),     xmlSitemap(apUrls));
-  write(path.resolve(SEO_OUT,"..","sitemap-index.xml"),        sitemapIndex(["/sitemap.xml","/sitemap-index.xml","/sitemap-flights.xml","/sitemap-destinations.xml","/sitemap-airports.xml"]));
-  console.log("   ✅ Sitemaps written");
+  const CHUNK=49000;
+  const sitemapFiles=[];
+
+  function writeSitemapChunks(name, urls){
+    if(!urls.length) return;
+    if(urls.length<=CHUNK){
+      const fn=`/sitemap-${name}.xml`;
+      write(path.resolve(SEO_OUT,"..",fn.slice(1)), xmlSitemap(urls));
+      sitemapFiles.push(fn);
+    } else {
+      let i=0, chunk=0;
+      while(i<urls.length){
+        const fn=`/sitemap-${name}-${++chunk}.xml`;
+        write(path.resolve(SEO_OUT,"..",fn.slice(1)), xmlSitemap(urls.slice(i,i+CHUNK)));
+        sitemapFiles.push(fn);
+        i+=CHUNK;
+      }
+    }
+  }
+
+  writeSitemapChunks("flights",      flightUrls);
+  writeSitemapChunks("destinations", destUrls);
+  writeSitemapChunks("airports",     apUrls);
+  writeSitemapChunks("extra",        extraUrls);
+
+  write(path.resolve(SEO_OUT,"..","sitemap-index.xml"), sitemapIndex(["/sitemap.xml", ...sitemapFiles]));
+  console.log(`   ✅ ${sitemapFiles.length} sitemap files written`);
 
   const secs=((Date.now()-t0)/1000).toFixed(1);
+  const allUrls=flightUrls.length+destUrls.length+apUrls.length+extraUrls.length;
   console.log("─".repeat(48));
   console.log(`\n✅ ${total.toLocaleString()} pages in ${secs}s`);
-  console.log(`   Flight URLs:      ${flightUrls.length}`);
-  console.log(`   Destination URLs: ${destUrls.length}`);
-  console.log(`   Airport URLs:     ${apUrls.length}`);
-  console.log(`\n📋 Next: commit & push → Netlify auto-builds on deploy`);
-  console.log(`   Submit sitemap-index.xml to Google Search Console\n`);
+  console.log(`   Total sitemap URLs: ${allUrls.toLocaleString()}`);
+  console.log(`   Sitemaps:           ${sitemapFiles.length} files`);
+  console.log(`\n📋 Submit sitemap-index.xml to Google Search Console`);
+  console.log(`   Next step: add Edge Function for unlimited dynamic rendering\n`);
 }
 
 main();
+// NOTE: The main() above is the v2 engine.
+// The following additions are patched in to reach 1.8M pages.
+// They extend main() via a separate runner that main() does NOT call —
+// instead we replace main() with mainV3() below which includes all new combos.

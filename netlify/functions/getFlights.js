@@ -58,15 +58,23 @@ function addDays(s, n) {
   d.setDate(d.getDate() + n);
   return d.toISOString().slice(0,10);
 }
+function defaultDep() {
+  const d = new Date(); d.setDate(d.getDate() + 21);
+  while (d.getDay() !== 2) d.setDate(d.getDate() + 1);
+  return d.toISOString().slice(0, 10);
+}
+function defaultRet(dep) {
+  const d = new Date(dep); d.setDate(d.getDate() + 7);
+  return d.toISOString().slice(0, 10);
+}
 function bookingUrl(orig, dest, dep, ret, adults) {
-  // TravelPayouts confirmed deeplink: aviasales.com/search/{ORIG}{DDMM_dep}{DEST}{DDMM_ret}{pax}{cabin}
+  // Always include dates — Aviasales shows "Oops" error without them
   const p  = parseInt(adults) || 2;
-  const dd = ddmm(dep);
-  const rd = ddmm(ret);
-  let path;
-  if (dd && rd) path = orig + dd + dest + rd + p + "1";
-  else if (dd)  path = orig + dd + dest + p + "1";
-  else          path = orig + dest;
+  const sd = dep || defaultDep();
+  const sr = ret || defaultRet(sd);
+  const dd = ddmm(sd);
+  const rd = ddmm(sr);
+  const path = orig + dd + dest + rd + p + "1";
   return "https://www.aviasales.com/search/" + path + "?marker=" + MARKER + "&currency=GBP&locale=en-GB";
 }
 

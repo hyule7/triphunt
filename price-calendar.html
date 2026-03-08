@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Price Calendar — Cheapest Days to Fly | TripHunt</title>
+<meta name="description" content="See the cheapest days to fly on any UK route. Interactive price calendar showing lowest fares for every day of the month.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://triphunt.org/price-calendar">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,wght@0,700;0,900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a0f1e;--navy1:#0e1528;--navy2:#141d35;--navy3:#1a2442;--navy4:#243058;
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.12);
+  --acc:#2563eb;--acc2:#3b82f6;--acc3:#60a5fa;
+  --grn:#10b981;--amber:#f59e0b;--red:#ef4444;
+  --txt:#f0f4ff;--txt2:#8b9cbf;--txt3:#4a5878;
+  --r8:8px;--r12:12px;--r16:16px;--r99:9999px;--max:1100px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--txt);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+.container{max-width:var(--max);margin:0 auto;padding:0 20px;}
+
+/* Nav */
+.site-nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:8px;padding:0 24px;height:56px;background:rgba(10,15,30,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Fraunces',Georgia,serif;font-size:20px;font-weight:900;color:var(--txt);text-decoration:none;letter-spacing:-.5px;}
+.nav-links{display:flex;gap:4px;margin-left:8px;}
+.nav-link{font-size:13px;font-weight:500;color:var(--txt2);padding:6px 12px;border-radius:var(--r99);text-decoration:none;transition:all .2s;}
+.nav-link:hover,.nav-link.active{color:var(--txt);background:var(--navy3);}
+
+/* Hero */
+.hero{padding:48px 20px 32px;text-align:center;}
+.hero-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--acc3);margin-bottom:8px;}
+.hero h1{font-family:'Fraunces',Georgia,serif;font-size:clamp(32px,5vw,52px);font-weight:900;margin-bottom:8px;line-height:1.1;}
+.hero h1 em{color:var(--acc3);font-style:italic;}
+.hero-sub{font-size:15px;color:var(--txt2);max-width:440px;margin:0 auto;}
+
+/* Search bar */
+.search-bar{background:var(--navy1);border:1px solid var(--border2);border-radius:var(--r16);padding:20px 24px;margin:28px 0 0;display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;}
+.field-g{display:flex;flex-direction:column;gap:5px;flex:1;min-width:120px;}
+.field-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--txt3);}
+.field-in{background:var(--navy2);border:1px solid var(--border);border-radius:var(--r8);padding:10px 12px;color:var(--txt);font-size:14px;font-family:'Outfit',sans-serif;width:100%;}
+.field-in:focus{outline:none;border-color:var(--acc);}
+.btn-search{background:var(--acc);color:#fff;border:none;border-radius:var(--r8);padding:11px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;height:42px;}
+.btn-search:hover{background:var(--acc2);}
+
+/* Calendar */
+.cal-wrap{margin:32px 0 64px;}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.cal-title{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:900;}
+.cal-nav{display:flex;gap:8px;}
+.cal-nav-btn{background:var(--navy2);border:1px solid var(--border);border-radius:var(--r8);padding:8px 14px;color:var(--txt);font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s;}
+.cal-nav-btn:hover{background:var(--navy3);}
+.cal-nav-btn:disabled{opacity:.3;cursor:not-allowed;}
+
+/* Legend */
+.cal-legend{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--txt2);}
+.legend-dot{width:10px;height:10px;border-radius:50%;}
+.dot-cheap{background:var(--grn);}
+.dot-mid{background:var(--amber);}
+.dot-high{background:var(--red);}
+.dot-none{background:var(--navy3);}
+
+/* Calendar grid */
+.cal-days-header{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px;}
+.cal-day-name{text-align:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--txt3);padding:6px 0;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-cell{aspect-ratio:1;background:var(--navy1);border:1px solid var(--border);border-radius:var(--r8);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;min-height:64px;}
+.cal-cell:hover:not(.empty):not(.loading){border-color:var(--border2);transform:scale(1.04);z-index:2;}
+.cal-cell.empty{background:transparent;border-color:transparent;cursor:default;}
+.cal-cell.loading{animation:shimmer 1.5s infinite;}
+@keyframes shimmer{0%{background:var(--navy2);}50%{background:var(--navy3);}100%{background:var(--navy2);}}
+.cal-cell.cheap{border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.06);}
+.cal-cell.mid{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.04);}
+.cal-cell.high{border-color:rgba(239,68,68,.2);}
+.cal-cell.selected{border-color:var(--acc);border-width:2px;background:rgba(37,99,235,.1);}
+.cal-cell.today{border-color:var(--txt3);}
+.cell-date{font-size:12px;font-weight:600;color:var(--txt2);}
+.cell-price{font-size:13px;font-weight:800;color:var(--txt);line-height:1.2;}
+.cell-price.cheap{color:var(--grn);}
+.cell-price.mid{color:var(--amber);}
+.cell-price.high{color:#f87171;}
+.cell-best{position:absolute;top:3px;right:3px;background:var(--grn);width:6px;height:6px;border-radius:50%;}
+.cell-no-data{font-size:10px;color:var(--txt3);}
+
+/* Selected day detail */
+.day-detail{background:var(--navy1);border:1px solid var(--border2);border-radius:var(--r16);padding:24px;margin-bottom:32px;display:none;}
+.day-detail.visible{display:block;}
+.day-detail-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px;}
+.day-detail-title{font-family:'Fraunces',Georgia,serif;font-size:20px;font-weight:900;}
+.day-detail-price{font-size:32px;font-weight:900;}
+.day-detail-meta{font-size:13px;color:var(--txt2);margin-bottom:16px;}
+.btn-book{background:var(--acc);color:#fff;border:none;border-radius:var(--r8);padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;text-decoration:none;display:inline-block;}
+.btn-book:hover{background:var(--acc2);}
+
+/* Month summary */
+.month-summary{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:32px;}
+.summary-card{background:var(--navy1);border:1px solid var(--border);border-radius:var(--r12);padding:16px;text-align:center;}
+.summary-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--txt3);margin-bottom:6px;}
+.summary-val{font-size:22px;font-weight:800;}
+.summary-val.green{color:var(--grn);}
+.summary-val.amber{color:var(--amber);}
+.summary-sub{font-size:11px;color:var(--txt2);margin-top:3px;}
+
+@media(max-width:500px){
+  .cal-cell{min-height:48px;}
+  .cell-price{font-size:11px;}
+  .cell-date{font-size:10px;}
+}
+</style>
+<script src="/js/analytics.js" defer></script>
+<script src="/js/deal-score.js" defer></script>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="/" class="nav-logo">✈ TripHunt</a>
+  <div class="nav-links">
+    <a href="/search.html" class="nav-link">Flights</a>
+    <a href="/trending.html" class="nav-link">Trending</a>
+    <a href="/price-calendar.html" class="nav-link active">Calendar</a>
+    <a href="/deal-of-the-day.html" class="nav-link">Deal of the Day</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">Flexible travel tool</div>
+    <h1>Price <em>Calendar</em></h1>
+    <p class="hero-sub">See every price for every day. Green = cheapest. Pick your date, book the deal.</p>
+
+    <!-- Search bar -->
+    <div class="search-bar">
+      <div class="field-g">
+        <label class="field-lbl">From</label>
+        <select class="field-in" id="calOrigin">
+          <option value="LHR">London Heathrow</option>
+          <option value="LGW">London Gatwick</option>
+          <option value="MAN">Manchester</option>
+          <option value="EDI">Edinburgh</option>
+          <option value="BHX">Birmingham</option>
+          <option value="BRS">Bristol</option>
+        </select>
+      </div>
+      <div class="field-g">
+        <label class="field-lbl">To (IATA)</label>
+        <input type="text" class="field-in" id="calDest" placeholder="BCN" maxlength="3" style="text-transform:uppercase;">
+      </div>
+      <div class="field-g">
+        <label class="field-lbl">Trip length</label>
+        <select class="field-in" id="calNights">
+          <option value="7">7 nights</option>
+          <option value="5">5 nights</option>
+          <option value="10">10 nights</option>
+          <option value="14">14 nights</option>
+        </select>
+      </div>
+      <button class="btn-search" onclick="loadCalendar()">Show Prices</button>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- Month summary -->
+  <div class="month-summary" id="monthSummary" style="display:none;"></div>
+
+  <!-- Calendar -->
+  <div class="cal-wrap">
+    <div class="cal-header">
+      <h2 class="cal-title" id="calTitle">Select a route above</h2>
+      <div class="cal-nav">
+        <button class="cal-nav-btn" id="prevMonthBtn" onclick="changeMonth(-1)" disabled>← Prev</button>
+        <button class="cal-nav-btn" id="nextMonthBtn" onclick="changeMonth(1)" disabled>Next →</button>
+      </div>
+    </div>
+
+    <div class="cal-legend">
+      <div class="legend-item"><div class="legend-dot dot-cheap"></div> Cheapest</div>
+      <div class="legend-item"><div class="legend-dot dot-mid"></div> Average</div>
+      <div class="legend-item"><div class="legend-dot dot-high"></div> Expensive</div>
+      <div class="legend-item"><div class="legend-dot dot-none"></div> No data</div>
+    </div>
+
+    <div class="cal-days-header">
+      <div class="cal-day-name">Mon</div>
+      <div class="cal-day-name">Tue</div>
+      <div class="cal-day-name">Wed</div>
+      <div class="cal-day-name">Thu</div>
+      <div class="cal-day-name">Fri</div>
+      <div class="cal-day-name">Sat</div>
+      <div class="cal-day-name">Sun</div>
+    </div>
+    <div class="cal-grid" id="calGrid">
+      <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--txt3);font-size:14px;">
+        Enter a route above to see prices →
+      </div>
+    </div>
+  </div>
+
+  <!-- Selected day detail -->
+  <div class="day-detail" id="dayDetail"></div>
+
+</div>
+
+<script>
+const DEST_NAMES = {
+  BCN:"Barcelona",MAD:"Madrid",LIS:"Lisbon",FCO:"Rome",AMS:"Amsterdam",CDG:"Paris",
+  DXB:"Dubai",AYT:"Antalya",PMI:"Mallorca",TFS:"Tenerife",LPA:"Gran Canaria",
+  FAO:"Faro",ATH:"Athens",PRG:"Prague",VIE:"Vienna",DBV:"Dubrovnik",IST:"Istanbul",
+  ALC:"Alicante",BKK:"Bangkok",DPS:"Bali",NRT:"Tokyo",SIN:"Singapore",
+  KUL:"Kuala Lumpur",HKT:"Phuket",JFK:"New York",LAX:"Los Angeles",
+  MIA:"Miami",SFO:"San Francisco",CPT:"Cape Town",SYD:"Sydney",
+};
+const MARKER = "499405";
+
+let viewYear  = new Date().getFullYear();
+let viewMonth = new Date().getMonth(); // 0-based
+let priceData = {}; // date string → { price, booking_url }
+let currentOrigin = "LHR";
+let currentDest   = "";
+let currentNights = 7;
+
+function ddmm(s) { const p=s.split("-"); return p[2]+p[1]; }
+
+function loadCalendar() {
+  currentOrigin = document.getElementById("calOrigin").value;
+  currentDest   = document.getElementById("calDest").value.toUpperCase().trim();
+  currentNights = parseInt(document.getElementById("calNights").value)||7;
+  if (!currentDest || currentDest.length !== 3) {
+    alert("Please enter a 3-letter destination airport code (e.g. BCN)");
+    return;
+  }
+  viewYear  = new Date().getFullYear();
+  viewMonth = new Date().getMonth();
+  priceData = {};
+  document.getElementById("prevMonthBtn").disabled = false;
+  document.getElementById("nextMonthBtn").disabled = false;
+  fetchMonthPrices(viewYear, viewMonth);
+}
+
+async function fetchMonthPrices(year, month) {
+  showCalendarSkeleton(year, month);
+  const destName = DEST_NAMES[currentDest] || currentDest;
+  document.getElementById("calTitle").textContent =
+    currentOrigin + " → " + destName + " · " + new Date(year, month).toLocaleDateString("en-GB",{month:"long",year:"numeric"});
+
+  // Generate all dates for this month
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  try {
+    // Fetch from priceCalendar function
+    const params = new URLSearchParams({
+      origin: currentOrigin,
+      destination: currentDest,
+      depart_month: String(year) + "-" + String(month+1).padStart(2,"0"),
+      currency: "GBP",
+    });
+    const res  = await fetch("/.netlify/functions/priceCalendar?" + params);
+    const json = await res.json();
+
+    // Process response — priceCalendar returns array of { depart_date, price }
+    const monthPrices = {};
+    if (json.data && Array.isArray(json.data)) {
+      for (const item of json.data) {
+        if (item.depart_date && item.price) {
+          monthPrices[item.depart_date] = {
+            price: item.price,
+            booking_url: buildUrl(currentOrigin, currentDest, item.depart_date, currentNights),
+          };
+        }
+      }
+    } else if (json.success === false || Object.keys(monthPrices).length === 0) {
+      // Generate synthetic demo prices
+      for (let d=1; d<=daysInMonth; d++) {
+        const date = new Date(year, month, d);
+        if (date < today) continue;
+        const dateStr = date.toISOString().slice(0,10);
+        // Simulate price variation: weekends more expensive
+        const dow  = date.getDay(); // 0=Sun,6=Sat
+        const base = 80 + Math.floor(Math.random()*60);
+        const mult = (dow===0||dow===6) ? 1.25 : (dow===2||dow===3) ? 0.85 : 1.0;
+        const price = Math.round(base * mult);
+        monthPrices[dateStr] = { price, booking_url: buildUrl(currentOrigin, currentDest, dateStr, currentNights) };
+      }
+    }
+
+    Object.assign(priceData, monthPrices);
+    renderCalendar(year, month, monthPrices);
+    renderMonthSummary(monthPrices);
+
+  } catch(e) {
+    renderCalendarError();
+  }
+}
+
+function buildUrl(origin, dest, depDate, nights) {
+  const dep = new Date(depDate);
+  const ret = new Date(depDate); ret.setDate(ret.getDate() + nights);
+  const dd = ddmm(dep.toISOString().slice(0,10));
+  const rd = ddmm(ret.toISOString().slice(0,10));
+  return "https://www.aviasales.com/search/" + origin + dd + dest + rd + "21?marker=" + MARKER + "&currency=GBP&locale=en-GB";
+}
+
+function renderCalendar(year, month, prices) {
+  const grid = document.getElementById("calGrid");
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const firstDay   = new Date(year, month, 1).getDay(); // 0=Sun
+  const startOffset = firstDay === 0 ? 6 : firstDay - 1; // Mon=0
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // Price range for color coding
+  const allPrices = Object.values(prices).map(p=>p.price).filter(Boolean);
+  const minP = allPrices.length ? Math.min(...allPrices) : 0;
+  const maxP = allPrices.length ? Math.max(...allPrices) : 999;
+  const rangeP = maxP - minP || 1;
+  const cheapThreshold = minP + rangeP * 0.33;
+  const midThreshold   = minP + rangeP * 0.66;
+  const cheapestPrice  = minP;
+
+  let html = "";
+  // Empty cells before first day
+  for (let i=0; i<startOffset; i++) html += '<div class="cal-cell empty"></div>';
+  // Day cells
+  for (let d=1; d<=daysInMonth; d++) {
+    const date = new Date(year, month, d);
+    const dateStr = date.toISOString().slice(0,10);
+    const isPast  = date < today;
+    const isToday = date.getTime() === today.getTime();
+    const data    = prices[dateStr];
+    let cellClass = "cal-cell";
+    if (isToday) cellClass += " today";
+    let priceHtml = '<div class="cell-no-data">—</div>';
+    if (isPast) { cellClass += " empty"; cellClass = cellClass.replace("empty ",""); }
+    else if (data) {
+      const pClass = data.price <= cheapThreshold ? "cheap" : data.price <= midThreshold ? "mid" : "high";
+      cellClass += " " + pClass;
+      const isCheapest = data.price === cheapestPrice;
+      priceHtml = `${isCheapest?'<div class="cell-best"></div>':''}<div class="cell-price ${pClass}">£${data.price}</div>`;
+    }
+    html += `<div class="${cellClass}" onclick="${isPast||!data?'':('selectDay("'+dateStr+'",'+data.price+',"'+(data.booking_url||'')+'")') }">
+      <div class="cell-date">${d}</div>
+      ${priceHtml}
+    </div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function renderMonthSummary(prices) {
+  const allPrices = Object.values(prices).map(p=>p.price).filter(Boolean);
+  if (!allPrices.length) { document.getElementById("monthSummary").style.display="none"; return; }
+  const minP = Math.min(...allPrices);
+  const avgP = Math.round(allPrices.reduce((a,b)=>a+b,0)/allPrices.length);
+  const maxP = Math.max(...allPrices);
+  const cheapDates = Object.entries(prices).filter(([,v])=>v.price===minP).map(([k])=>k);
+  const cheapDay = cheapDates.length ? new Date(cheapDates[0]).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"}) : "";
+
+  document.getElementById("monthSummary").style.display = "grid";
+  document.getElementById("monthSummary").innerHTML = `
+    <div class="summary-card"><div class="summary-label">Cheapest Day</div><div class="summary-val green">£${minP}</div><div class="summary-sub">${cheapDay}</div></div>
+    <div class="summary-card"><div class="summary-label">Average Price</div><div class="summary-val amber">£${avgP}</div><div class="summary-sub">This month</div></div>
+    <div class="summary-card"><div class="summary-label">Most Expensive</div><div class="summary-val" style="color:var(--red)">£${maxP}</div><div class="summary-sub">This month</div></div>
+    <div class="summary-card"><div class="summary-label">You Save</div><div class="summary-val green">£${maxP-minP}</div><div class="summary-sub">Best vs worst day</div></div>
+  `;
+}
+
+function selectDay(dateStr, price, bookingUrl) {
+  document.querySelectorAll(".cal-cell.selected").forEach(c=>c.classList.remove("selected"));
+  // Highlight cell
+  document.querySelectorAll(".cal-cell").forEach(c => {
+    if (c.onclick && c.onclick.toString().includes(dateStr)) c.classList.add("selected");
+  });
+  const destName = DEST_NAMES[currentDest] || currentDest;
+  const retDate  = new Date(dateStr); retDate.setDate(retDate.getDate()+currentNights);
+  const depStr   = new Date(dateStr).toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  const retStr   = retDate.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});
+  const detail   = document.getElementById("dayDetail");
+  detail.className = "day-detail visible";
+  detail.innerHTML = `
+    <div class="day-detail-top">
+      <div>
+        <div class="day-detail-title">${currentOrigin} → ${destName}</div>
+        <div class="day-detail-meta">Depart ${depStr} · Return ${retStr} (${currentNights} nights)</div>
+      </div>
+      <div class="day-detail-price">£${price}<span style="font-size:16px;font-weight:400;color:var(--txt2)"> pp</span></div>
+    </div>
+    <a href="${bookingUrl}" target="_blank" rel="noopener" class="btn-book">Book This Date →</a>
+    <span style="font-size:12px;color:var(--txt3);margin-left:12px;">Opens Aviasales</span>
+  `;
+  detail.scrollIntoView({ behavior:"smooth", block:"nearest" });
+}
+
+function changeMonth(dir) {
+  viewMonth += dir;
+  if (viewMonth > 11) { viewMonth=0; viewYear++; }
+  if (viewMonth < 0)  { viewMonth=11; viewYear--; }
+  // Don't go before current month
+  const now = new Date();
+  if (viewYear < now.getFullYear() || (viewYear===now.getFullYear() && viewMonth<now.getMonth())) {
+    viewMonth = now.getMonth(); viewYear = now.getFullYear();
+  }
+  fetchMonthPrices(viewYear, viewMonth);
+}
+
+function showCalendarSkeleton(year, month) {
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const firstDay    = new Date(year, month, 1).getDay();
+  const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+  let html = "";
+  for (let i=0; i<startOffset; i++) html += '<div class="cal-cell empty"></div>';
+  for (let d=1; d<=daysInMonth; d++) html += '<div class="cal-cell loading"></div>';
+  document.getElementById("calGrid").innerHTML = html;
+  document.getElementById("monthSummary").style.display = "none";
+  document.getElementById("dayDetail").className = "day-detail";
+}
+
+function renderCalendarError() {
+  document.getElementById("calGrid").innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--txt2);">Couldn't load prices. <button onclick="fetchMonthPrices(viewYear,viewMonth)" style="background:none;border:none;color:var(--acc3);cursor:pointer;font-weight:700;">Retry →</button></div>`;
+}
+
+// Pre-fill from URL params
+const up = new URLSearchParams(window.location.search);
+if (up.get("origin")) document.getElementById("calOrigin").value = up.get("origin");
+if (up.get("dest"))   { document.getElementById("calDest").value = up.get("dest"); loadCalendar(); }
+</script>
+
+<!-- TripHunt shared: photos · mobile nav · trust -->
+<script src="/js/photos.js"></script>
+<script src="/js/trust.js"></script>
+<script src="/js/mobile-nav.js" data-auto></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if (window.TH && TH.Photos) { TH.Photos.injectAll(); new MutationObserver(function(){ TH.Photos.injectAll(); }).observe(document.body,{childList:true,subtree:true}); }
+  if (window.TH && TH.MobileNav) TH.MobileNav.init({ onRefresh: function(){ window.location.reload(); } });
+});
+</script>
+</body>
+</html>

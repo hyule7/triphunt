@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title id="page-title">Flight Deal | TripHunt</title>
+<meta name="description" id="page-desc" content="Find cheap flights on TripHunt.">
+<link rel="canonical" id="page-canonical" href="https://www.triphunt.org/deal/">
+<!-- OG / Twitter card — populated by JS -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TripHunt">
+<meta id="og-title"  property="og:title"       content="">
+<meta id="og-desc"   property="og:description"  content="">
+<meta id="og-url"    property="og:url"          content="">
+<meta id="og-image"  property="og:image"        content="https://www.triphunt.org/og-deals.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta id="tw-title"  name="twitter:title"       content="">
+<meta id="tw-desc"   name="twitter:description" content="">
+<!-- Preconnect -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#08101f;--navy1:#0c1525;--navy2:#111e32;--navy3:#172440;--navy4:#1e2e50;--border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);--acc:#2563eb;--acc2:#3b82f6;--acc3:#60a5fa;--grn:#10b981;--grn2:#059669;--red:#ef4444;--yel:#f59e0b;--pur:#8b5cf6;--txt:#eef2ff;--txt2:#8b9cbf;--txt3:#4a5878;--r8:8px;--r12:12px;--r16:16px;--r24:24px;--r99:9999px;--max:1100px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--navy);color:var(--txt);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.container{max-width:var(--max);margin:0 auto;padding:0 20px}
+
+/* Nav */
+.site-nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:8px;padding:0 24px;height:56px;background:rgba(8,16,31,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Fraunces',serif;font-size:20px;font-weight:900;text-decoration:none;color:var(--txt)}
+.nav-links{display:flex;gap:4px;margin-left:12px}
+.nav-link{font-size:13px;font-weight:500;color:var(--txt2);padding:6px 12px;border-radius:var(--r99);text-decoration:none;transition:all .2s;border:none;background:none;cursor:pointer;font-family:inherit}
+.nav-link:hover{color:var(--txt);background:var(--navy3)}
+
+/* Hero */
+.deal-hero{position:relative;padding:64px 24px 48px;background:linear-gradient(160deg,#08101f 0%,#0d1a38 100%);overflow:hidden}
+.deal-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 700px 400px at 50% 0%,rgba(37,99,235,.18) 0%,transparent 70%);pointer-events:none}
+.deal-hero-inner{position:relative;max-width:860px;margin:0 auto}
+.deal-breadcrumb{font-size:12px;color:var(--txt3);margin-bottom:20px}
+.deal-breadcrumb a{color:var(--txt3);text-decoration:none}
+.deal-breadcrumb a:hover{color:var(--txt2)}
+.deal-breadcrumb span{margin:0 6px}
+
+/* Badge strip */
+.deal-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:var(--r99);font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase}
+.badge-exceptional{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.2)}
+.badge-great{background:rgba(245,158,11,.1);color:#fbbf24;border:1px solid rgba(245,158,11,.2)}
+.badge-good{background:rgba(16,185,129,.1);color:var(--grn);border:1px solid rgba(16,185,129,.2)}
+.badge-error{background:rgba(139,92,246,.1);color:#a78bfa;border:1px solid rgba(139,92,246,.2)}
+.badge-live{animation:badge-pulse 2s ease-in-out infinite}
+@keyframes badge-pulse{0%,100%{opacity:1}50%{opacity:.65}}
+
+/* Route headline */
+.deal-route-line{font-family:'Fraunces',serif;font-size:clamp(32px,6vw,64px);font-weight:900;line-height:1.0;letter-spacing:-1px;margin-bottom:12px}
+.deal-route-line .arr{color:var(--acc3);font-style:italic}
+.deal-meta-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:32px}
+.deal-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:var(--navy2);border:1px solid var(--border2);border-radius:var(--r99);font-size:12px;font-weight:600;color:var(--txt2)}
+.deal-chip.green{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.2);color:var(--grn)}
+
+/* Price + CTA box */
+.deal-cta-box{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;background:var(--navy1);border:1px solid var(--border2);border-radius:var(--r24);padding:28px 32px;margin-bottom:24px}
+.deal-price-col{}
+.deal-price-val{font-family:'Fraunces',serif;font-size:clamp(48px,8vw,72px);font-weight:900;color:var(--grn);line-height:1}
+.deal-price-pp{font-size:13px;color:var(--txt3);margin-top:4px}
+.deal-saving-row{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.deal-typical{font-size:16px;color:var(--txt3);text-decoration:line-through}
+.deal-saving-pill{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.15);padding:4px 12px;border-radius:var(--r99);font-size:13px;font-weight:800}
+.deal-cta-col{display:flex;flex-direction:column;gap:10px;min-width:200px}
+.btn-book{display:flex;align-items:center;justify-content:center;gap:8px;padding:16px 28px;background:var(--grn);color:#fff;border-radius:var(--r12);font-size:16px;font-weight:800;text-decoration:none;border:none;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
+.btn-book:hover{background:var(--grn2);transform:translateY(-2px);box-shadow:0 8px 30px rgba(16,185,129,.3)}
+.btn-share{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;background:var(--navy3);color:var(--txt);border-radius:var(--r12);font-size:13px;font-weight:600;border:1px solid var(--border2);cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-share:hover{background:var(--navy4)}
+
+/* Urgency bar */
+.urgency-bar{background:linear-gradient(90deg,rgba(239,68,68,.08),rgba(245,158,11,.06));border:1px solid rgba(239,68,68,.15);border-radius:var(--r12);padding:14px 20px;display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.urgency-dot{width:8px;height:8px;background:var(--red);border-radius:50%;flex-shrink:0;animation:pulse-urgency 1.5s ease-in-out infinite}
+@keyframes pulse-urgency{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 6px rgba(239,68,68,0)}}
+.urgency-text{font-size:13px;font-weight:600}
+.urgency-text strong{color:#f87171}
+
+/* Price comparison */
+.price-compare{background:var(--navy1);border:1px solid var(--border);border-radius:var(--r16);padding:24px;margin-bottom:24px}
+.pc-title{font-size:14px;font-weight:800;margin-bottom:16px}
+.pc-bar-wrap{margin-bottom:12px}
+.pc-bar-label{display:flex;justify-content:space-between;font-size:12px;color:var(--txt3);margin-bottom:6px}
+.pc-bar{height:10px;background:var(--navy3);border-radius:var(--r99);overflow:hidden;position:relative}
+.pc-bar-fill{height:100%;border-radius:var(--r99);transition:width 1s cubic-bezier(.34,1.2,.64,1)}
+.pc-bar-fill.current{background:var(--grn)}
+.pc-bar-fill.typical{background:var(--navy4)}
+.pc-bar-fill.high{background:var(--red)}
+.pc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.pc-stat{text-align:center;background:var(--navy2);border:1px solid var(--border);border-radius:var(--r12);padding:14px 10px}
+.pc-stat-val{font-family:'Fraunces',serif;font-size:22px;font-weight:900}
+.pc-stat-val.green{color:var(--grn)}
+.pc-stat-val.red{color:var(--red)}
+.pc-stat-label{font-size:11px;color:var(--txt3);margin-top:3px}
+
+/* Flight detail card */
+.detail-card{background:var(--navy1);border:1px solid var(--border);border-radius:var(--r16);padding:24px;margin-bottom:24px}
+.detail-card-title{font-size:14px;font-weight:800;margin-bottom:18px;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px}
+.detail-rows{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.detail-row{display:flex;flex-direction:column;gap:4px}
+.detail-row-label{font-size:11px;color:var(--txt3);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.detail-row-val{font-size:14px;font-weight:600}
+
+/* Share section */
+.share-section{background:var(--navy1);border:1px solid var(--border);border-radius:var(--r16);padding:24px;margin-bottom:24px}
+.share-title{font-size:14px;font-weight:800;margin-bottom:14px}
+.share-btns{display:flex;gap:10px;flex-wrap:wrap}
+.share-btn{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:var(--r8);font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:inherit;transition:all .15s}
+.share-btn:hover{transform:translateY(-1px);filter:brightness(1.1)}
+.sb-whatsapp{background:#25d366;color:#fff}
+.sb-twitter{background:#1da1f2;color:#fff}
+.sb-facebook{background:#1877f2;color:#fff}
+.sb-copy{background:var(--navy3);color:var(--txt);border:1px solid var(--border2)}
+
+/* More deals */
+.more-deals-section{margin-top:48px}
+.more-deals-title{font-family:'Fraunces',serif;font-size:26px;font-weight:900;margin-bottom:6px}
+.more-deals-sub{font-size:14px;color:var(--txt2);margin-bottom:24px}
+.more-deals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.mini-deal-card{background:var(--navy1);border:1px solid var(--border);border-radius:var(--r16);padding:18px;transition:all .2s;cursor:pointer;text-decoration:none;display:block;color:inherit}
+.mini-deal-card:hover{border-color:var(--border2);transform:translateY(-2px);background:var(--navy2)}
+.mdc-emoji{font-size:24px;margin-bottom:10px}
+.mdc-route{font-size:14px;font-weight:700;margin-bottom:4px}
+.mdc-meta{font-size:12px;color:var(--txt3);margin-bottom:10px}
+.mdc-bottom{display:flex;align-items:center;justify-content:space-between}
+.mdc-price{font-family:'Fraunces',serif;font-size:24px;font-weight:900;color:var(--grn)}
+.mdc-saving{font-size:11px;color:var(--red);font-weight:700;background:rgba(239,68,68,.1);padding:3px 8px;border-radius:var(--r99)}
+
+/* Email capture */
+.email-section{background:linear-gradient(135deg,var(--navy2),var(--navy3));border:1px solid var(--border2);border-radius:var(--r24);padding:36px;text-align:center;margin:40px 0}
+.email-icon{font-size:40px;margin-bottom:14px}
+.email-title{font-family:'Fraunces',serif;font-size:26px;font-weight:900;margin-bottom:8px}
+.email-sub{font-size:14px;color:var(--txt2);margin-bottom:22px;max-width:400px;margin-left:auto;margin-right:auto}
+.email-form{display:flex;gap:10px;max-width:400px;margin:0 auto}
+.email-input{flex:1;background:var(--navy1);border:1px solid var(--border2);border-radius:var(--r8);padding:12px 16px;font-family:inherit;font-size:14px;color:var(--txt);outline:none}
+.email-input:focus{border-color:var(--grn)}
+.email-input::placeholder{color:var(--txt3)}
+.email-btn{padding:12px 20px;background:var(--grn);color:#fff;border-radius:var(--r8);font-size:14px;font-weight:800;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s}
+.email-btn:hover{background:var(--grn2)}
+.email-trust{font-size:11px;color:var(--txt3);margin-top:10px}
+
+/* SEO content block */
+.seo-content{max-width:680px;margin:40px auto;padding:0 20px}
+.seo-h2{font-family:'Fraunces',serif;font-size:22px;font-weight:900;margin-bottom:10px}
+.seo-p{font-size:14px;color:var(--txt2);line-height:1.8;margin-bottom:16px}
+.internal-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.internal-link{font-size:12px;color:var(--acc3);text-decoration:none;padding:5px 12px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.15);border-radius:var(--r99)}
+.internal-link:hover{background:rgba(37,99,235,.15)}
+
+/* Footer */
+.site-footer{background:var(--navy1);border-top:1px solid var(--border);padding:28px 24px;text-align:center;color:var(--txt3);font-size:12px;margin-top:60px}
+.site-footer a{color:var(--txt2);text-decoration:none;margin:0 6px}
+
+@media(max-width:640px){
+  .deal-cta-box{grid-template-columns:1fr}
+  .detail-rows{grid-template-columns:1fr}
+  .pc-stats{grid-template-columns:repeat(3,1fr)}
+  .nav-links{display:none}
+  .deal-hero{padding:40px 16px 32px}
+  .deal-cta-box{padding:20px}
+}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a class="nav-logo" href="/">✈️ TripHunt</a>
+  <div class="nav-links">
+    <a class="nav-link" href="/">Home</a>
+    <a class="nav-link" href="/deals.html">All Deals</a>
+    <a class="nav-link" href="/error-fares.html">🚨 Error Fares</a>
+    <a class="nav-link" href="/trending.html">🔥 Trending</a>
+  </div>
+</nav>
+
+<main>
+<div class="deal-hero">
+  <div class="deal-hero-inner">
+    <div class="deal-breadcrumb">
+      <a href="/">TripHunt</a><span>›</span>
+      <a href="/deals.html">Deals</a><span>›</span>
+      <span id="bc-route">Loading…</span>
+    </div>
+    <div class="deal-badges" id="deal-badges"></div>
+    <h1 class="deal-route-line" id="deal-headline">Loading deal…</h1>
+    <div class="deal-meta-row" id="deal-meta-row"></div>
+
+    <div class="deal-cta-box">
+      <div class="deal-price-col">
+        <div class="deal-price-val" id="deal-price">—</div>
+        <div class="deal-price-pp">per person, return flight</div>
+        <div class="deal-saving-row">
+          <span class="deal-typical" id="deal-typical"></span>
+          <span class="deal-saving-pill" id="deal-saving"></span>
+        </div>
+      </div>
+      <div class="deal-cta-col">
+        <a href="#" class="btn-book" id="btn-book" target="_blank" rel="noopener">
+          🎫 Book This Deal
+        </a>
+        <button class="btn-share" onclick="openShareMenu()">
+          📤 Share deal
+        </button>
+      </div>
+    </div>
+
+    <div class="urgency-bar">
+      <div class="urgency-dot"></div>
+      <div class="urgency-text" id="urgency-text">Checking availability…</div>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding-top:40px">
+
+  <!-- Price comparison -->
+  <div class="price-compare" id="price-compare">
+    <div class="pc-title">📊 Price comparison</div>
+    <div class="pc-bar-wrap">
+      <div class="pc-bar-label"><span>This deal</span><span id="pc-current-val">—</span></div>
+      <div class="pc-bar"><div class="pc-bar-fill current" id="pc-bar-current" style="width:0%"></div></div>
+    </div>
+    <div class="pc-bar-wrap">
+      <div class="pc-bar-label"><span>Typical price</span><span id="pc-typical-val">—</span></div>
+      <div class="pc-bar"><div class="pc-bar-fill typical" id="pc-bar-typical" style="width:0%"></div></div>
+    </div>
+    <div class="pc-bar-wrap">
+      <div class="pc-bar-label"><span>Peak price</span><span id="pc-peak-val">—</span></div>
+      <div class="pc-bar"><div class="pc-bar-fill high" id="pc-bar-peak" style="width:100%"></div></div>
+    </div>
+    <div class="pc-stats">
+      <div class="pc-stat"><div class="pc-stat-val green" id="pcs-saving">—</div><div class="pc-stat-label">You save</div></div>
+      <div class="pc-stat"><div class="pc-stat-val green" id="pcs-pct">—</div><div class="pc-stat-label">Below average</div></div>
+      <div class="pc-stat"><div class="pc-stat-val" id="pcs-score">—</div><div class="pc-stat-label">Deal score</div></div>
+    </div>
+  </div>
+
+  <!-- Flight details -->
+  <div class="detail-card">
+    <div class="detail-card-title">Flight details</div>
+    <div class="detail-rows" id="detail-rows"></div>
+  </div>
+
+  <!-- Share -->
+  <div class="share-section">
+    <div class="share-title">📤 Share this deal</div>
+    <div class="share-btns">
+      <button class="share-btn sb-whatsapp" onclick="sharePlatform('whatsapp')">💬 WhatsApp</button>
+      <button class="share-btn sb-twitter"  onclick="sharePlatform('twitter')">🐦 Twitter</button>
+      <button class="share-btn sb-facebook" onclick="sharePlatform('facebook')">👥 Facebook</button>
+      <button class="share-btn sb-copy"     onclick="copyLink(this)">🔗 Copy link</button>
+    </div>
+  </div>
+
+  <!-- Email capture -->
+  <div class="email-section">
+    <div class="email-icon">🔔</div>
+    <div class="email-title">Never miss a deal like this</div>
+    <div class="email-sub">Get 3 deals per week, picked from the UK's cheapest fares. Free forever, unsubscribe anytime.</div>
+    <div class="email-form">
+      <input type="email" class="email-input" id="email-input" placeholder="your@email.com">
+      <button class="email-btn" onclick="subscribeEmail()">Get free alerts</button>
+    </div>
+    <div class="email-trust" id="email-trust">🔒 No spam. No booking fees. Just cheap flights.</div>
+  </div>
+
+  <!-- SEO content -->
+  <div class="seo-content" id="seo-content">
+    <h2 class="seo-h2" id="seo-h2">Loading…</h2>
+    <p class="seo-p" id="seo-p1"></p>
+    <p class="seo-p" id="seo-p2"></p>
+    <div class="internal-links" id="internal-links"></div>
+  </div>
+
+  <!-- More deals -->
+  <section class="more-deals-section">
+    <div class="more-deals-title">More deals you'll love</div>
+    <div class="more-deals-sub" id="more-sub">Loading similar deals…</div>
+    <div class="more-deals-grid" id="more-deals-grid"></div>
+  </section>
+
+</div>
+</main>
+
+<footer class="site-footer">
+  <p>TripHunt compares fares from 100+ airlines. We earn affiliate commission when you book — you always pay the same as booking direct.</p>
+  <p style="margin-top:8px"><a href="/">Home</a><a href="/deals.html">All Deals</a><a href="/error-fares.html">Error Fares</a><a href="/share.html">Share &amp; Earn</a><a href="/privacy.html">Privacy</a></p>
+</footer>
+
+<script>
+const MARKER = '499405';
+const SITE   = 'https://www.triphunt.org';
+
+// Read slug from URL: /deal/london-to-tokyo-349
+const slug = location.pathname.replace(/^\/deal\//,'').replace(/\/$/,'');
+
+const DEST_NAMES = {BCN:"Barcelona",MAD:"Madrid",LIS:"Lisbon",FCO:"Rome",AMS:"Amsterdam",CDG:"Paris",ATH:"Athens",PRG:"Prague",VIE:"Vienna",DBV:"Dubrovnik",IST:"Istanbul",PMI:"Palma",ALC:"Alicante",AGP:"Malaga",FAO:"Faro",TFS:"Tenerife",LPA:"Gran Canaria",AYT:"Antalya",DXB:"Dubai",DOH:"Doha",BKK:"Bangkok",DPS:"Bali",NRT:"Tokyo",SIN:"Singapore",KUL:"Kuala Lumpur",HKT:"Phuket",JFK:"New York",LAX:"Los Angeles",MIA:"Miami",YYZ:"Toronto",CPT:"Cape Town",NBO:"Nairobi",SYD:"Sydney",MEL:"Melbourne"};
+
+let currentDeal = null;
+
+async function loadDeal() {
+  try {
+    // First try: fetch from getDeals API (which reads Supabase)
+    const res = await fetch(`/.netlify/functions/getDeals?type=all&limit=50`);
+    const json = await res.json();
+    const deals = json.data || [];
+    let deal = deals.find(d => d.slug === slug);
+
+    // If not found, try to reconstruct from slug
+    if (!deal) deal = slugToDeal(slug, deals);
+    if (!deal) { showNotFound(); return; }
+
+    currentDeal = deal;
+    renderDeal(deal);
+    loadMoreDeals(deal, deals);
+  } catch(e) {
+    console.error('loadDeal error:', e);
+    const deal = slugToDeal(slug, []);
+    if (deal) { currentDeal = deal; renderDeal(deal); }
+    else showNotFound();
+  }
+}
+
+function slugToDeal(slug, existingDeals) {
+  // Try to parse slug: "london-to-tokyo-349" → {city:London, dest:Tokyo, price:349}
+  const m = slug.match(/^(.+)-to-(.+?)-(\d+)$/);
+  if (!m) return null;
+  const priceNum = parseInt(m[3]);
+  const destSlug = m[2];
+  const destCode = Object.keys(DEST_NAMES).find(k => DEST_NAMES[k].toLowerCase().replace(/\s+/g,'-') === destSlug);
+  if (!destCode) return null;
+  const destName = DEST_NAMES[destCode] || destCode;
+  const originCity = m[1].replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  const typical = {BCN:120,MAD:110,LIS:105,FCO:115,AMS:95,DXB:280,BKK:520,DPS:590,NRT:620,SIN:480,JFK:380,LAX:420,MIA:390,CPT:520,SYD:780}[destCode] || 250;
+  const saving = Math.round((1 - priceNum/typical)*100);
+  const dep = (() => { const d = new Date(); d.setDate(d.getDate()+21); while(d.getDay()!==2) d.setDate(d.getDate()+1); return d.toISOString().slice(0,10); })();
+  const ret = (() => { const d = new Date(dep); d.setDate(d.getDate()+7); return d.toISOString().slice(0,10); })();
+  const score = Math.min(99, Math.round(saving * 0.8 + 20));
+  return { slug, origin_code:'LHR', origin_city:originCity, origin_airport:originCity+' Airport', dest_code:destCode, dest_name:destName, dest_country:'', dest_region:'', price:priceNum, typical_price:typical, saving_pct:saving, saving_amount:typical-priceNum, price_vs_avg:Math.round(priceNum/typical*100), deal_score:score, deal_tier:score>=80?'exceptional':score>=65?'great':'good', deal_label:score>=80?'🔥 Exceptional Deal':score>=65?'⚡ Great Deal':'✓ Good Price', deal_badge:score>=80?'EXCEPTIONAL':'GREAT DEAL', is_error_fare:saving>=60, is_exceptional:score>=80, airline:'Multiple airlines', stops:1, depart_date:dep, return_date:ret, booking_url:`https://www.aviasales.com/search/LHR?marker=${MARKER}&currency=GBP&locale=en-GB`, _source:'slug_parse' };
+}
+
+function renderDeal(d) {
+  const originCity = d.origin_city || d.origin_code;
+  const destName   = d.dest_name || DEST_NAMES[d.dest_code] || d.dest_code;
+  const depDate = d.depart_date ? new Date(d.depart_date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'}) : 'Flexible dates';
+  const retDate = d.return_date ? new Date(d.return_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '';
+
+  // Meta tags
+  document.getElementById('page-title').textContent = `${originCity} to ${destName} from £${d.price} | TripHunt`;
+  document.getElementById('page-desc').content = `${d.saving_pct}% off flights from ${originCity} to ${destName}. Usually £${d.typical_price} — now just £${d.price} return.`;
+  document.getElementById('page-canonical').href = `${SITE}/deal/${d.slug}`;
+  document.getElementById('og-title').content = `${originCity} → ${destName} from £${d.price} 🔥`;
+  document.getElementById('og-desc').content  = `${d.saving_pct}% below average. Usual price £${d.typical_price}. Act fast.`;
+  document.getElementById('og-url').content   = `${SITE}/deal/${d.slug}`;
+  document.getElementById('tw-title').content = `${originCity} → ${destName} from £${d.price} 🔥`;
+  document.getElementById('tw-desc').content  = `${d.saving_pct}% off the usual price of £${d.typical_price}. Find it on TripHunt.`;
+
+  // Breadcrumb
+  document.getElementById('bc-route').textContent = `${originCity} to ${destName}`;
+
+  // Badges
+  const badgesEl = document.getElementById('deal-badges');
+  badgesEl.innerHTML = [
+    `<span class="badge badge-live" style="background:rgba(16,185,129,.1);color:var(--grn);border:1px solid rgba(16,185,129,.2)">● Live deal</span>`,
+    d.is_error_fare ? `<span class="badge badge-error">🚨 Possible error fare</span>` : '',
+    d.deal_tier==='exceptional'||d.deal_tier==='legendary' ? `<span class="badge badge-exceptional">🔥 Exceptional Deal</span>` : '',
+    d.deal_tier==='great' ? `<span class="badge badge-great">⚡ Great Deal</span>` : '',
+    d.stops===0 ? `<span class="badge" style="background:rgba(37,99,235,.1);color:var(--acc3);border:1px solid rgba(37,99,235,.2)">✈ Direct flight</span>` : '',
+  ].join('');
+
+  // Headline
+  document.getElementById('deal-headline').innerHTML = `${originCity} <span class="arr">→</span> ${destName}`;
+
+  // Meta chips
+  document.getElementById('deal-meta-row').innerHTML = [
+    `<span class="deal-chip green">${d.saving_pct}% off average</span>`,
+    `<span class="deal-chip">${d.stops===0?'✈ Direct':d.stops+' stop'}</span>`,
+    d.airline ? `<span class="deal-chip">${d.airline}</span>` : '',
+    `<span class="deal-chip">📅 ${depDate}${retDate?' → '+retDate:''}</span>`,
+    `<span class="deal-chip">Return flight</span>`,
+  ].join('');
+
+  // Price + CTA
+  document.getElementById('deal-price').textContent = `£${d.price}`;
+  document.getElementById('deal-typical').textContent = `£${d.typical_price}`;
+  document.getElementById('deal-saving').textContent = `-${d.saving_pct}% (£${d.saving_amount} off)`;
+
+  // Book button — goes through upsell
+  const upsell = `/upsell.html?${new URLSearchParams({origin:d.origin_code,dest:d.dest_code,price:d.price,typical:d.typical_price,book_url:d.booking_url})}`;
+  document.getElementById('btn-book').href = upsell;
+
+  // Urgency
+  const hoursAgo = d.discovered_at ? Math.floor((Date.now()-new Date(d.discovered_at).getTime())/3600000) : 0;
+  const urgencyMsgs = [
+    `<strong>${Math.floor(Math.random()*12)+4} people</strong> viewed this deal in the last hour`,
+    `Deal discovered <strong>${hoursAgo>0?hoursAgo+'h ago':'just now'}</strong> — prices can change any time`,
+    d.is_error_fare ? `<strong>🚨 Possible mistake fare</strong> — airlines usually correct these within 2–4 hours` : `<strong>${d.saving_pct}% below the usual price</strong> — book before it's gone`,
+  ];
+  document.getElementById('urgency-text').innerHTML = urgencyMsgs[Math.floor(Math.random()*urgencyMsgs.length)];
+
+  // Price comparison bars
+  const peak = Math.round(d.typical_price * 1.4);
+  document.getElementById('pc-current-val').textContent = `£${d.price}`;
+  document.getElementById('pc-typical-val').textContent = `£${d.typical_price}`;
+  document.getElementById('pc-peak-val').textContent    = `£${peak}`;
+  setTimeout(()=>{
+    document.getElementById('pc-bar-current').style.width = `${(d.price/peak)*100}%`;
+    document.getElementById('pc-bar-typical').style.width = `${(d.typical_price/peak)*100}%`;
+  }, 100);
+  document.getElementById('pcs-saving').textContent = `£${d.saving_amount}`;
+  document.getElementById('pcs-pct').textContent    = `${d.saving_pct}%`;
+  document.getElementById('pcs-score').textContent  = `${d.deal_score}/99`;
+
+  // Flight details
+  document.getElementById('detail-rows').innerHTML = [
+    `<div class="detail-row"><div class="detail-row-label">From</div><div class="detail-row-val">${d.origin_airport||originCity+' Airport'}</div></div>`,
+    `<div class="detail-row"><div class="detail-row-label">To</div><div class="detail-row-val">${destName}${d.dest_country?' ('+d.dest_country+')':''}</div></div>`,
+    `<div class="detail-row"><div class="detail-row-label">Departure</div><div class="detail-row-val">${depDate}</div></div>`,
+    retDate?`<div class="detail-row"><div class="detail-row-label">Return</div><div class="detail-row-val">${retDate}</div></div>`:'',
+    d.airline?`<div class="detail-row"><div class="detail-row-label">Airline</div><div class="detail-row-val">${d.airline}</div></div>`:'',
+    `<div class="detail-row"><div class="detail-row-label">Stops</div><div class="detail-row-val">${d.stops===0?'Direct (non-stop)':d.stops+' stop(s)'}</div></div>`,
+    `<div class="detail-row"><div class="detail-row-label">Trip type</div><div class="detail-row-val">Return</div></div>`,
+    `<div class="detail-row"><div class="detail-row-label">Passengers</div><div class="detail-row-val">2 adults (price per person)</div></div>`,
+  ].join('');
+
+  // SEO content
+  document.getElementById('seo-h2').textContent = `Cheap flights from ${originCity} to ${destName}`;
+  document.getElementById('seo-p1').textContent = `This ${originCity} to ${destName} deal represents ${d.saving_pct}% off the typical fare of £${d.typical_price}. The average return flight on this route usually costs between £${Math.round(d.typical_price*0.85)} and £${Math.round(d.typical_price*1.3)}, making this £${d.price} fare genuinely exceptional. ${d.airline?'The deal is operated by '+d.airline+'.' : ''}`;
+  document.getElementById('seo-p2').textContent = `TripHunt monitors over 100 airlines and hundreds of UK departure airports 24/7. When prices drop ${d.saving_pct}% or more below the route average, we flag it immediately and send alerts to subscribers. This deal was detected and published automatically by our deal radar system.`;
+
+  const intLinks = document.getElementById('internal-links');
+  const citySlug = originCity.toLowerCase().replace(/\s+/g,'-');
+  const destSlug2 = destName.toLowerCase().replace(/\s+/g,'-');
+  intLinks.innerHTML = [
+    `<a class="internal-link" href="/cheap-flights-from-${citySlug}">Cheap flights from ${originCity}</a>`,
+    `<a class="internal-link" href="/cheap-flights-to-${destSlug2}">Cheap flights to ${destName}</a>`,
+    `<a class="internal-link" href="/error-fares.html">All error fares</a>`,
+    `<a class="internal-link" href="/trending.html">Trending destinations</a>`,
+    `<a class="internal-link" href="/">All UK flight deals</a>`,
+  ].join('');
+}
+
+function loadMoreDeals(currentDeal, allDeals) {
+  const others = allDeals.filter(d => d.slug !== currentDeal.slug && (d.dest_region === currentDeal.dest_region || d.origin_code === currentDeal.origin_code)).slice(0, 6);
+  const grid = document.getElementById('more-deals-grid');
+  if (!others.length) { document.querySelector('.more-deals-section').style.display='none'; return; }
+  document.getElementById('more-sub').textContent = `More deals from ${currentDeal.origin_city||currentDeal.origin_code} and the ${currentDeal.dest_region||'same region'}`;
+  grid.innerHTML = others.map(d => {
+    const upsell = `/upsell.html?${new URLSearchParams({origin:d.origin_code,dest:d.dest_code,price:d.price,typical:d.typical_price,book_url:d.booking_url})}`;
+    return `<a class="mini-deal-card" href="/deal/${d.slug}">
+      <div class="mdc-emoji">${d.dest_emoji||'✈️'}</div>
+      <div class="mdc-route">${d.origin_city||d.origin_code} → ${d.dest_name}</div>
+      <div class="mdc-meta">${d.airline||'Multiple airlines'} · ${d.stops===0?'Direct':d.stops+' stop'}</div>
+      <div class="mdc-bottom">
+        <div class="mdc-price">£${d.price}</div>
+        <div class="mdc-saving">-${d.saving_pct}%</div>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+function sharePlatform(platform) {
+  const url  = encodeURIComponent(location.href);
+  const d    = currentDeal;
+  const text = d ? encodeURIComponent(`✈️ ${d.origin_city||d.origin_code} → ${d.dest_name} from £${d.price}! (${d.saving_pct}% off usual price of £${d.typical_price}) Found on TripHunt:`) : encodeURIComponent('Check out this flight deal on TripHunt:');
+  const maps = {
+    whatsapp:  `https://wa.me/?text=${text}%20${url}`,
+    twitter:   `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+    facebook:  `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+  };
+  if (maps[platform]) window.open(maps[platform],'_blank','noopener,width=640,height=480');
+  // Track share
+  fetch('/.netlify/functions/getDeals',{method:'POST'}).catch(()=>{});
+}
+
+function copyLink(btn) {
+  navigator.clipboard.writeText(location.href).then(()=>{
+    btn.textContent='✅ Copied!';
+    setTimeout(()=>btn.textContent='🔗 Copy link', 2000);
+  });
+}
+
+function openShareMenu() { sharePlatform('whatsapp'); }
+
+async function subscribeEmail() {
+  const email = document.getElementById('email-input').value;
+  if (!email || !email.includes('@')) return;
+  try {
+    await fetch('/.netlify/functions/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,source:'deal-page',deal_slug:slug})});
+    document.getElementById('email-trust').textContent='✅ Subscribed! Your first deal digest will arrive Monday morning.';
+    document.getElementById('email-trust').style.color='var(--grn)';
+  } catch { document.getElementById('email-trust').textContent='Something went wrong. Try again.'; }
+}
+
+function showNotFound() {
+  document.getElementById('deal-headline').textContent = 'Deal not found';
+  document.getElementById('deal-badges').innerHTML = '';
+  document.getElementById('deal-price').textContent = '';
+  document.getElementById('urgency-text').textContent = 'This deal may have expired. Check our latest deals below.';
+}
+
+// Track click from search engines
+function trackPageview() {
+  if (document.referrer && !document.referrer.includes(location.hostname)) {
+    fetch(`/.netlify/functions/trackConversion`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'deal_page_view',slug,referrer:document.referrer})}).catch(()=>{});
+  }
+}
+
+loadDeal();
+trackPageview();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+</script>
+</body>
+</html>

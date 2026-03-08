@@ -14,7 +14,7 @@ const MARKER    = process.env.TRAVELPAYOUTS_MARKER || "499405";
 const SUPABASE  = process.env.SUPABASE_URL;
 const SUPA_KEY  = process.env.SUPABASE_SERVICE_KEY;
 const RESEND    = process.env.RESEND_API_KEY;
-const SITE_URL  = process.env.SITE_URL || "https://www.triphunt.co.uk";
+const SITE_URL  = process.env.SITE_URL || "https://www.triphunt.org";
 const TP_TOKEN  = process.env.TRAVELPAYOUTS_TOKEN;
 
 function bad(msg) {
@@ -139,7 +139,7 @@ async function sendAlertEmail(alert, price) {
   const html = "<h2>Price Alert: " + alert.dest_name + "</h2><p>A flight from " + alert.origin_code + " to " + alert.dest_name + " is now available for <strong>GBP" + price + "</strong> - below your target of GBP" + alert.target_price + ".</p><a href='" + bookingUrl + "' style='background:#7c6af7;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;margin-top:16px'>Book Now</a><p style='color:#666;font-size:12px;margin-top:24px'>TripHunt - " + SITE_URL + "</p>";
 
   return new Promise(function(resolve, reject) {
-    const payload = JSON.stringify({ from:"TripHunt Alerts <alerts@triphunt.co.uk>", to:[alert.email], subject:"Price Drop: Flights to " + alert.dest_name + " from GBP" + price, html });
+    const payload = JSON.stringify({ from:"TripHunt Alerts <alerts@triphunt.org>", to:[alert.email], subject:"Price Drop: Flights to " + alert.dest_name + " from GBP" + price, html });
     const req = https.request({ hostname:"api.resend.com", path:"/emails", method:"POST", headers:{ "Authorization":"Bearer " + RESEND, "Content-Type":"application/json", "Content-Length":Buffer.byteLength(payload) } }, function(res) {
       let b = "";
       res.on("data", function(c) { b += c; });

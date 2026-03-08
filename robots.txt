@@ -2,12 +2,18 @@ User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://www.triphunt.co.uk/sitemap.xml
-Sitemap: https://www.triphunt.co.uk/sitemap-index.xml
-Sitemap: https://www.triphunt.co.uk/sitemap-flights.xml
-Sitemap: https://www.triphunt.co.uk/sitemap-destinations.xml
-Sitemap: https://www.triphunt.co.uk/sitemap-airports.xml
+Sitemap: https://triphunt.org/sitemap-index.xml
+Sitemap: https://triphunt.org/sitemap-flights.xml
+Sitemap: https://triphunt.org/sitemap-destinations.xml
+Sitemap: https://triphunt.org/sitemap-airports.xml
 
-# Disallow internal paths
+# Block Netlify internals
 Disallow: /.netlify/
 Disallow: /node_modules/
+
+# Crawl-delay for aggressive bots
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
